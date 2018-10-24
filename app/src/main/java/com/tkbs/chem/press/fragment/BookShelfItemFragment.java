@@ -28,7 +28,7 @@ import cn.lemon.view.adapter.RecyclerAdapter;
 /**
  * Created by Administrator on 2018/10/12.
  */
-public class BookShelfItemFragment extends BaseFragment {
+public class BookShelfItemFragment extends BaseFragment implements View.OnClickListener {
     private LinearLayout ll_bookshelf_edit;
     private LinearLayout ll_sort_time;
     private TextView tv_sort_time;
@@ -46,6 +46,7 @@ public class BookShelfItemFragment extends BaseFragment {
     private BookShelfItemAdapter bookShelfItemAdapter;
     private int page = 1;
     private Handler mHandler;
+    private boolean editFlg = false;
 
     @Override
     protected View getPreviewLayout(LayoutInflater inflater, ViewGroup container) {
@@ -56,12 +57,15 @@ public class BookShelfItemFragment extends BaseFragment {
     protected void onCreateViewLazy(Bundle savedInstanceState) {
         super.onCreateViewLazy(savedInstanceState);
         setContentView(R.layout.fragment_bookshelf_item);
+        ll_sort_edit = (LinearLayout) findViewById(R.id.ll_sort_edit);
+        ll_sort_edit.setOnClickListener(this);
+        ll_bottom_edit = (LinearLayout) findViewById(R.id.ll_bottom_edit);
         bookShelfItemAdapter = new BookShelfItemAdapter(getActivity());
         mHandler = new Handler();
         initView();
         // 编辑界面隐藏
         ll_bookshelf_edit.setVisibility(View.VISIBLE);
-        ll_bottom_edit.setVisibility(View.VISIBLE);
+        ll_bottom_edit.setVisibility(View.GONE);
 
         recycler_bookshelf.setSwipeRefreshColors(0xFF437845, 0xFFE44F98, 0xFF2FAC21);
         recycler_bookshelf.setLayoutManager(new GridLayoutManager(getActivity(), 1));
@@ -143,6 +147,23 @@ public class BookShelfItemFragment extends BaseFragment {
         cb_select = (CheckBox) findViewById(R.id.cb_select);
         tv_delete = (TextView) findViewById(R.id.tv_delete);
         recycler_bookshelf = (RefreshRecyclerView) findViewById(R.id.recycler_bookshelf);
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.ll_sort_edit:
+                if (editFlg) {
+                    editFlg = false;
+                    ll_bottom_edit.setVisibility(View.GONE);
+                } else {
+                    editFlg = true;
+                    ll_bottom_edit.setVisibility(View.VISIBLE);
+                }
+                break;
+            default:
+                break;
+        }
     }
 
     class BookShelfItemAdapter extends RecyclerAdapter<BookShelfItemData> {
