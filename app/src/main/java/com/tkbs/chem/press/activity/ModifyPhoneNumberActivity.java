@@ -52,7 +52,7 @@ public class ModifyPhoneNumberActivity extends BaseActivity implements View.OnCl
 
     @Override
     protected void initdata() {
-        // TODO 修改手机号码 分三步  1、密码验证 2、输入手机号 3、输入验证码
+        //  修改手机号码 分三步  1、密码验证 2、输入手机号 3、输入验证码
         SettingView();
 
     }
