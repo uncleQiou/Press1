@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/app_bag"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:visibility="gone"
+        android:gravity="center_vertical">
+
+        <LinearLayout
+            android:id="@+id/ll_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_10dp"
+            android:layout_weight="1"
+            android:background="@drawable/rounded_rectangle_gray"
+            android:gravity="center_vertical"
+            android:padding="@dimen/margin_5dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_10dp"
+                android:src="@mipmap/icon_search" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_8dp"
+                android:text="@string/text_search_hint"
+                android:textColor="@color/text_main_6"
+                android:textSize="@dimen/text_14sp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_classfy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/margin_10dp"
+            android:text="@string/text_bookcity_classfy"
+            android:textColor="@color/text_main_3"
+            android:textSize="@dimen/text_18sp" />
+    </LinearLayout>
+
+    <com.youth.banner.Banner xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/book_city_banner"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_190dp"
+        app:indicator_height="@dimen/margin_8dp"
+        app:indicator_margin="@dimen/margin_5dp"
+        app:indicator_width="@dimen/margin_8dp"
+        app:title_background="@color/transparent" />
+
+</LinearLayout>

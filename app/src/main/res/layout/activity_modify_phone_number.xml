@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_bag"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    tools:context="com.tkbs.chem.press.activity.ModifyPhoneNumberActivity">
+
+    <include layout="@layout/title_bar_normal" />
+
+    <TextView
+        android:id="@+id/tv_tips"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/margin_10dp"
+        android:text="@string/input_password"
+        android:textColor="@color/text_main_3"
+        android:textSize="@dimen/text_14sp" />
+
+    <LinearLayout
+        android:id="@+id/ll_phone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_1dp"
+        android:background="@color/white"
+        android:gravity="center_vertical"
+        android:padding="@dimen/margin_10dp"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/country_area"
+            android:textColor="@color/text_main_3"
+            android:textSize="@dimen/text_15sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/telephone_number"
+            android:textColor="@color/text_main_3"
+            android:textSize="@dimen/text_15sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/margin_10dp"
+            android:src="@mipmap/icon_arrow_right" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_phone_number"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_50dp"
+        android:layout_marginTop="@dimen/margin_1dp"
+        android:background="@color/white"
+        android:gravity="center_vertical"
+        android:padding="@dimen/margin_10dp">
+
+        <TextView
+            android:id="@+id/tv_passwird"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/login_password"
+            android:textColor="@color/text_main_3"
+            android:textSize="@dimen/text_15sp" />
+
+        <EditText
+            android:id="@+id/ed_phone_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_10dp"
+            android:layout_weight="1"
+            android:background="@null"
+            android:hint="@string/use_of_check"
+            android:textColor="@color/text_main_3"
+            android:textColorHint="@color/text_main_6"
+            android:textSize="@dimen/text_15sp" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_check_code"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_1dp"
+        android:background="@color/white"
+        android:gravity="center_vertical"
+        android:padding="@dimen/margin_10dp"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/check_code"
+            android:textColor="@color/text_main_3"
+            android:textSize="@dimen/text_15sp" />
+
+        <EditText
+            android:id="@+id/ed_check_code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_10dp"
+            android:layout_weight="1"
+            android:background="@null"
+            android:hint="@string/message_code"
+            android:textColor="@color/text_main_3"
+            android:textColorHint="@color/text_main_6"
+            android:textSize="@dimen/text_15sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="|"
+            android:textColor="@color/text_main_3"
+            android:textSize="@dimen/text_15sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/margin_10dp"
+            android:text="@string/get_check_code"
+            android:textColor="@color/text_main_6" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_next"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_30dp"
+        android:layout_marginLeft="@dimen/margin_15dp"
+        android:layout_marginRight="@dimen/margin_15dp"
+        android:layout_marginTop="@dimen/margin_30dp"
+        android:background="@drawable/btn_logout"
+        android:gravity="center"
+        android:text="@string/next_step"
+        android:textColor="@color/bg_main_white"
+        android:textSize="@dimen/text_18sp" />
+
+</LinearLayout>

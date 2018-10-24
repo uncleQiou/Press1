@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/app_bag"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_message_date"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:textColor="@color/text_main_6"
+        android:textSize="@dimen/text_13sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_10dp"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_message_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/margin_10dp"
+            android:textColor="@color/text_main_3"
+            android:textSize="@dimen/text_16sp" />
+
+        <LinearLayout
+            android:id="@+id/ll_click_check"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="@dimen/margin_10dp"
+                android:text="@string/click_look"
+                android:textColor="@color/text_main_6"
+                android:textSize="@dimen/text_14sp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/margin_15dp"
+                android:src="@mipmap/icon_arrow_right" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical"
+     >
+
+    <TextView
+        android:id="@+id/delete_dialog_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="30dp"
+        android:gravity="center"
+        android:background="@drawable/miaobian_delete_dialog"
+        android:paddingBottom="30dp"
+        android:textColor="@color/text_main_3"
+        android:text="你确定要删除这3种商品吗"
+        android:textSize="15sp" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/div_total_color"/>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/tv_deletedialog_cancle"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:gravity="center"
+        android:padding="15dp"
+        android:background="@drawable/miaobian_delete_left_dialog"
+        android:textColor="@color/text_main_3"
+        android:text="取消"/>
+    <View
+        android:layout_width="0.5dp"
+        android:layout_height="match_parent"
+        android:background="@color/div_total_color"/>
+    <TextView
+        android:id="@+id/tv_deletedialog_delete"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:background="@drawable/miaobian_delete_right_dialog"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:gravity="center"
+        android:padding="15dp"
+        android:textColor="@color/color_dark"
+        android:text="确定"/>
+</LinearLayout>
+</LinearLayout>

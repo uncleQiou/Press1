@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="white">#FFFFFF</color>
+    <color name="top_bg_color">#44D28A</color><!--手机状态栏颜色-->
+    <color name="app_bag">#F5F5F5</color>
+    <!-- 公共的 -->
+    <color name="tab_main_text_1">#aaa</color>
+    <color name="tab_main_text_2">#74b5f7</color>
+    <color name="tab_top_text_1">#aaa</color>
+    <color name="tab_top_text_2">#000</color>
+    <color name="tab_top2_text_1">#000</color>
+    <color name="tab_top2_text_2">#fff</color>
+
+
+    <color name="bg_main_white">#FFFFFF</color>
+    <color name="bg_main_gray">#F4F5F9</color>
+
+    <color name="text_main_3">#333333</color>
+    <color name="text_main_6">#666666</color>
+    <color name="text_main_9">#999999</color>
+    <color name="text_main_c">#CCCCCC</color>
+    <color name="text_main_green">#29A10B</color>
+
+    <color name="bg_total">#F3F6F8</color>
+
+    <color name="color_disable">#CCCCCC</color>
+    <color name="color_normal_w">#FFF3EA</color>
+    <color name="color_normal">#FF8525</color>
+    <color name="color_press">#E57720</color>
+    <color name="color_dark">#FF8624</color>
+    <color name="color_red">#F43631</color>
+    <color name="div_total_color">#d9d9d9</color>
+
+    <color name="color_ljgh">#97C11A</color>
+    <color name="code_bg">#F6F6F6</color>
+    <color name="clor_money_invoice">#FF6D00</color>
+    <color name="bg_title_total">#FF6D00</color>
+    <!-- cc color start -->
+    <color name="cc_orage">#fff08519</color>
+    <color name="cc_orage_start">#fff08519</color>
+    <color name="cc_orage_end">#fff06f19</color>
+    <color name="cc_orage_bk">#fff07019</color>
+    <color name="cc_orage_light">#fff09d48</color>
+    <color name="cc_orage_enable">#ffcfcfcf</color><!-- 浅白fff0a75b -->
+    <color name="cc_orage_hint">#22f08519</color><!-- 不透明#fff0e6dc -->
+    <color name="cc_orage_red">#fff86851</color>
+    <color name="cc_orage_dark">#ffde7b17</color>
+    <color name="cc_orage_head">#fff08519</color>
+    <color name="cc_blue">#ff006699</color>
+    <color name="cc_blue_hot">#ff00557f</color>
+    <color name="cc_lay_nomal">#ffffffff</color>
+    <color name="cc_lay_pressed">#07000000</color>
+    <color name="cc_lay_pressed_untran">#fff9f9f9</color>
+    <color name="cc_lay_pressed_untran_dark">#fff5f5f5</color>
+    <color name="cc_lay_pressed_white">#44ffffff</color>
+    <color name="cc_lay_selected">#11000000</color>
+    <color name="cc_light">#10000000</color>
+    <color name="cc_dark">#ff555555</color>
+    <color name="cc_dark_fade">#33000000</color>
+    <color name="cc_hint">#ffcccccc</color>
+    <color name="cc_hintlight">#ffdddddd</color>
+    <color name="cc_line">#11000000</color>
+    <color name="cc_line_dark">#33000000</color>
+    <color name="cc_line_darklight">#22000000</color>
+    <color name="cc_head_bk">#22000000</color>
+    <color name="cc_string">#ffb8a087</color>
+    <color name="cc_stroke">#ffe4e4e4</color><!-- 描边颜色 -->
+    <color name="cc_shadow_dark">#05000000</color>
+    <color name="cc_shadow_light">#11ffffff</color>
+    <color name="none">#00000000</color>
+    <color name="cc_card_hot">#44000000</color>
+
+    <color name="cc_bluelight">#ff3dc3ff</color>
+    <color name="cc_green">#ff12b143</color>
+    <color name="cc_red">#fff86851</color>
+    <color name="cc_cofee">#ff9c7145</color>
+    <color name="cc_add_dark">#44000000</color>
+    <color name="cc_white_head">#fff0f0f0</color>
+    <color name="cc_white">#ffeeeeee</color>
+    <color name="cc_bk">#fff0f0f0</color><!-- fff1f1f1 -->
+    <color name="cc_bk_dark">#ffdcdcdc</color>
+    <color name="cc_text_blank">#ff4b4b4b</color>
+    <color name="cc_text_dark">#ff7c7c7c</color>
+    <color name="cc_text_darklight">#ff9a9a9a</color>
+    <color name="cc_text_light">#ffcccccc</color>
+    <color name="cc_text_logolight">#ff999999</color>
+    <color name="cc_btn_off">#ffdedede</color>
+    <color name="cc_dot_orage">#fff08519</color>
+    <color name="cc_dot_dark">#ffdcd3cb</color>
+
+    <color name="cc_list_title_bk">#fff0f0f0</color>
+    <color name="cc_blue_xieyi">#448afe</color>
+    <color name="item_student_bg">#F6F2E6</color>
+    <color name="app_black">#ff000000</color>
+    <color name="btn_logout">#FFDD54</color>
+    <color name="btn_logout_press">#FFECC00D</color>
+    <color name="gray_normal">#666667</color>
+    <color name="main_bg">#F2F2F2</color>
+    <color name="btn_login">#45D38B</color>
+    <color name="personal_data_bc">#FBF8EA</color>
+    <color name="test">#551A8B</color>
+    <!--自定义进度条-->
+    <color name="red">#FFC93437</color>
+    <color name="blue">#FF375BF1</color>
+    <color name="yellow">#FFF7D23E</color>
+    <color name="green">#FF34A350</color>
+    <!--自定义进度条-->
+    <color name="transparent">#00000000</color>
+    <color name="hg_app_main_color">#0AC3C8</color>
+    <color name="search_hot_1">#DA0500</color>
+    <color name="search_hot_2">#FE3C00</color>
+    <color name="search_hot_3">#FF8E16</color>
+    <color name="search_hot_4">#B1B6BC</color>
+    <color name="apply_violet">#A1A2F2</color>
+</resources>

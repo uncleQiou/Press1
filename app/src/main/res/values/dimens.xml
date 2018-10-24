@@ -1,0 +1,79 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <dimen name="font_size_main_tab">12sp</dimen>
+
+    <dimen name="text_11sp">11sp</dimen>
+    <dimen name="text_12sp">12sp</dimen>
+    <dimen name="text_13sp">13sp</dimen>
+    <dimen name="text_14sp">14sp</dimen>
+    <dimen name="text_15sp">15sp</dimen>
+    <dimen name="text_16sp">16sp</dimen>
+    <dimen name="text_17sp">17sp</dimen>
+    <dimen name="text_18sp">18sp</dimen>
+    <dimen name="text_19sp">19sp</dimen>
+    <dimen name="text_20sp">20sp</dimen>
+    <dimen name="text_25sp">25sp</dimen>
+    <dimen name="text_28sp">28sp</dimen>
+    <dimen name="text_30sp">30sp</dimen>
+    <dimen name="text_40sp">40sp</dimen>
+    <dimen name="titlebar_title_size">20sp</dimen>
+
+    <dimen name="titlebar_height">48dp</dimen>
+    <dimen name="titlebar_return_left">20dp</dimen>
+
+    <dimen name="margin_main">20dp</dimen>
+    <dimen name="height_form_item">64dp</dimen>
+    <dimen name="height_getcode">35dp</dimen>
+    <dimen name="height_div">0.5dp</dimen>
+
+    <dimen name="margin_1dp">1dp</dimen>
+    <dimen name="margin_2dp">2dp</dimen>
+    <dimen name="margin_3dp">3dp</dimen>
+    <dimen name="margin_5dp">5dp</dimen>
+    <dimen name="margin_8dp">8dp</dimen>
+    <dimen name="margin_10dp">10dp</dimen>
+    <dimen name="margin_15dp">15dp</dimen>
+    <dimen name="margin_20dp">20dp</dimen>
+    <dimen name="margin_25dp">25dp</dimen>
+    <dimen name="margin_30dp">30dp</dimen>
+    <dimen name="margin_35dp">35dp</dimen>
+    <dimen name="margin_40dp">40dp</dimen>
+    <dimen name="margin_45dp">45dp</dimen>
+    <dimen name="margin_50dp">50dp</dimen>
+    <dimen name="margin_60dp">60dp</dimen>
+    <dimen name="margin_65dp">65dp</dimen>
+    <dimen name="margin_70dp">70dp</dimen>
+    <dimen name="margin_75dp">75dp</dimen>
+    <dimen name="margin_85dp">85dp</dimen>
+    <dimen name="margin_90dp">90dp</dimen>
+    <dimen name="margin_100dp">100dp</dimen>
+    <dimen name="margin_115dp">115dp</dimen>
+    <dimen name="margin_125dp">125dp</dimen>
+    <dimen name="margin_135dp">135dp</dimen>
+    <dimen name="margin_160dp">160dp</dimen>
+    <dimen name="margin_150dp">150dp</dimen>
+    <dimen name="margin_190dp">190dp</dimen>
+    <dimen name="margin_225dp">225dp</dimen>
+    <dimen name="margin_200dp">200dp</dimen>
+    <dimen name="margin_250dp">250dp</dimen>
+    <dimen name="margin_300dp">300dp</dimen>
+    <dimen name="drawer_icon_size">20dp</dimen>
+
+    <!-- cc lz -->
+    <dimen name="text_title">20sp</dimen>
+    <dimen name="text_mintitle">19sp</dimen>
+    <dimen name="text_subig">17sp</dimen>
+    <dimen name="text_big">16sp</dimen>
+    <dimen name="text_nomal">15sp</dimen>
+    <dimen name="text_small">14sp</dimen>
+    <dimen name="text_smalltiny">13sp</dimen>
+    <dimen name="text_tiny">12sp</dimen>
+
+    <dimen name="nomal_corners">5dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <!--home-->
+    <dimen name="fragment_home_type_h">48dp</dimen>
+</resources>

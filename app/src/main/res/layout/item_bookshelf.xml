@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/margin_1dp"
+    android:background="@color/white"
+    android:padding="@dimen/margin_10dp">
+
+    <CheckBox
+        android:id="@+id/cb_select_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:button="@drawable/selector_btn_blue"
+        android:checked="true"
+        android:clickable="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:padding="@dimen/margin_5dp"
+        android:textColor="@color/text_main_3"
+        android:textSize="@dimen/text_12sp" />
+
+    <ImageView
+        android:id="@+id/bookshelf_cover"
+        android:layout_width="@dimen/margin_75dp"
+        android:layout_height="@dimen/margin_85dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_default_image" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="@dimen/margin_10dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_book_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_8dp"
+            android:singleLine="true"
+            android:text="飞回我手里"
+            android:textColor="@color/text_main_3"
+            android:textSize="@dimen/text_16sp" />
+
+        <TextView
+            android:id="@+id/tv_buy_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_5dp"
+            android:text="订单时间：100"
+            android:textColor="@color/text_main_6"
+            android:textSize="@dimen/text_12sp" />
+        <TextView
+            android:id="@+id/tv_book_page"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_5dp"
+            android:text="页数：100"
+            android:textColor="@color/text_main_6"
+            android:textSize="@dimen/text_12sp" />
+
+        <TextView
+            android:id="@+id/tv_book_endtime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_5dp"
+            android:text="截止时间。。。。"
+            android:textColor="@color/text_main_6"
+            android:textSize="@dimen/text_12sp" />
+    </LinearLayout>
+</LinearLayout>

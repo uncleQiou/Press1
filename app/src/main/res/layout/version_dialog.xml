@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/miaobian_delete_dialog"
+        android:gravity="center_horizontal"
+        android:paddingTop="15dp"
+        android:tag="beta_title"
+        android:text="提示"
+        android:textColor="@color/text_main_3"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/tv_versiondialog_msg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/bg_main_white"
+        android:gravity="center"
+        android:paddingBottom="30dp"
+        android:paddingTop="15dp"
+        android:tag="beta_tip_message"
+        android:text="你的APP已经是最新版本，\n祝您使用愉快"
+        android:textColor="@color/text_main_3"
+        android:textSize="15sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/text_main_3" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_versiondialog_cancle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/miaobian_delete_left_dialog"
+            android:gravity="center"
+            android:padding="15dp"
+            android:tag="beta_cancel_button"
+            android:text="取消"
+            android:textColor="@color/text_main_3"
+            android:textSize="15sp" />
+
+        <View
+            android:id="@+id/view_versiondialog"
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:background="@color/text_main_3" />
+
+        <TextView
+            android:id="@+id/tv_versiondialog_update"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/miaobian_delete_right_dialog"
+            android:gravity="center"
+            android:padding="15dp"
+            android:tag="beta_confirm_button"
+            android:text="确定"
+            android:textColor="@color/text_main_3"
+            android:textSize="15sp" />
+    </LinearLayout>
+</LinearLayout>

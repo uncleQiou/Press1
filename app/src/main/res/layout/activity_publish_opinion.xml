@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_bag"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    tools:context="com.tkbs.chem.press.activity.PublishOpinionActivity">
+
+    <include layout="@layout/title_bar_normal" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_10dp"
+        android:padding="@dimen/margin_10dp"
+        android:text="@string/publish_opinion_title"
+        android:textColor="@color/hg_app_main_color"
+        android:textSize="@dimen/text_14sp" />
+
+    <EditText
+        android:id="@+id/ed_opinion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_10dp"
+        android:background="@color/white"
+        android:gravity="start"
+        android:hint="@string/publish_opinion_hint"
+        android:minHeight="@dimen/margin_125dp"
+        android:maxHeight="@dimen/margin_300dp"
+        android:padding="@dimen/margin_10dp"
+        android:textColor="@color/text_main_3"
+        android:textColorHint="@color/text_main_6"
+        android:textSize="@dimen/text_14sp" />
+
+    <TextView
+        android:id="@+id/tv_submit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_10dp"
+        android:background="@drawable/btn_apply_state1"
+        android:gravity="center"
+        android:padding="@dimen/margin_10dp"
+        android:text="@string/submit_opinion"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_18sp" />
+</LinearLayout>

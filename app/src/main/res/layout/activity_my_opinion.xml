@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_bag"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    tools:context="com.tkbs.chem.press.activity.MyOpinionActivity">
+
+    <include layout="@layout/titlebar_search_result" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <cn.lemon.view.RefreshRecyclerView
+            android:id="@+id/recycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_1dp" />
+
+        <LinearLayout
+            android:id="@+id/ll_reply_layot"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@drawable/miaobian_normal"
+            android:gravity="center_vertical"
+            android:padding="@dimen/margin_10dp">
+
+            <EditText
+                android:id="@+id/ed_reply"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/conner_gray"
+                android:hint="@string/reply_platform"
+                android:padding="@dimen/margin_10dp"
+                android:textColor="@color/text_main_3"
+                android:textColorHint="@color/text_main_6"
+                android:textSize="@dimen/text_15sp" />
+
+            <TextView
+                android:id="@+id/tv_send"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_5dp"
+                android:background="@drawable/miaobian_blue"
+                android:paddingBottom="@dimen/margin_8dp"
+                android:paddingLeft="@dimen/margin_15dp"
+                android:paddingRight="@dimen/margin_15dp"
+                android:paddingTop="@dimen/margin_8dp"
+                android:text="@string/send"
+                android:textColor="@color/hg_app_main_color"
+                android:textSize="@dimen/text_15sp" />
+
+        </LinearLayout>
+    </FrameLayout>
+</LinearLayout>

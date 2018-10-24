@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_bag"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/ll_bookshelf_edit"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_50dp"
+        android:layout_marginBottom="@dimen/margin_8dp"
+        android:background="@color/white">
+
+        <LinearLayout
+            android:id="@+id/ll_sort_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="@dimen/margin_5dp">
+
+            <TextView
+                android:id="@+id/tv_sort_time"
+                style="@style/book_shelf_sort"
+                android:text="@string/sort_time" />
+
+            <ImageView
+                android:id="@+id/img_sort_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:padding="@dimen/margin_5dp"
+                android:src="@mipmap/bookshelf_icon_up" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_sort_book_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="@dimen/margin_5dp">
+
+            <TextView
+                android:id="@+id/tv_sort_book_name"
+                style="@style/book_shelf_sort"
+                android:text="@string/sort_book_name" />
+
+            <ImageView
+                android:id="@+id/img_sort_book_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:padding="@dimen/margin_5dp"
+                android:src="@mipmap/bookshelf_icon_up" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:id="@+id/ll_sort_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="@dimen/margin_5dp">
+
+            <ImageView
+                android:id="@+id/img_sort_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:padding="@dimen/margin_5dp"
+                android:src="@mipmap/bookshelf_icon_edit" />
+
+            <TextView
+                android:id="@+id/tv_sort_edit"
+                style="@style/book_shelf_sort"
+                android:text="@string/str_edit" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <cn.lemon.view.RefreshRecyclerView
+            android:id="@+id/recycler_bookshelf"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:id="@+id/ll_bottom_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/miaobian_normal"
+            android:padding="@dimen/margin_10dp">
+
+            <CheckBox
+                android:id="@+id/cb_select"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/margin_10dp"
+                android:button="@drawable/selector_btn_blue"
+                android:checked="true"
+                android:clickable="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:padding="@dimen/margin_5dp"
+                android:textColor="@color/text_main_3"
+                android:textSize="@dimen/text_12sp" />
+
+            <TextView
+                style="@style/book_shelf_sort"
+                android:layout_weight="1"
+                android:text="@string/str_check_all" />
+
+            <TextView
+                android:id="@+id/tv_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/miaobian_red"
+                android:paddingBottom="@dimen/margin_5dp"
+                android:paddingLeft="@dimen/margin_10dp"
+                android:paddingRight="@dimen/margin_10dp"
+                android:paddingTop="@dimen/margin_5dp"
+                android:text="@string/str_delete"
+                android:textColor="@color/red"
+                android:textSize="@dimen/text_15sp" />
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>

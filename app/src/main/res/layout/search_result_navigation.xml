@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_bookshelf_edit"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/margin_50dp"
+    android:layout_marginBottom="@dimen/margin_8dp"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:id="@+id/ll_sort_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_margin="@dimen/margin_5dp">
+
+        <TextView
+            android:id="@+id/tv_sort_time"
+            style="@style/book_shelf_sort"
+            android:text="@string/sort_time" />
+
+        <ImageView
+            android:id="@+id/img_sort_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:padding="@dimen/margin_5dp"
+            android:src="@mipmap/bookshelf_icon_up" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_sort_hot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_margin="@dimen/margin_5dp">
+
+        <TextView
+            android:id="@+id/tv_sort_hot"
+            style="@style/book_shelf_sort"
+            android:text="@string/search_hot" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_sort_book_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_margin="@dimen/margin_5dp">
+
+        <TextView
+            android:id="@+id/tv_sort_book_name"
+            style="@style/book_shelf_sort"
+            android:text="@string/sort_book_name" />
+
+        <ImageView
+            android:id="@+id/img_sort_book_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:padding="@dimen/margin_5dp"
+            android:src="@mipmap/bookshelf_icon_up"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+
+    <LinearLayout
+        android:id="@+id/ll_sort_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_margin="@dimen/margin_5dp">
+
+        <ImageView
+            android:id="@+id/img_sort_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="@dimen/margin_10dp"
+            android:padding="@dimen/margin_5dp"
+            android:src="@mipmap/three_level_page_icon_list" />
+
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/margin_8dp"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/ll_book_city_more"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/fragment_home_type_h"
+        android:background="@color/bg_main_white"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_10dp"
+            android:text="|"
+            android:textColor="@color/cc_bluelight"
+            android:textSize="@dimen/text_20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="我的定制"
+            android:textColor="@color/text_main_3"
+            android:textSize="@dimen/text_18sp"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_more"
+            android:textColor="@color/cc_bluelight" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/margin_10dp"
+            android:text=">"
+            android:textColor="@color/cc_bluelight"
+            android:textSize="@dimen/text_18sp" />
+    </LinearLayout>
+
+    <com.shizhefei.view.indicator.ScrollIndicatorView
+        android:id="@+id/fragment_bookcity_indicator"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_45dp"
+        android:background="@color/white"/>
+
+    <android.support.v4.view.ViewPager
+        android:layout_gravity="center"
+        android:id="@+id/fragment_bookcity_viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        android:background="@color/white" />
+</LinearLayout>

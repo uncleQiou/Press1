@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.tkbs.chem.press">
+
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.READ_LOGS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+    <uses-feature android:name="android.hardware.camera.flash" />
+    <!-- 摄像头、手电筒 -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+    <application
+        android:name=".base.BaseApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".activity.SplashActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".MainActivity"
+            android:launchMode="singleTask" />
+        <!-- 搜索界面 -->
+        <activity
+            android:name=".activity.SearchActivity"
+            android:windowSoftInputMode="stateHidden|stateUnchanged" />
+        <!-- 搜索结果 -->
+        <activity android:name=".activity.SearchResultActivity" />
+        <!-- 书城二级分类页面 -->
+        <activity android:name=".activity.SecondaryClassificationActivity" />
+        <!-- 书城三级分类页面 -->
+        <activity android:name=".activity.ThreeClassificActivity" />
+        <!-- 设置页面 -->
+        <activity android:name=".activity.SettingActivity" />
+        <!-- 修改手机号 -->
+        <activity android:name=".activity.ModifyPhoneNumberActivity" />
+        <!-- 登陆 -->
+        <activity android:name=".activity.LoginActivity" />
+        <!-- 我的定制 -->
+        <activity android:name=".activity.MyCustomizedActivity" />
+        <!-- 我的申请 -->
+        <activity android:name=".activity.MyApplyActivity" />
+        <!-- 我的意见 -->
+        <activity
+            android:name=".activity.MyOpinionActivity"
+            android:windowSoftInputMode="stateHidden|stateUnchanged" />
+        <!-- 发表意见 -->
+        <activity
+            android:name=".activity.PublishOpinionActivity"
+            android:windowSoftInputMode="stateHidden|stateUnchanged" />
+        <!-- 样书管理 -->
+        <activity android:name=".activity.SampleBookActivity" />
+        <!-- 一键审核 -->
+        <activity android:name=".activity.OneKeyManageBookActivity" />
+        <!-- 用户管理 -->
+        <activity android:name=".activity.UserManageActivity" />
+        <!-- 修改密码 -->
+        <activity
+            android:name=".activity.ChangePasswordActivity"
+            android:windowSoftInputMode="stateHidden|stateUnchanged" />
+        <!-- 消息 -->
+        <activity android:name=".activity.NewsActivity" />
+
+    </application>
+
+</manifest>
