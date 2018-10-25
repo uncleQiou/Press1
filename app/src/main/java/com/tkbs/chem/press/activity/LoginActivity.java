@@ -29,7 +29,11 @@ import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
 import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.onekeyshare.OnekeyShare;
+import cn.sharesdk.onekeyshare.ShareContentCustomizeCallback;
+import cn.sharesdk.sina.weibo.SinaWeibo;
 import cn.sharesdk.tencent.qq.QQ;
+import cn.sharesdk.wechat.friends.Wechat;
+import cn.sharesdk.wechat.moments.WechatMoments;
 import de.greenrobot.event.EventBus;
 import okhttp3.RequestBody;
 
@@ -155,8 +159,35 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         oks.setUrl("http://sharesdk.cn");
         // comment是我对这条分享的评论，仅在人人网使用
         oks.setComment("我是测试评论文本");
+        //设置一个总开关，用于在分享前若需要授权，则禁用sso功能
+        oks.disableSSOWhenAuthorize();
         // 启动分享GUI
-        oks.show(this);
+        oks.setShareContentCustomizeCallback(new ShareContentCustomizeCallback() {
+            @Override
+            public void onShare(Platform platform, cn.sharesdk.framework.Platform.ShareParams paramsToShare) {
+                if (Wechat.NAME.equals(platform.getName()) ||
+                        WechatMoments.NAME.equals(platform.getName())) {
+                    paramsToShare.setShareType(Platform.SHARE_WEBPAGE);
+                    paramsToShare.setUrl("http://www.xianzhiwang.cn/");
+                    paramsToShare.setText("微信测试微信测试");
+                    paramsToShare.setImageUrl("http://221.122.68.72:8070/webFile/column/20181008183210912495.jpg");
+                    paramsToShare.setTitle("微信测试能不能行啦还");
+                }
+                if (SinaWeibo.NAME.equals(platform.getName())) {
+                    paramsToShare.setText("微博微博微博测试");
+                    paramsToShare.setUrl("http://www.xianzhiwang.cn/");
+                    paramsToShare.setImageUrl("http://221.122.68.72:8070/webFile/column/20181008183210912495.jpg");
+                }
+                if (QQ.NAME.equals(platform.getName())) {
+                    paramsToShare.setTitle("QQ");
+                    paramsToShare.setTitleUrl("http://www.xianzhiwang.cn/");
+                    paramsToShare.setText("QQQQQQ测试");
+                    paramsToShare.setUrl("http://www.xianzhiwang.cn/");
+                    paramsToShare.setImageUrl("http://221.122.68.72:8070/webFile/column/20181008183210912495.jpg");
+                }
+            }
+        });
+
         oks.setCallback(new PlatformActionListener() {
             @Override
             public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
@@ -173,6 +204,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 toastShow("取消" + i);
             }
         });
+        oks.show(this);
+
     }
 
     /**

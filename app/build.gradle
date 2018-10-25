@@ -43,14 +43,15 @@ android {
 
                 Wechat {
                     sortId 1
-                    appId "wx4868b35061f87885"
-                    appSecret "64020361b8ec4c99936c0e3999a9f249"
+                    appId "wx65125889a1045772"
+                    appSecret "077db7bb4611ab84cd869c80bcfeb6d4"
+                    bypassApproval false
                 }
                 WechatMoments {
                     id 5
                     sortId 2
-                    appId "wx4868b35061f87885"
-                    appSecret "64020361b8ec4c99936c0e3999a9f249"
+                    appId "wx65125889a1045772"
+                    appSecret "077db7bb4611ab84cd869c80bcfeb6d4"
                     bypassApproval false
                     enable true
                 }
@@ -108,7 +109,5 @@ dependencies {
     compile 'com.hyman:flowlayout-lib:1.1.2'
     //毕加索
     compile 'de.greenrobot:eventbus:3.0.0-beta1'
-    // PDf
-    compile 'com.github.barteksc:android-pdf-viewer:3.1.0-beta.1'
 
 }
