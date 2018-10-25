@@ -159,7 +159,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         oks.setUrl("http://sharesdk.cn");
         // comment是我对这条分享的评论，仅在人人网使用
         oks.setComment("我是测试评论文本");
-        //设置一个总开关，用于在分享前若需要授权，则禁用sso功能
+        //设置一个总开关，用于在分享前若需要授权，则禁用sso功能  添加这个才成功
         oks.disableSSOWhenAuthorize();
         // 启动分享GUI
         oks.setShareContentCustomizeCallback(new ShareContentCustomizeCallback() {
