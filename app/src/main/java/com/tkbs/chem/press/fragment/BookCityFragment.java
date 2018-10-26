@@ -35,6 +35,7 @@ import com.tkbs.chem.press.adapter.BookCityItemAdapter;
 import com.tkbs.chem.press.base.BaseApplication;
 import com.tkbs.chem.press.base.BaseFragment;
 import com.tkbs.chem.press.bean.BannerDataBean;
+import com.tkbs.chem.press.bean.BookCityDataBean;
 import com.tkbs.chem.press.bean.HttpResponse;
 import com.tkbs.chem.press.net.ApiCallback;
 import com.tkbs.chem.press.util.FullyGridLayoutManager;
@@ -123,7 +124,7 @@ public class BookCityFragment extends BaseFragment implements View.OnClickListen
             @Override
             public void onAction() {
                 page = 1;
-                getData(true);
+                getBookCityData(true);
             }
         });
 
@@ -131,7 +132,7 @@ public class BookCityFragment extends BaseFragment implements View.OnClickListen
             @Override
             public void onAction() {
                 page++;
-                getData(false);
+                getBookCityData(false);
 
             }
         });
@@ -139,7 +140,7 @@ public class BookCityFragment extends BaseFragment implements View.OnClickListen
             @Override
             public void run() {
                 mRecyclerView.showSwipeRefresh();
-                getData(true);
+                getBookCityData(true);
             }
         });
         mRecyclerView.getNoMoreView().setText("没有更多数据了");
@@ -182,6 +183,49 @@ public class BookCityFragment extends BaseFragment implements View.OnClickListen
         }
     }
 
+    /**
+     * 获取书城首页数据
+     */
+    private void getBookCityData(final boolean isRefresh) {
+        showProgressDialog();
+        addSubscription(apiStores.BookCityData(), new ApiCallback<HttpResponse<ArrayList<BookCityDataBean>>>() {
+            @Override
+            public void onSuccess(HttpResponse<ArrayList<BookCityDataBean>> model) {
+                if (model.isStatus()){
+                    if (isRefresh) {
+                        page = 1;
+                        mAdapter.clear();
+                        mAdapter.addAll(model.getData());
+                        mRecyclerView.dismissSwipeRefresh();
+                        mRecyclerView.getRecyclerView().scrollToPosition(0);
+
+                    } else {
+                        mAdapter.addAll(model.getData());
+                    }
+                    if (model.getData().size() < 10) {
+                        mRecyclerView.showNoMore();
+                    }
+                }else {
+                    mRecyclerView.dismissSwipeRefresh();
+                    toastShow(model.getErrorDescription());
+                }
+
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                toastShow(msg);
+            }
+
+            @Override
+            public void onFinish() {
+                dismissProgressDialog();
+
+            }
+        });
+
+    }
+
     public void getData(final boolean isRefresh) {
         mHandler.postDelayed(new Runnable() {
             @Override
@@ -189,14 +233,14 @@ public class BookCityFragment extends BaseFragment implements View.OnClickListen
                 if (isRefresh) {
                     page = 1;
                     mAdapter.clear();
-                    mAdapter.addAll(getTestData());
+//                    mAdapter.addAll(getTestData());
                     mRecyclerView.dismissSwipeRefresh();
                     mRecyclerView.getRecyclerView().scrollToPosition(0);
                     mRecyclerView.showNoMore();
                     getBannerData();
 //                    setBanner(list_path, list_title);
                 } else {
-                    mAdapter.addAll(getTestData());
+//                    mAdapter.addAll(getTestData());
                     if (page >= 3) {
                         mRecyclerView.showNoMore();
                     }
@@ -283,18 +327,18 @@ public class BookCityFragment extends BaseFragment implements View.OnClickListen
         book_city_banner.stopAutoPlay();
     }
 
-    class BookCityAdapter extends RecyclerAdapter<BookCityData> {
+    class BookCityAdapter extends RecyclerAdapter<BookCityDataBean> {
         public BookCityAdapter(Context context) {
             super(context);
         }
 
         @Override
-        public BaseViewHolder<BookCityData> onCreateBaseViewHolder(ViewGroup parent, int viewType) {
+        public BaseViewHolder<BookCityDataBean> onCreateBaseViewHolder(ViewGroup parent, int viewType) {
             return new BookCityHolder(parent);
         }
     }
 
-    class BookCityHolder extends BaseViewHolder<BookCityData> {
+    class BookCityHolder extends BaseViewHolder<BookCityDataBean> {
 
 
         private LinearLayout ll_book_city_more;
@@ -316,13 +360,14 @@ public class BookCityFragment extends BaseFragment implements View.OnClickListen
         }
 
         @Override
-        public void setData(BookCityData data) {
+        public void setData(BookCityDataBean data) {
             super.setData(data);
-            tv_title.setText(data.getTitle());
+            tv_title.setText(data.getResCatagory().getTitle());
             fragment_bookcity_indicator.setScrollBar(new ColorBar(getApplicationContext(), getResources().getColor(R.color.tab_main_text_2), 2));
             fragment_bookcity_indicator.setOnTransitionListener
                     (new OnTransitionTextListener().setColor(getResources().getColor(R.color.tab_main_text_2), Color.GRAY));
             fragment_bookcity_viewPager.setOffscreenPageLimit(4);
+            // TODO 设置三级分类  indicators
             IndicatorViewPager indicatorViewPager = new IndicatorViewPager(fragment_bookcity_indicator, fragment_bookcity_viewPager);
             indicatorViewPager.setAdapter(new BookCityIndicatorAdapter());
             ll_book_city_more.setOnClickListener(new View.OnClickListener() {
@@ -335,7 +380,7 @@ public class BookCityFragment extends BaseFragment implements View.OnClickListen
         }
 
         @Override
-        public void onItemViewClick(BookCityData data) {
+        public void onItemViewClick(BookCityDataBean data) {
             super.onItemViewClick(data);
         }
     }
@@ -399,6 +444,7 @@ public class BookCityFragment extends BaseFragment implements View.OnClickListen
             RecyclerView recyclerView = (RecyclerView) convertView;
             recyclerView.setLayoutManager(layoutManage);
             recyclerView.addItemDecoration(new GridSpacingItemDecoration(spanCount, spacing, includeEdge));
+            // TODO  设置三级书籍 九本
             BookCityItemAdapter bookCityItemAdapter = new BookCityItemAdapter(getActivity(), books);
             recyclerView.setAdapter(bookCityItemAdapter);
             recyclerView.setNestedScrollingEnabled(false);

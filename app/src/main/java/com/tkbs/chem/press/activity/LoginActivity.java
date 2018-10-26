@@ -145,8 +145,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private void showShare() {
         OnekeyShare oks = new OnekeyShare();
         //关闭sso授权
+//        oks.disableSSOWhenAuthorize();
+        //设置一个总开关，用于在分享前若需要授权，则禁用sso功能  添加这个才成功
         oks.disableSSOWhenAuthorize();
-
         // title标题，微信、QQ和QQ空间等平台使用
         oks.setTitle("分享测试");
         // titleUrl QQ和QQ空间跳转链接
@@ -159,8 +160,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         oks.setUrl("http://sharesdk.cn");
         // comment是我对这条分享的评论，仅在人人网使用
         oks.setComment("我是测试评论文本");
-        //设置一个总开关，用于在分享前若需要授权，则禁用sso功能  添加这个才成功
-        oks.disableSSOWhenAuthorize();
+
         // 启动分享GUI
         oks.setShareContentCustomizeCallback(new ShareContentCustomizeCallback() {
             @Override

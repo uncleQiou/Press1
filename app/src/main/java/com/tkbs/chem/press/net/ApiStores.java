@@ -2,6 +2,7 @@ package com.tkbs.chem.press.net;
 
 
 import com.tkbs.chem.press.bean.BannerDataBean;
+import com.tkbs.chem.press.bean.BookCityDataBean;
 import com.tkbs.chem.press.bean.HttpResponse;
 import com.tkbs.chem.press.bean.UserBean;
 
@@ -45,6 +46,13 @@ public interface ApiStores {
     @POST("resDocument/polling/1/10")
     Observable<HttpResponse<ArrayList<BannerDataBean>>> BannerData();
 
+    /**
+     * 书城首页数据
+     *
+     * @return
+     */
+    @POST("resDocument/index")
+    Observable<HttpResponse<ArrayList<BookCityDataBean>>> BookCityData();
 
     /*************************************************************************************************************/
 
