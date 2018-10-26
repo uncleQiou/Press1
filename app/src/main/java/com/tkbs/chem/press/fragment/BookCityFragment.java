@@ -36,6 +36,7 @@ import com.tkbs.chem.press.base.BaseApplication;
 import com.tkbs.chem.press.base.BaseFragment;
 import com.tkbs.chem.press.bean.BannerDataBean;
 import com.tkbs.chem.press.bean.BookCityDataBean;
+import com.tkbs.chem.press.bean.BookCityResultDataList;
 import com.tkbs.chem.press.bean.HttpResponse;
 import com.tkbs.chem.press.net.ApiCallback;
 import com.tkbs.chem.press.util.FullyGridLayoutManager;
@@ -87,6 +88,7 @@ public class BookCityFragment extends BaseFragment implements View.OnClickListen
         add("5");
     }};
 
+    private ArrayList<BookCityDataBean> bookCityData;
 
     int spanCount = 2;
     int spacing = 0;
@@ -140,7 +142,7 @@ public class BookCityFragment extends BaseFragment implements View.OnClickListen
             @Override
             public void run() {
                 mRecyclerView.showSwipeRefresh();
-                getBookCityData(true);
+                getBannerData(true);
             }
         });
         mRecyclerView.getNoMoreView().setText("没有更多数据了");
@@ -191,21 +193,23 @@ public class BookCityFragment extends BaseFragment implements View.OnClickListen
         addSubscription(apiStores.BookCityData(), new ApiCallback<HttpResponse<ArrayList<BookCityDataBean>>>() {
             @Override
             public void onSuccess(HttpResponse<ArrayList<BookCityDataBean>> model) {
-                if (model.isStatus()){
+                if (model.isStatus()) {
                     if (isRefresh) {
+                        bookCityData = model.getData();
                         page = 1;
                         mAdapter.clear();
-                        mAdapter.addAll(model.getData());
+                        mAdapter.addAll(bookCityData);
                         mRecyclerView.dismissSwipeRefresh();
                         mRecyclerView.getRecyclerView().scrollToPosition(0);
 
                     } else {
+                        bookCityData.addAll(model.getData());
                         mAdapter.addAll(model.getData());
                     }
                     if (model.getData().size() < 10) {
                         mRecyclerView.showNoMore();
                     }
-                }else {
+                } else {
                     mRecyclerView.dismissSwipeRefresh();
                     toastShow(model.getErrorDescription());
                 }
@@ -219,6 +223,7 @@ public class BookCityFragment extends BaseFragment implements View.OnClickListen
 
             @Override
             public void onFinish() {
+                mRecyclerView.dismissSwipeRefresh();
                 dismissProgressDialog();
 
             }
@@ -237,7 +242,7 @@ public class BookCityFragment extends BaseFragment implements View.OnClickListen
                     mRecyclerView.dismissSwipeRefresh();
                     mRecyclerView.getRecyclerView().scrollToPosition(0);
                     mRecyclerView.showNoMore();
-                    getBannerData();
+//                    getBannerData();
 //                    setBanner(list_path, list_title);
                 } else {
 //                    mAdapter.addAll(getTestData());
@@ -276,7 +281,7 @@ public class BookCityFragment extends BaseFragment implements View.OnClickListen
     /**
      * 获取BannerData
      */
-    private void getBannerData() {
+    private void getBannerData(final boolean isRefresh) {
         showProgressDialog();
         addSubscription(apiStores.BannerData(), new ApiCallback<HttpResponse<ArrayList<BannerDataBean>>>() {
             @Override
@@ -290,6 +295,7 @@ public class BookCityFragment extends BaseFragment implements View.OnClickListen
 //                        list_path.add(UiUtils.ImageMachining(model.data.get(i).getFile_path()));
                     }
                     setBanner(list_path, list_title);
+                    getBookCityData(isRefresh);
                 } else {
                     toastShow(model.getErrorDescription());
                 }
@@ -368,8 +374,15 @@ public class BookCityFragment extends BaseFragment implements View.OnClickListen
                     (new OnTransitionTextListener().setColor(getResources().getColor(R.color.tab_main_text_2), Color.GRAY));
             fragment_bookcity_viewPager.setOffscreenPageLimit(4);
             // TODO 设置三级分类  indicators
+            BookCityIndicatorAdapter bookCityIndicatorAdapter = new BookCityIndicatorAdapter();
+            List<BookCityResultDataList> resultDataLists = data.getResultDataList();
+//            List<String> list = new ArrayList<>();
+//            for (int i = 0; i < resultDataLists.size(); i++) {
+//                list.add(resultDataLists.get(i).getResCatagory().getTitle());
+//            }
+            bookCityIndicatorAdapter.SetData(resultDataLists);
             IndicatorViewPager indicatorViewPager = new IndicatorViewPager(fragment_bookcity_indicator, fragment_bookcity_viewPager);
-            indicatorViewPager.setAdapter(new BookCityIndicatorAdapter());
+            indicatorViewPager.setAdapter(bookCityIndicatorAdapter);
             ll_book_city_more.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -403,10 +416,16 @@ public class BookCityFragment extends BaseFragment implements View.OnClickListen
 
 
     private class BookCityIndicatorAdapter extends IndicatorViewPager.IndicatorViewPagerAdapter {
+        private List<BookCityResultDataList> indicatorList;
+
+        public void SetData(List<BookCityResultDataList> indicatorList) {
+            this.indicatorList = indicatorList;
+        }
+
 
         @Override
         public int getCount() {
-            return indicators.length;
+            return indicatorList.size();
         }
 
         @Override
@@ -415,7 +434,7 @@ public class BookCityFragment extends BaseFragment implements View.OnClickListen
                 convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.tab_top, container, false);
             }
             TextView textView = (TextView) convertView;
-            textView.setText(indicators[position]);
+            textView.setText(indicatorList.get(position).getResCatagory().getTitle());
 
             int witdh = getTextWidth(textView);
             int padding = UiUtils.dipToPix(getApplicationContext(), 8);
@@ -432,7 +451,7 @@ public class BookCityFragment extends BaseFragment implements View.OnClickListen
                 convertView = new RecyclerView(container.getContext());
 //                convertView = new TextView(container.getContext());
             }
-            // TODO RecyclerView 三排显示
+            //  RecyclerView 三排显示
             FullyGridLayoutManager fullyGridLayoutManager = new FullyGridLayoutManager(getActivity(), 3);
             fullyGridLayoutManager.setOrientation(GridLayoutManager.VERTICAL);
             fullyGridLayoutManager.setSmoothScrollbarEnabled(true);
@@ -445,7 +464,7 @@ public class BookCityFragment extends BaseFragment implements View.OnClickListen
             recyclerView.setLayoutManager(layoutManage);
             recyclerView.addItemDecoration(new GridSpacingItemDecoration(spanCount, spacing, includeEdge));
             // TODO  设置三级书籍 九本
-            BookCityItemAdapter bookCityItemAdapter = new BookCityItemAdapter(getActivity(), books);
+            BookCityItemAdapter bookCityItemAdapter = new BookCityItemAdapter(getActivity(), indicatorList.get(position).getResDocuments());
             recyclerView.setAdapter(bookCityItemAdapter);
             recyclerView.setNestedScrollingEnabled(false);
             return convertView;

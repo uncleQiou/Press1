@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.base.BaseApplication;
+import com.tkbs.chem.press.bean.BookCityResDocument;
 
 import java.util.List;
 
@@ -20,14 +21,14 @@ import java.util.List;
  */
 public class BookCityItemAdapter extends RecyclerView.Adapter<BookCityItemAdapter.ViewHolder> {
     private Context context;
-    private List<String> list;
+    private List<BookCityResDocument> list;
 
-    public BookCityItemAdapter(Context context, List<String> list) {
+    public BookCityItemAdapter(Context context, List<BookCityResDocument> list) {
         this.context = context;
         this.list = list;
     }
 
-    public void setList(List<String> list) {
+    public void setList(List<BookCityResDocument> list) {
         this.list = list;
         notifyDataSetChanged();
     }
@@ -42,7 +43,7 @@ public class BookCityItemAdapter extends RecyclerView.Adapter<BookCityItemAdapte
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.tv_book_name.setText(list.get(position));
+        holder.tv_book_name.setText(list.get(position).getTitle());
         Glide.with(context).load("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1539859348&di=8b469335b1c844071278bde5488ba5f4&imgtype=jpg&er=1&src=http%3A%2F%2Fpic2.ooopic.com%2F13%2F38%2F51%2F47b1OOOPIC37.jpg")
                 .apply(BaseApplication.options)
                 .into(holder.img_book_cover);
@@ -50,7 +51,13 @@ public class BookCityItemAdapter extends RecyclerView.Adapter<BookCityItemAdapte
 
     @Override
     public int getItemCount() {
-        return list.size();
+        int len = list.size();
+        if (len > 9) {
+            return 9;
+        } else {
+
+            return list.size();
+        }
     }
 
     //自定义的ViewHolder，持有每个Item的的所有界面元素
