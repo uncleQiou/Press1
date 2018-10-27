@@ -15,6 +15,11 @@ import com.shizhefei.view.indicator.slidebar.ColorBar;
 import com.shizhefei.view.indicator.transition.OnTransitionTextListener;
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.base.BaseFragment;
+import com.tkbs.chem.press.util.MessageEvent;
+
+import de.greenrobot.event.EventBus;
+import de.greenrobot.event.Subscribe;
+import de.greenrobot.event.ThreadMode;
 
 /**
  * Created by Administrator on 2018/10/16.
@@ -33,6 +38,7 @@ public class SalesmanManageFragment extends BaseFragment {
     @Override
     protected void onCreateViewLazy(Bundle savedInstanceState) {
         super.onCreateViewLazy(savedInstanceState);
+        EventBus.getDefault().register(this);
         setContentView(R.layout.fragment_salesman_manage);
         manage_indicator = (ScrollIndicatorView) findViewById(R.id.manage_indicator);
         manage_viewPager = (ViewPager) findViewById(R.id.manage_viewPager);
@@ -43,6 +49,13 @@ public class SalesmanManageFragment extends BaseFragment {
         manage_viewPager.setOffscreenPageLimit(4);
         indicatorViewPager = new IndicatorViewPager(manage_indicator, manage_viewPager);
         indicatorViewPager.setAdapter(new MyMangerAdapter(getChildFragmentManager()));
+    }
+
+    @Subscribe(threadMode = ThreadMode.MainThread)
+    public void RefreshUi(MessageEvent messageEvent) {
+        if ("Refresh".endsWith(messageEvent.getMessage())) {
+            indicatorViewPager.setAdapter(new MyMangerAdapter(getChildFragmentManager()));
+        }
     }
 
     private class MyMangerAdapter extends IndicatorViewPager.IndicatorFragmentPagerAdapter {

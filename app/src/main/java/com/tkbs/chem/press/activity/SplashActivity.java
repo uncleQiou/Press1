@@ -19,6 +19,7 @@ import com.tkbs.chem.press.base.BaseApplication;
 import com.tkbs.chem.press.bean.HttpResponse;
 import com.tkbs.chem.press.bean.UserBean;
 import com.tkbs.chem.press.net.ApiCallback;
+import com.tkbs.chem.press.util.Config;
 import com.tkbs.chem.press.util.PermissionUtils;
 import com.tkbs.chem.press.util.UiUtils;
 import com.tkbs.chem.press.view.CustomerDialog;
@@ -213,9 +214,10 @@ public class SplashActivity extends BaseActivity {
                         if (model.isStatus()) {
                             UserBean user = model.getData();
                             SharedPreferences.Editor edit = BaseApplication.preferences.edit();
-                            edit.putString("login_name", user.getLogin_name());
-                            edit.putString("PASSWORD", user.getPASSWORD());
-                            edit.putString("nick_name", user.getNick_name());
+                            edit.putString(Config.LOGIN_NAME, user.getLogin_name());
+                            edit.putString(Config.PASSWORD, user.getPASSWORD());
+                            edit.putString(Config.NICK_NAME, user.getNick_name());
+                            edit.putString(Config.REAL_NAME, user.getReal_name());
                             edit.commit();
                             startActivity(new Intent(SplashActivity.this, MainActivity.class));
                             finish();

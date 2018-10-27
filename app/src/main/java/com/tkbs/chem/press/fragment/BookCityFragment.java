@@ -31,6 +31,7 @@ import com.shizhefei.view.indicator.slidebar.ColorBar;
 import com.shizhefei.view.indicator.transition.OnTransitionTextListener;
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.activity.SecondaryClassificationActivity;
+import com.tkbs.chem.press.activity.ThreeClassificActivity;
 import com.tkbs.chem.press.adapter.BookCityItemAdapter;
 import com.tkbs.chem.press.base.BaseApplication;
 import com.tkbs.chem.press.base.BaseFragment;
@@ -40,6 +41,7 @@ import com.tkbs.chem.press.bean.BookCityResultDataList;
 import com.tkbs.chem.press.bean.HttpResponse;
 import com.tkbs.chem.press.net.ApiCallback;
 import com.tkbs.chem.press.util.FullyGridLayoutManager;
+import com.tkbs.chem.press.util.MessageEvent;
 import com.tkbs.chem.press.util.UiUtils;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
@@ -55,6 +57,9 @@ import cn.lemon.view.RefreshRecyclerView;
 import cn.lemon.view.adapter.Action;
 import cn.lemon.view.adapter.BaseViewHolder;
 import cn.lemon.view.adapter.RecyclerAdapter;
+import de.greenrobot.event.EventBus;
+import de.greenrobot.event.Subscribe;
+import de.greenrobot.event.ThreadMode;
 
 
 /**
@@ -103,6 +108,7 @@ public class BookCityFragment extends BaseFragment implements View.OnClickListen
     protected void onCreateViewLazy(Bundle savedInstanceState) {
         super.onCreateViewLazy(savedInstanceState);
         setContentView(R.layout.fragment_book_city);
+        EventBus.getDefault().register(this);
         spacing = getActivity().getResources().getDimensionPixelSize(R.dimen.margin_8dp);
         //添加Header
         inflate = LayoutInflater.from(getApplicationContext());
@@ -178,6 +184,13 @@ public class BookCityFragment extends BaseFragment implements View.OnClickListen
                 .start();
     }
 
+    @Subscribe(threadMode = ThreadMode.MainThread)
+    public void RefreshUi(MessageEvent messageEvent) {
+        if ("Refresh".endsWith(messageEvent.getMessage())) {
+            mRecyclerView.showSwipeRefresh();
+            getBannerData(true);
+        }
+    }
     private class MyLoader extends ImageLoader {
         @Override
         public void displayImage(Context context, Object path, ImageView imageView) {
@@ -366,7 +379,7 @@ public class BookCityFragment extends BaseFragment implements View.OnClickListen
         }
 
         @Override
-        public void setData(BookCityDataBean data) {
+        public void setData(final BookCityDataBean data) {
             super.setData(data);
             tv_title.setText(data.getResCatagory().getTitle());
             fragment_bookcity_indicator.setScrollBar(new ColorBar(getApplicationContext(), getResources().getColor(R.color.tab_main_text_2), 2));
@@ -386,7 +399,20 @@ public class BookCityFragment extends BaseFragment implements View.OnClickListen
             ll_book_city_more.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    getActivity().startActivity(new Intent(getActivity(), SecondaryClassificationActivity.class));
+                    int subexists = data.getResCatagory().getSubexists();
+                    // TODO 分类是否含有子节点 有：二级页面 无：三级页面
+                    if (subexists == 1) {
+                        Intent intent = new Intent(getActivity(), SecondaryClassificationActivity.class);
+                        intent.putExtra("guid", data.getResCatagory().getGuid());
+                        intent.putExtra("title", data.getResCatagory().getTitle());
+                        getActivity().startActivity(intent);
+                    } else {
+                        Intent intent1 = new Intent(getActivity(), ThreeClassificActivity.class);
+                        intent1.putExtra("guid", data.getResCatagory().getGuid());
+                        intent1.putExtra("title", data.getResCatagory().getTitle());
+                        getActivity().startActivity(intent1);
+                    }
+
                 }
             });
 

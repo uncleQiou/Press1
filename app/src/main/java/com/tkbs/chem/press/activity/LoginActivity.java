@@ -17,6 +17,7 @@ import com.tkbs.chem.press.bean.HttpResponse;
 import com.tkbs.chem.press.bean.LoginRequestBen;
 import com.tkbs.chem.press.bean.UserBean;
 import com.tkbs.chem.press.net.ApiCallback;
+import com.tkbs.chem.press.util.Config;
 import com.tkbs.chem.press.util.MessageEvent;
 import com.tkbs.chem.press.util.UiUtils;
 
@@ -227,9 +228,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 if (model.isStatus()) {
                     UserBean user = model.getData();
                     SharedPreferences.Editor edit = BaseApplication.preferences.edit();
-                    edit.putString("login_name", user.getLogin_name());
-                    edit.putString("PASSWORD", user.getPASSWORD());
-                    edit.putString("nick_name", user.getNick_name());
+                    edit.putString(Config.LOGIN_NAME, user.getLogin_name());
+                    edit.putString(Config.PASSWORD, user.getPASSWORD());
+                    edit.putString(Config.NICK_NAME, user.getNick_name());
+                    edit.putString(Config.REAL_NAME, user.getReal_name());
+                    edit.putString(Config.WORKPHONE, user.getWorkphone());
+                    edit.putString(Config.PHONE, user.getPhone());
                     edit.commit();
                     // TODO refresh MainActivity
                     EventBus.getDefault().post(new MessageEvent("Refresh"));

@@ -34,6 +34,15 @@ public class BookCityResCatagory {
     private String documentCatagoryGuid;
     private String code;
     private String title;
+    private int subexists;
+
+    public int getSubexists() {
+        return subexists;
+    }
+
+    public void setSubexists(int subexists) {
+        this.subexists = subexists;
+    }
 
     public int getId() {
         return id;

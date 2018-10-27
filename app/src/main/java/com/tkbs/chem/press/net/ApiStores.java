@@ -3,7 +3,10 @@ package com.tkbs.chem.press.net;
 
 import com.tkbs.chem.press.bean.BannerDataBean;
 import com.tkbs.chem.press.bean.BookCityDataBean;
+import com.tkbs.chem.press.bean.BookCityResCatagory;
 import com.tkbs.chem.press.bean.HttpResponse;
+import com.tkbs.chem.press.bean.SecondClassifyDataBean;
+import com.tkbs.chem.press.bean.ThreeClassifyDataBena;
 import com.tkbs.chem.press.bean.UserBean;
 
 import java.util.ArrayList;
@@ -53,6 +56,39 @@ public interface ApiStores {
      */
     @POST("resDocument/index")
     Observable<HttpResponse<ArrayList<BookCityDataBean>>> BookCityData();
+
+    /**
+     * 书城二级页面Indicator数据
+     *
+     * @return
+     */
+    @POST("resDocument/customizationTwo{guid}")
+    Observable<HttpResponse<ArrayList<BookCityResCatagory>>> SecondClassificIndicator(@Path("guid") String guid);
+
+    /**
+     * 书城二级页面
+     *
+     * @param guid
+     * @return
+     */
+    @POST("resDocument/customization{guid}")
+    Observable<HttpResponse<ArrayList<SecondClassifyDataBean>>> SecondClassifyData(@Path("guid") String guid);
+
+    /**
+     * 书城三级页面
+     *
+     * @param guid
+     * @return
+     */
+    @POST("resDocument/customizationFour{guid}")
+    Observable<HttpResponse<ArrayList<ThreeClassifyDataBena>>> ThreeClassifyData(@Path("guid") String guid);
+
+    /**
+     * 我的定制
+     * @return
+     */
+    @POST("resDocument/interestIndex")
+    Observable<HttpResponse<ArrayList<ThreeClassifyDataBena>>> MyCustomData();
 
     /*************************************************************************************************************/
 

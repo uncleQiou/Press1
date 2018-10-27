@@ -17,6 +17,7 @@ import com.shizhefei.fragment.LazyFragment;
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.base.BaseApplication;
 import com.tkbs.chem.press.base.BaseFragment;
+import com.tkbs.chem.press.util.MessageEvent;
 
 import java.util.List;
 
@@ -24,6 +25,9 @@ import cn.lemon.view.RefreshRecyclerView;
 import cn.lemon.view.adapter.Action;
 import cn.lemon.view.adapter.BaseViewHolder;
 import cn.lemon.view.adapter.RecyclerAdapter;
+import de.greenrobot.event.EventBus;
+import de.greenrobot.event.Subscribe;
+import de.greenrobot.event.ThreadMode;
 
 /**
  * Created by Administrator on 2018/10/12.
@@ -57,6 +61,7 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
     protected void onCreateViewLazy(Bundle savedInstanceState) {
         super.onCreateViewLazy(savedInstanceState);
         setContentView(R.layout.fragment_bookshelf_item);
+        EventBus.getDefault().register(this);
         ll_sort_edit = (LinearLayout) findViewById(R.id.ll_sort_edit);
         ll_sort_edit.setOnClickListener(this);
         ll_bottom_edit = (LinearLayout) findViewById(R.id.ll_bottom_edit);
@@ -96,6 +101,14 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
         String values = getArguments().getString("111");
         recycler_bookshelf.getNoMoreView().setText(values);
 //        recycler_bookshelf.getNoMoreView().setText("没有更多数据了");
+    }
+
+    @Subscribe(threadMode = ThreadMode.MainThread)
+    public void RefreshUi(MessageEvent messageEvent) {
+        if ("Refresh".endsWith(messageEvent.getMessage())) {
+            recycler_bookshelf.showSwipeRefresh();
+            getData(true);
+        }
     }
 
     public void getData(final boolean isRefresh) {

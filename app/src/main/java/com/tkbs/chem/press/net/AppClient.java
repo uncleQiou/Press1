@@ -7,6 +7,7 @@ import com.tkbs.chem.press.util.Config;
 import com.tkbs.chem.press.util.UiUtils;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -23,6 +24,10 @@ public class AppClient {
     public static Retrofit retrofit() {
         if (mRetrofit == null) {
             OkHttpClient.Builder builder = new OkHttpClient.Builder();
+            // 设置超时
+            builder.connectTimeout(30, TimeUnit.SECONDS);
+            builder.readTimeout(30, TimeUnit.SECONDS);
+            builder.writeTimeout(30, TimeUnit.SECONDS);
             builder.addInterceptor(new Interceptor() {
                 @Override
                 public Response intercept(Chain chain) throws IOException {
@@ -49,6 +54,7 @@ public class AppClient {
 //                builder.addInterceptor(loggingInterceptor);
 //            }
             OkHttpClient okHttpClient = builder.build();
+
             mRetrofit = new Retrofit.Builder()
                     .baseUrl(Config.API_SERVER)
                     .addConverterFactory(GsonConverterFactory.create())

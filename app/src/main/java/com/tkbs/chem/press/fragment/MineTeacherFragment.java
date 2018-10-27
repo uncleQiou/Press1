@@ -16,6 +16,12 @@ import com.tkbs.chem.press.activity.MyOpinionActivity;
 import com.tkbs.chem.press.activity.SettingActivity;
 import com.tkbs.chem.press.base.BaseFragment;
 import com.tkbs.chem.press.myinterface.HomeInterface;
+import com.tkbs.chem.press.util.Config;
+import com.tkbs.chem.press.util.MessageEvent;
+
+import de.greenrobot.event.EventBus;
+import de.greenrobot.event.Subscribe;
+import de.greenrobot.event.ThreadMode;
 
 /**
  * Created by Administrator on 2018/10/13.
@@ -40,6 +46,7 @@ public class MineTeacherFragment extends BaseFragment implements View.OnClickLis
     protected void onCreateViewLazy(Bundle savedInstanceState) {
         super.onCreateViewLazy(savedInstanceState);
         setContentView(R.layout.fragment_mine_teacher);
+        EventBus.getDefault().register(this);
         ll_personal_information = (LinearLayout) findViewById(R.id.ll_personal_information);
         ll_personal_information.setOnClickListener(this);
         ll_my_apply = (LinearLayout) findViewById(R.id.ll_my_apply);
@@ -54,6 +61,26 @@ public class MineTeacherFragment extends BaseFragment implements View.OnClickLis
         tv_phone = (TextView) findViewById(R.id.tv_phone);
         img_set = (ImageView) findViewById(R.id.img_set);
         img_set.setOnClickListener(this);
+        setUserData();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MainThread)
+    public void RefreshUi(MessageEvent messageEvent) {
+        if ("Refresh".endsWith(messageEvent.getMessage())) {
+            setUserData();
+        }
+    }
+
+    /**
+     * 设置用户数据
+     */
+    private void setUserData() {
+        String name = preference.getString(Config.NICK_NAME, "");
+        if (name.length() == 0) {
+            name = preference.getString(Config.REAL_NAME, "");
+        }
+        tv_my_name.setText(name);
+        tv_phone.setText(preference.getString(Config.PHONE, ""));
     }
 
     @Override

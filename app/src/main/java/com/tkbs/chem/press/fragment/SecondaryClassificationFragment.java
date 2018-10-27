@@ -18,6 +18,12 @@ import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.activity.ThreeClassificActivity;
 import com.tkbs.chem.press.base.BaseApplication;
 import com.tkbs.chem.press.base.BaseFragment;
+import com.tkbs.chem.press.bean.BookCityResCatagory;
+import com.tkbs.chem.press.bean.HttpResponse;
+import com.tkbs.chem.press.bean.SecondClassifyDataBean;
+import com.tkbs.chem.press.net.ApiCallback;
+
+import java.util.ArrayList;
 
 import cn.lemon.view.RefreshRecyclerView;
 import cn.lemon.view.adapter.Action;
@@ -33,6 +39,7 @@ public class SecondaryClassificationFragment extends BaseFragment {
     private int page = 1;
     private Handler mHandler;
     private MyAdapter myAdapter;
+    private String guid;
 
     @Override
     protected View getPreviewLayout(LayoutInflater inflater, ViewGroup container) {
@@ -44,6 +51,7 @@ public class SecondaryClassificationFragment extends BaseFragment {
         super.onCreateViewLazy(savedInstanceState);
 
         setContentView(R.layout.fragment_secondary_classification);
+        guid = getArguments().getString("Type");
         mHandler = new Handler();
         myAdapter = new MyAdapter(getActivity());
         recycler = (RefreshRecyclerView) findViewById(R.id.recycler);
@@ -54,14 +62,14 @@ public class SecondaryClassificationFragment extends BaseFragment {
             @Override
             public void onAction() {
                 page = 1;
-                getData(true);
+                getClassifyData(true);
             }
         });
         recycler.setLoadMoreAction(new Action() {
             @Override
             public void onAction() {
                 page++;
-                getData(false);
+                getClassifyData(false);
 
             }
         });
@@ -70,12 +78,51 @@ public class SecondaryClassificationFragment extends BaseFragment {
             @Override
             public void run() {
                 recycler.showSwipeRefresh();
-                getData(true);
+                getClassifyData(true);
             }
         });
-        String values = getArguments().getString("111");
-        recycler.getNoMoreView().setText(values);
-//        recycler_bookshelf.getNoMoreView().setText("没有更多数据了");
+//        String values = getArguments().getString("111");
+//        recycler.getNoMoreView().setText(values);
+        recycler.getNoMoreView().setText("没有更多数据了");
+    }
+
+    private void getClassifyData(final boolean isRefresh) {
+        showProgressDialog();
+        addSubscription(apiStores.SecondClassifyData(guid), new ApiCallback<HttpResponse<ArrayList<SecondClassifyDataBean>>>() {
+            @Override
+            public void onSuccess(HttpResponse<ArrayList<SecondClassifyDataBean>> model) {
+                if (model.isStatus()) {
+                    if (isRefresh) {
+                        page = 1;
+                        myAdapter.clear();
+                        myAdapter.addAll(model.getData());
+                        recycler.dismissSwipeRefresh();
+                        recycler.getRecyclerView().scrollToPosition(0);
+
+                    } else {
+                        myAdapter.addAll(model.getData());
+                    }
+                    if (model.getData().size() < 10) {
+                        recycler.showNoMore();
+                    }
+                } else {
+                    recycler.dismissSwipeRefresh();
+                    toastShow(model.getErrorDescription());
+                }
+
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                toastShow(msg);
+            }
+
+            @Override
+            public void onFinish() {
+                dismissProgressDialog();
+            }
+        });
+
     }
 
     public void getData(final boolean isRefresh) {
@@ -85,12 +132,12 @@ public class SecondaryClassificationFragment extends BaseFragment {
                 if (isRefresh) {
                     page = 1;
                     myAdapter.clear();
-                    myAdapter.addAll(getTestData());
+//                    myAdapter.addAll(getTestData());
                     recycler.dismissSwipeRefresh();
                     recycler.getRecyclerView().scrollToPosition(0);
                     recycler.showNoMore();
                 } else {
-                    myAdapter.addAll(getTestData());
+//                    myAdapter.addAll(getTestData());
                     if (page >= 3) {
                         recycler.showNoMore();
                     }
@@ -112,7 +159,7 @@ public class SecondaryClassificationFragment extends BaseFragment {
         };
     }
 
-    class MyAdapter extends RecyclerAdapter<SecondaryClassificationData> {
+    class MyAdapter extends RecyclerAdapter<SecondClassifyDataBean> {
         private Context context;
         /**
          * 实现单选，保存当前选中的position
@@ -125,12 +172,12 @@ public class SecondaryClassificationFragment extends BaseFragment {
         }
 
         @Override
-        public BaseViewHolder<SecondaryClassificationData> onCreateBaseViewHolder(ViewGroup parent, int viewType) {
+        public BaseViewHolder<SecondClassifyDataBean> onCreateBaseViewHolder(ViewGroup parent, int viewType) {
             return new MyHolder(parent);
         }
 
 
-        class MyHolder extends BaseViewHolder<SecondaryClassificationData> {
+        class MyHolder extends BaseViewHolder<SecondClassifyDataBean> {
 
             private LinearLayout ll_more;
             private TextView tv_title;
@@ -159,12 +206,12 @@ public class SecondaryClassificationFragment extends BaseFragment {
             }
 
             @Override
-            public void setData(SecondaryClassificationData data) {
+            public void setData(final SecondClassifyDataBean data) {
                 super.setData(data);
-                tv_title.setText(data.getName());
-                tv_book_name1.setText("第一本书第一本书第一本书第一本书第一本书第一本书第一本书");
-                tv_book_name2.setText("第二本书");
-                tv_book_name3.setText("第三本书");
+                tv_title.setText(data.getResCatagory().getTitle());
+                tv_book_name1.setText(data.getResDocumentList().get(0).getTitle());
+                tv_book_name2.setText(data.getResDocumentList().get(1).getTitle());
+                tv_book_name3.setText(data.getResDocumentList().get(2).getTitle());
                 Glide.with(context).load("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1539859348&di=8b469335b1c844071278bde5488ba5f4&imgtype=jpg&er=1&src=http%3A%2F%2Fpic2.ooopic.com%2F13%2F38%2F51%2F47b1OOOPIC37.jpg")
                         .apply(BaseApplication.options)
                         .into(img_book_cover1);
@@ -177,14 +224,17 @@ public class SecondaryClassificationFragment extends BaseFragment {
                 ll_more.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        getActivity().startActivity(new Intent(getActivity(), ThreeClassificActivity.class));
+                        Intent intent = new Intent(getActivity(), ThreeClassificActivity.class);
+                        intent.putExtra("guid", data.getResCatagory().getGuid());
+                        intent.putExtra("title", data.getResCatagory().getTitle());
+                        getActivity().startActivity(intent);
                     }
                 });
 
             }
 
             @Override
-            public void onItemViewClick(SecondaryClassificationData data) {
+            public void onItemViewClick(SecondClassifyDataBean data) {
                 super.onItemViewClick(data);
 
             }

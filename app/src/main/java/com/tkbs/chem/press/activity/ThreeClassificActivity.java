@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.support.v7.widget.GridLayoutManager;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -14,6 +15,12 @@ import com.bumptech.glide.Glide;
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.base.BaseActivity;
 import com.tkbs.chem.press.base.BaseApplication;
+import com.tkbs.chem.press.bean.HttpResponse;
+import com.tkbs.chem.press.bean.SecondClassifyDataBean;
+import com.tkbs.chem.press.bean.ThreeClassifyDataBena;
+import com.tkbs.chem.press.net.ApiCallback;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -59,6 +66,10 @@ public class ThreeClassificActivity extends BaseActivity implements View.OnClick
     private int page = 1;
     private Handler mHandler;
     private MyAdapter myAdapter;
+    private String guid;
+    private String titleStr;
+    private int disType = 2;
+    private ArrayList<ThreeClassifyDataBena> bookDatas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +83,8 @@ public class ThreeClassificActivity extends BaseActivity implements View.OnClick
 
     @Override
     protected void initdata() {
+        guid = getIntent().getStringExtra("guid");
+        titleStr = getIntent().getStringExtra("title");
         mHandler = new Handler();
         myAdapter = new MyAdapter(this);
         recycler = (RefreshRecyclerView) findViewById(R.id.recycler);
@@ -82,14 +95,14 @@ public class ThreeClassificActivity extends BaseActivity implements View.OnClick
             @Override
             public void onAction() {
                 page = 1;
-                getData(true);
+                getClassifyData(true);
             }
         });
         recycler.setLoadMoreAction(new Action() {
             @Override
             public void onAction() {
                 page++;
-                getData(false);
+                getClassifyData(false);
 
             }
         });
@@ -98,7 +111,7 @@ public class ThreeClassificActivity extends BaseActivity implements View.OnClick
             @Override
             public void run() {
                 recycler.showSwipeRefresh();
-                getData(true);
+                getClassifyData(true);
             }
         });
         recycler.getNoMoreView().setText("没有更多数据了");
@@ -106,7 +119,48 @@ public class ThreeClassificActivity extends BaseActivity implements View.OnClick
 
     @Override
     protected void initTitle() {
-        tvTitle.setText("ThreeClassificActivity");
+        tvTitle.setText(titleStr);
+    }
+
+    private void getClassifyData(final boolean isRefresh) {
+        showProgressDialog();
+        addSubscription(apiStores.ThreeClassifyData(guid), new ApiCallback<HttpResponse<ArrayList<ThreeClassifyDataBena>>>() {
+            @Override
+            public void onSuccess(HttpResponse<ArrayList<ThreeClassifyDataBena>> model) {
+                if (model.isStatus()) {
+                    if (isRefresh) {
+                        page = 1;
+                        bookDatas = model.getData();
+                        myAdapter.clear();
+                        myAdapter.addAll(bookDatas);
+                        recycler.dismissSwipeRefresh();
+                        recycler.getRecyclerView().scrollToPosition(0);
+
+                    } else {
+                        bookDatas.addAll(model.getData());
+                        myAdapter.addAll(model.getData());
+                    }
+                    if (model.getData().size() < 10) {
+                        recycler.showNoMore();
+                    }
+                } else {
+                    recycler.dismissSwipeRefresh();
+                    toastShow(model.getErrorDescription());
+                }
+
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                toastShow(msg);
+            }
+
+            @Override
+            public void onFinish() {
+                dismissProgressDialog();
+            }
+        });
+
     }
 
     public void getData(final boolean isRefresh) {
@@ -116,12 +170,12 @@ public class ThreeClassificActivity extends BaseActivity implements View.OnClick
                 if (isRefresh) {
                     page = 1;
                     myAdapter.clear();
-                    myAdapter.addAll(getTestData());
+//                    myAdapter.addAll(getTestData());
                     recycler.dismissSwipeRefresh();
                     recycler.getRecyclerView().scrollToPosition(0);
                     recycler.showNoMore();
                 } else {
-                    myAdapter.addAll(getTestData());
+//                    myAdapter.addAll(getTestData());
                     if (page >= 3) {
                         recycler.showNoMore();
                     }
@@ -155,19 +209,41 @@ public class ThreeClassificActivity extends BaseActivity implements View.OnClick
         };
     }
 
-    @OnClick({R.id.back})
+    @OnClick({R.id.back, R.id.img_sort_edit})
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.back:
                 finish();
                 break;
+            case R.id.img_sort_edit:
+                toastShow("显示方式");
+                if (1 == disType) {
+                    disType = 2;
+                    imgSortEdit.setImageResource(R.mipmap.customized_btn_list);
+                    myAdapter = new MyAdapter(this);
+                    myAdapter.clear();
+                    myAdapter.addAll(bookDatas);
+                    recycler.setLayoutManager(new GridLayoutManager(this, 3));
+                    recycler.setAdapter(myAdapter);
+                    recycler.showNoMore();
+                } else {
+                    disType = 1;
+                    imgSortEdit.setImageResource(R.mipmap.customized_btn_list_switching);
+                    myAdapter = new MyAdapter(this);
+                    myAdapter.clear();
+                    myAdapter.addAll(bookDatas);
+                    recycler.setLayoutManager(new GridLayoutManager(this, 1));
+                    recycler.setAdapter(myAdapter);
+                    recycler.showNoMore();
+                }
+                break;
             default:
                 break;
         }
     }
 
-    class MyAdapter extends RecyclerAdapter<ThreeClassificData> {
+    class MyAdapter extends RecyclerAdapter<ThreeClassifyDataBena> {
         private Context context;
         /**
          * 实现单选，保存当前选中的position
@@ -180,12 +256,17 @@ public class ThreeClassificActivity extends BaseActivity implements View.OnClick
         }
 
         @Override
-        public BaseViewHolder<ThreeClassificData> onCreateBaseViewHolder(ViewGroup parent, int viewType) {
-            return new MyHolder(parent);
+        public BaseViewHolder<ThreeClassifyDataBena> onCreateBaseViewHolder(ViewGroup parent, int viewType) {
+
+            if (1 == disType) {
+                return new MyCustomItemHolder(parent);
+            } else {
+                return new MyHolder(parent);
+            }
         }
 
 
-        class MyHolder extends BaseViewHolder<ThreeClassificData> {
+        class MyHolder extends BaseViewHolder<ThreeClassifyDataBena> {
 
             private ImageView img_book_cover;
             private TextView tv_book_name;
@@ -203,9 +284,9 @@ public class ThreeClassificActivity extends BaseActivity implements View.OnClick
             }
 
             @Override
-            public void setData(ThreeClassificData data) {
+            public void setData(ThreeClassifyDataBena data) {
                 super.setData(data);
-                tv_book_name.setText(data.getName());
+                tv_book_name.setText(data.getTitle());
                 Glide.with(context).load("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1539859348&di=8b469335b1c844071278bde5488ba5f4&imgtype=jpg&er=1&src=http%3A%2F%2Fpic2.ooopic.com%2F13%2F38%2F51%2F47b1OOOPIC37.jpg")
                         .apply(BaseApplication.options)
                         .into(img_book_cover);
@@ -213,12 +294,57 @@ public class ThreeClassificActivity extends BaseActivity implements View.OnClick
             }
 
             @Override
-            public void onItemViewClick(ThreeClassificData data) {
+            public void onItemViewClick(ThreeClassifyDataBena data) {
                 super.onItemViewClick(data);
 
             }
 
 
+        }
+
+        class MyCustomItemHolder extends BaseViewHolder<ThreeClassifyDataBena> {
+
+            private CheckBox cb_select_item;
+            private TextView tv_book_name;
+            private TextView tv_book_page;
+            private TextView tv_book_endtime;
+            private TextView tv_buy_time;
+            private ImageView bookshelf_cover;
+
+            public MyCustomItemHolder(ViewGroup parent) {
+                super(parent, R.layout.item_bookshelf);
+            }
+
+            @Override
+            public void onInitializeView() {
+                super.onInitializeView();
+                cb_select_item = findViewById(R.id.cb_select_item);
+                tv_book_name = findViewById(R.id.tv_book_name);
+                tv_book_page = findViewById(R.id.tv_book_page);
+                tv_buy_time = findViewById(R.id.tv_buy_time);
+                tv_book_endtime = findViewById(R.id.tv_book_endtime);
+                bookshelf_cover = findViewById(R.id.bookshelf_cover);
+            }
+
+            @Override
+            public void setData(ThreeClassifyDataBena data) {
+                super.setData(data);
+                tv_book_name.setText(data.getTitle());
+                tv_buy_time.setVisibility(View.GONE);
+                cb_select_item.setVisibility(View.GONE);
+                tv_book_page.setText("￥" + data.getPrice());
+                tv_book_endtime.setText(data.getAuthor());
+                Glide.with(ThreeClassificActivity.this).load("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1539859348&di=8b469335b1c844071278bde5488ba5f4&imgtype=jpg&er=1&src=http%3A%2F%2Fpic2.ooopic.com%2F13%2F38%2F51%2F47b1OOOPIC37.jpg")
+                        .apply(BaseApplication.options)
+                        .into(bookshelf_cover);
+
+            }
+
+            @Override
+            public void onItemViewClick(ThreeClassifyDataBena data) {
+                super.onItemViewClick(data);
+
+            }
         }
 
 

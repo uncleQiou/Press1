@@ -13,11 +13,15 @@ import android.widget.TextView;
 import com.shizhefei.fragment.LazyFragment;
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.base.BaseFragment;
+import com.tkbs.chem.press.util.MessageEvent;
 
 import cn.lemon.view.RefreshRecyclerView;
 import cn.lemon.view.adapter.Action;
 import cn.lemon.view.adapter.BaseViewHolder;
 import cn.lemon.view.adapter.RecyclerAdapter;
+import de.greenrobot.event.EventBus;
+import de.greenrobot.event.Subscribe;
+import de.greenrobot.event.ThreadMode;
 
 /**
  * Created by Administrator on 2018/10/12.
@@ -28,6 +32,7 @@ public class DiscoverFragment extends BaseFragment {
     private Handler mHandler;
 
     private DiscoverAdapter discoverAdapter;
+
     @Override
     protected View getPreviewLayout(LayoutInflater inflater, ViewGroup container) {
         return inflater.inflate(R.layout.layout_preview, container, false);
@@ -37,6 +42,7 @@ public class DiscoverFragment extends BaseFragment {
     protected void onCreateViewLazy(Bundle savedInstanceState) {
         super.onCreateViewLazy(savedInstanceState);
         setContentView(R.layout.fragment_discover);
+        EventBus.getDefault().register(this);
         mHandler = new Handler();
         discoverAdapter = new DiscoverAdapter(getActivity());
         recycler_discover = (RefreshRecyclerView) findViewById(R.id.recycler_discover);
@@ -67,6 +73,14 @@ public class DiscoverFragment extends BaseFragment {
             }
         });
         recycler_discover.getNoMoreView().setText(R.string.no_more_data);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MainThread)
+    public void RefreshUi(MessageEvent messageEvent) {
+        if ("Refresh".endsWith(messageEvent.getMessage())) {
+            recycler_discover.showSwipeRefresh();
+            getData(true);
+        }
     }
 
     public void getData(final boolean isRefresh) {

@@ -77,7 +77,6 @@ public class DialogApprovalBook extends Dialog implements AdapterView.OnItemClic
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
 
         init();
@@ -151,7 +150,6 @@ public class DialogApprovalBook extends Dialog implements AdapterView.OnItemClic
     private class clickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            // TODO Auto-generated method stub
             int id = v.getId();
             switch (id) {
                 case R.id.tv_via:

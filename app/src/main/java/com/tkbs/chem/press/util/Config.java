@@ -9,7 +9,11 @@ public class Config {
     /**
      * Zmy
      */
-    public static String API_SERVER = "http://192.168.1.158:8281/app/";
+//    public static String API_SERVER = "http://192.168.1.158:8281/app/";
+    /**
+     * 251
+     */
+    public static String API_SERVER = "http://192.168.1.251:8281/app/";
 
 
     /**
@@ -35,4 +39,14 @@ public class Config {
      * 保存搜索的的值
      */
     public static final String SAVEDTAB = "savedTab";
+    /**
+     * 用户信息保存Key
+     */
+    public static final String LOGIN_NAME = "login_name";
+    public static final String PASSWORD = "PASSWORD";
+    public static final String NICK_NAME = "nick_name";
+    public static final String REAL_NAME = "real_name";
+    public static final String WORKPHONE = "workphone";
+    public static final String PHONE = "phone";
+
 }

@@ -16,6 +16,11 @@ import com.bumptech.glide.Glide;
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.base.BaseActivity;
 import com.tkbs.chem.press.base.BaseApplication;
+import com.tkbs.chem.press.bean.HttpResponse;
+import com.tkbs.chem.press.bean.ThreeClassifyDataBena;
+import com.tkbs.chem.press.net.ApiCallback;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -47,6 +52,7 @@ public class MyCustomizedActivity extends BaseActivity implements View.OnClickLi
 
     private MyCustomItemAdapter myAdapter;
     private int disType = 1;
+    private ArrayList<ThreeClassifyDataBena> bookDatas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,14 +76,14 @@ public class MyCustomizedActivity extends BaseActivity implements View.OnClickLi
             @Override
             public void onAction() {
                 page = 1;
-                getData(true);
+                getCustomData(true);
             }
         });
         recycler.setLoadMoreAction(new Action() {
             @Override
             public void onAction() {
                 page++;
-                getData(false);
+                getCustomData(false);
 
             }
         });
@@ -86,11 +92,51 @@ public class MyCustomizedActivity extends BaseActivity implements View.OnClickLi
             @Override
             public void run() {
                 recycler.showSwipeRefresh();
-                getData(true);
+                getCustomData(true);
             }
         });
         recycler.getNoMoreView().setText("没有更多数据了");
 
+    }
+
+    private void getCustomData(final boolean isRefresh) {
+        showProgressDialog();
+        addSubscription(apiStores.MyCustomData(), new ApiCallback<HttpResponse<ArrayList<ThreeClassifyDataBena>>>() {
+            @Override
+            public void onSuccess(HttpResponse<ArrayList<ThreeClassifyDataBena>> model) {
+                if (model.isStatus()) {
+                    if (isRefresh) {
+                        page = 1;
+                        bookDatas = model.getData();
+                        myAdapter.clear();
+                        myAdapter.addAll(bookDatas);
+                        recycler.dismissSwipeRefresh();
+                        recycler.getRecyclerView().scrollToPosition(0);
+
+                    } else {
+                        bookDatas.addAll(model.getData());
+                        myAdapter.addAll(model.getData());
+                    }
+                    if (model.getData().size() < 10) {
+                        recycler.showNoMore();
+                    }
+                } else {
+                    recycler.dismissSwipeRefresh();
+                    toastShow(model.getErrorDescription());
+                }
+
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                toastShow(msg);
+            }
+
+            @Override
+            public void onFinish() {
+                dismissProgressDialog();
+            }
+        });
     }
 
     public void getData(final boolean isRefresh) {
@@ -100,12 +146,12 @@ public class MyCustomizedActivity extends BaseActivity implements View.OnClickLi
                 if (isRefresh) {
                     page = 1;
                     myAdapter.clear();
-                    myAdapter.addAll(getTestData());
+//                    myAdapter.addAll(getTestData());
                     recycler.dismissSwipeRefresh();
                     recycler.getRecyclerView().scrollToPosition(0);
                     recycler.showNoMore();
                 } else {
-                    myAdapter.addAll(getTestData());
+//                    myAdapter.addAll(getTestData());
                     if (page >= 3) {
                         recycler.showNoMore();
                     }
@@ -132,7 +178,7 @@ public class MyCustomizedActivity extends BaseActivity implements View.OnClickLi
         title.setText(R.string.my_custom);
     }
 
-    @OnClick({R.id.back, R.id.ll_search,R.id.img_display_way,})
+    @OnClick({R.id.back, R.id.ll_search, R.id.img_display_way,})
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -149,15 +195,16 @@ public class MyCustomizedActivity extends BaseActivity implements View.OnClickLi
                     imgDisplayWay.setImageResource(R.mipmap.customized_btn_list);
                     myAdapter = new MyCustomItemAdapter(this);
                     myAdapter.clear();
-                    myAdapter.addAll(getTestData());
+                    myAdapter.addAll(bookDatas);
                     recycler.setLayoutManager(new GridLayoutManager(this, 3));
                     recycler.setAdapter(myAdapter);
                     recycler.showNoMore();
                 } else {
                     disType = 1;
-                    imgDisplayWay.setImageResource(R.mipmap.customized_btn_list_switching);myAdapter = new MyCustomItemAdapter(this);
+                    imgDisplayWay.setImageResource(R.mipmap.customized_btn_list_switching);
+                    myAdapter = new MyCustomItemAdapter(this);
                     myAdapter.clear();
-                    myAdapter.addAll(getTestData());
+                    myAdapter.addAll(bookDatas);
                     recycler.setLayoutManager(new GridLayoutManager(this, 1));
                     recycler.setAdapter(myAdapter);
                     recycler.showNoMore();
@@ -169,7 +216,7 @@ public class MyCustomizedActivity extends BaseActivity implements View.OnClickLi
         }
     }
 
-    class MyCustomItemAdapter extends RecyclerAdapter<MyCustomItemData> {
+    class MyCustomItemAdapter extends RecyclerAdapter<ThreeClassifyDataBena> {
         private Context context;
         /**
          * 实现单选，保存当前选中的position
@@ -182,7 +229,7 @@ public class MyCustomizedActivity extends BaseActivity implements View.OnClickLi
         }
 
         @Override
-        public BaseViewHolder<MyCustomItemData> onCreateBaseViewHolder(ViewGroup parent, int viewType) {
+        public BaseViewHolder<ThreeClassifyDataBena> onCreateBaseViewHolder(ViewGroup parent, int viewType) {
             if (1 == disType) {
                 return new MyCustomItemHolder(parent);
             } else {
@@ -193,7 +240,7 @@ public class MyCustomizedActivity extends BaseActivity implements View.OnClickLi
 
     }
 
-    class MyCustomItemHolder extends BaseViewHolder<MyCustomItemData> {
+    class MyCustomItemHolder extends BaseViewHolder<ThreeClassifyDataBena> {
 
         private CheckBox cb_select_item;
         private TextView tv_book_name;
@@ -218,13 +265,13 @@ public class MyCustomizedActivity extends BaseActivity implements View.OnClickLi
         }
 
         @Override
-        public void setData(MyCustomItemData data) {
+        public void setData(ThreeClassifyDataBena data) {
             super.setData(data);
-            tv_book_name.setText(data.getName());
+            tv_book_name.setText(data.getTitle());
             tv_buy_time.setVisibility(View.GONE);
             cb_select_item.setVisibility(View.GONE);
-            tv_book_page.setText("页数：100 页");
-            tv_book_endtime.setText("截止时间：永久");
+            tv_book_page.setText("页数：" + data.getTrialPage());
+            tv_book_endtime.setText("截止时间：" + data.getCreateDate());
             Glide.with(MyCustomizedActivity.this).load("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1539859348&di=8b469335b1c844071278bde5488ba5f4&imgtype=jpg&er=1&src=http%3A%2F%2Fpic2.ooopic.com%2F13%2F38%2F51%2F47b1OOOPIC37.jpg")
                     .apply(BaseApplication.options)
                     .into(bookshelf_cover);
@@ -232,13 +279,13 @@ public class MyCustomizedActivity extends BaseActivity implements View.OnClickLi
         }
 
         @Override
-        public void onItemViewClick(MyCustomItemData data) {
+        public void onItemViewClick(ThreeClassifyDataBena data) {
             super.onItemViewClick(data);
 
         }
     }
 
-    class MyCustomItem2Holder extends BaseViewHolder<MyCustomItemData> {
+    class MyCustomItem2Holder extends BaseViewHolder<ThreeClassifyDataBena> {
 
         private TextView tv_book_name;
         public ImageView img_book_cover;
@@ -255,9 +302,9 @@ public class MyCustomizedActivity extends BaseActivity implements View.OnClickLi
         }
 
         @Override
-        public void setData(MyCustomItemData data) {
+        public void setData(ThreeClassifyDataBena data) {
             super.setData(data);
-            tv_book_name.setText(data.getName());
+            tv_book_name.setText(data.getTitle());
             Glide.with(MyCustomizedActivity.this).load("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1539859348&di=8b469335b1c844071278bde5488ba5f4&imgtype=jpg&er=1&src=http%3A%2F%2Fpic2.ooopic.com%2F13%2F38%2F51%2F47b1OOOPIC37.jpg")
                     .apply(BaseApplication.options)
                     .into(img_book_cover);
@@ -265,7 +312,7 @@ public class MyCustomizedActivity extends BaseActivity implements View.OnClickLi
         }
 
         @Override
-        public void onItemViewClick(MyCustomItemData data) {
+        public void onItemViewClick(ThreeClassifyDataBena data) {
             super.onItemViewClick(data);
 
         }

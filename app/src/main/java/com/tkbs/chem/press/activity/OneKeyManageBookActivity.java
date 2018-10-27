@@ -258,14 +258,12 @@ public class OneKeyManageBookActivity extends BaseActivity implements View.OnCli
                         confirmDialog.setClicklistener(new DialogApprovalBook.ClickListenerInterface() {
                             @Override
                             public void doConfirm() {
-                                // TODO Auto-generated method stub
                                 confirmDialog.dismiss();
                                 //toUserHome(context);
                             }
 
                             @Override
                             public void doCancel() {
-                                // TODO Auto-generated method stub
                                 confirmDialog.dismiss();
                             }
                         });

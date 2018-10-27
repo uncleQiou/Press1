@@ -16,9 +16,14 @@ import com.shizhefei.view.indicator.slidebar.ColorBar;
 import com.shizhefei.view.indicator.transition.OnTransitionTextListener;
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.base.BaseActivity;
+import com.tkbs.chem.press.bean.BookCityResCatagory;
+import com.tkbs.chem.press.bean.HttpResponse;
 import com.tkbs.chem.press.fragment.BookShelfItemFragment;
 import com.tkbs.chem.press.fragment.SecondaryClassificationFragment;
 import com.tkbs.chem.press.fragment.TextFragment;
+import com.tkbs.chem.press.net.ApiCallback;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -39,6 +44,9 @@ public class SecondaryClassificationActivity extends BaseActivity implements Vie
     TextView tvTitle;
     private IndicatorViewPager indicatorViewPager;
     private String[] indicators = {"本科", "高职", "中职", "中职", "中小学", "教材综合", "大学", "研究生", "博士", "博士后"};
+    private String guid = "";
+    private String titleStr = "";
+    private ArrayList<BookCityResCatagory> indicatorData;
 
 
     @Override
@@ -55,17 +63,48 @@ public class SecondaryClassificationActivity extends BaseActivity implements Vie
     protected void initdata() {
         int selectColor = getResources().getColor(R.color.hg_app_main_color);
         int unSelectColor = getResources().getColor(R.color.text_main_3);
+        // 获取indicator数据
+        guid = getIntent().getStringExtra("guid");
+        titleStr = getIntent().getStringExtra("title");
+        getIndicatorData();
         viewIndicator.setScrollBar(new ColorBar(getApplicationContext(), getResources().getColor(R.color.hg_app_main_color), 2));
         viewIndicator.setOnTransitionListener(
                 new OnTransitionTextListener().setColor(selectColor, unSelectColor));
         viewViewPager.setOffscreenPageLimit(indicators.length);
         indicatorViewPager = new IndicatorViewPager(viewIndicator, viewViewPager);
-        indicatorViewPager.setAdapter(new MyAdapter(getSupportFragmentManager()));
+//        indicatorViewPager.setAdapter(new MyAdapter(getSupportFragmentManager()));
+    }
+
+    private void getIndicatorData() {
+        showProgressDialog();
+        addSubscription(apiStores.SecondClassificIndicator(guid), new ApiCallback<HttpResponse<ArrayList<BookCityResCatagory>>>() {
+            @Override
+            public void onSuccess(HttpResponse<ArrayList<BookCityResCatagory>> model) {
+                if (model.isStatus()) {
+                    indicatorData = model.getData();
+                    indicatorViewPager.setAdapter(new MyAdapter(getSupportFragmentManager()));
+
+                } else {
+                    toastShow(model.getErrorDescription());
+                }
+
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                toastShow(msg);
+            }
+
+            @Override
+            public void onFinish() {
+                dismissProgressDialog();
+            }
+        });
     }
 
     @Override
     protected void initTitle() {
-        tvTitle.setText("SecondaryClassificationActivity");
+        tvTitle.setText(titleStr);
     }
 
     @OnClick({R.id.back})
@@ -88,7 +127,7 @@ public class SecondaryClassificationActivity extends BaseActivity implements Vie
 
         @Override
         public int getCount() {
-            return indicators.length;
+            return indicatorData.size();
         }
 
         @Override
@@ -98,7 +137,7 @@ public class SecondaryClassificationActivity extends BaseActivity implements Vie
                         .inflate(R.layout.tab_top, container, false);
             }
             TextView textView = (TextView) convertView;
-            textView.setText(indicators[position]);
+            textView.setText(indicatorData.get(position).getTitle());
             return convertView;
         }
 
@@ -107,7 +146,7 @@ public class SecondaryClassificationActivity extends BaseActivity implements Vie
             SecondaryClassificationFragment secondaryClassificationFragment = new SecondaryClassificationFragment();
             Bundle bundle = new Bundle();
             bundle.putString("111", "这是第==" + position);
-            bundle.putInt("Type", position);
+            bundle.putString("Type", indicatorData.get(position).getGuid());
             secondaryClassificationFragment.setArguments(bundle);
             return secondaryClassificationFragment;
 
