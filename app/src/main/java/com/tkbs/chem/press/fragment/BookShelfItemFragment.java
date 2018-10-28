@@ -13,13 +13,19 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.shizhefei.fragment.LazyFragment;
+import com.orhanobut.logger.Logger;
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.base.BaseApplication;
 import com.tkbs.chem.press.base.BaseFragment;
 import com.tkbs.chem.press.util.MessageEvent;
 
+import java.text.Collator;
+import java.text.RuleBasedCollator;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 import cn.lemon.view.RefreshRecyclerView;
 import cn.lemon.view.adapter.Action;
@@ -160,6 +166,7 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
         cb_select = (CheckBox) findViewById(R.id.cb_select);
         tv_delete = (TextView) findViewById(R.id.tv_delete);
         recycler_bookshelf = (RefreshRecyclerView) findViewById(R.id.recycler_bookshelf);
+        tv_sort_book_name.setOnClickListener(this);
     }
 
     @Override
@@ -174,9 +181,34 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
                     ll_bottom_edit.setVisibility(View.VISIBLE);
                 }
                 break;
+            case R.id.tv_sort_book_name:
+                List<BookShelfItemData> tData = new ArrayList<>();
+                BookShelfItemData[] rData = getTestData();
+                for (int i = 0; i < rData.length; i++) {
+                    tData.add(rData[i]);
+                }
+                SortByBookName(tData);
+                for (int i = 0; i < tData.size(); i++) {
+                    Logger.e(tData.get(i).getName());
+                }
+                break;
             default:
                 break;
         }
+    }
+
+    /**
+     * 按书名排序
+     */
+    private void SortByBookName(final List<BookShelfItemData> data) {
+        final RuleBasedCollator collator = (RuleBasedCollator) Collator.getInstance(Locale.CHINA);
+        Collections.sort(data, new Comparator<BookShelfItemData>() {
+            @Override
+            public int compare(BookShelfItemData bookShelfItemData, BookShelfItemData t1) {
+                return collator.compare(bookShelfItemData.getName(),  t1.getName()) < 0 ? -1 : 1;
+            }
+        });
+
     }
 
     class BookShelfItemAdapter extends RecyclerAdapter<BookShelfItemData> {

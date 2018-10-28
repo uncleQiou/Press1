@@ -51,6 +51,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:padding="@dimen/margin_5dp"
+                android:visibility="gone"
                 android:src="@mipmap/bookshelf_icon_up" />
         </LinearLayout>
 

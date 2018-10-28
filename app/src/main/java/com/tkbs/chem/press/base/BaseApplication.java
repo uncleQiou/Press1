@@ -7,6 +7,8 @@ import android.support.multidex.MultiDex;
 
 import com.bumptech.glide.request.RequestOptions;
 import com.mob.MobSDK;
+import com.orhanobut.logger.AndroidLogAdapter;
+import com.orhanobut.logger.Logger;
 import com.tkbs.chem.press.R;
 
 
@@ -38,6 +40,7 @@ public class BaseApplication extends Application {
 
         context = getApplicationContext();
         preferences = getSharedPreferences("press", MODE_PRIVATE);
+        Logger.addLogAdapter(new AndroidLogAdapter());
     }
 
 
