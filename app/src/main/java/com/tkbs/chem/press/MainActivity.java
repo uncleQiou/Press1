@@ -27,6 +27,7 @@ import com.tkbs.chem.press.fragment.MineTeacherFragment;
 import com.tkbs.chem.press.fragment.SalesmanManageFragment;
 import com.tkbs.chem.press.myinterface.HomeInterface;
 import com.tkbs.chem.press.net.ApiCallback;
+import com.tkbs.chem.press.util.Config;
 import com.tkbs.chem.press.util.MessageEvent;
 import com.tkbs.chem.press.util.UiUtils;
 
@@ -97,6 +98,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     protected void initTitle() {
 
     }
+
     @Subscribe(threadMode = ThreadMode.MainThread)
     public void RefreshUi(MessageEvent messageEvent) {
         if ("Refresh".endsWith(messageEvent.getMessage())) {
@@ -122,8 +124,20 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         });
         salesmanManageFragment = new SalesmanManageFragment();
 //        myStudyFragment = new MyStudyFragment();
-        //添加到数组
-        mFragments = new Fragment[]{bookShelfFragment, bookCityFragment, salesmanManageFragment, mineTeacherFragment};
+        // 根据 用户信息 添加到数组
+        /**
+         * 1、超级管理员 2、业务员 3、教师 4、游客
+         */
+        int user_type = preference.getInt(Config.MEMBER_TYPE, 3);
+        if (3 == user_type || 4 == user_type) {
+            // 教师
+            mFragments = new Fragment[]{bookShelfFragment, bookCityFragment, discoverFragment, mineTeacherFragment};
+        } else if (2 == user_type) {
+            // 业务员
+            mFragments = new Fragment[]{bookShelfFragment, bookCityFragment, salesmanManageFragment, mineTeacherFragment};
+
+        }
+
 
         //开启事务
         FragmentTransaction ft =

@@ -9,11 +9,11 @@ public class Config {
     /**
      * Zmy
      */
-    public static String API_SERVER = "http://192.168.1.158:8281/app/";
+//    public static String API_SERVER = "http://192.168.1.158:8281/app/";
     /**
      * 251
      */
-//    public static String API_SERVER = "http://192.168.1.251:8281/app/";
+    public static String API_SERVER = "http://192.168.1.251:8281/app/";
 
 
     /**
@@ -48,5 +48,9 @@ public class Config {
     public static final String REAL_NAME = "real_name";
     public static final String WORKPHONE = "workphone";
     public static final String PHONE = "phone";
+    /**
+     * 1、超级管理员 2、业务员 3、教师 4、游客
+     */
+    public static final String MEMBER_TYPE = "member_type";
 
 }

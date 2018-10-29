@@ -218,6 +218,7 @@ public class SplashActivity extends BaseActivity {
                             edit.putString(Config.PASSWORD, user.getPASSWORD());
                             edit.putString(Config.NICK_NAME, user.getNick_name());
                             edit.putString(Config.REAL_NAME, user.getReal_name());
+                            edit.putInt(Config.MEMBER_TYPE, user.getMember_type());
                             edit.commit();
                             startActivity(new Intent(SplashActivity.this, MainActivity.class));
                             finish();

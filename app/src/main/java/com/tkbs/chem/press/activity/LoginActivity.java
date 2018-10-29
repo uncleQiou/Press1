@@ -234,6 +234,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     edit.putString(Config.REAL_NAME, user.getReal_name());
                     edit.putString(Config.WORKPHONE, user.getWorkphone());
                     edit.putString(Config.PHONE, user.getPhone());
+                    edit.putInt(Config.MEMBER_TYPE, user.getMember_type());
                     edit.commit();
                     // TODO refresh MainActivity
                     EventBus.getDefault().post(new MessageEvent("Refresh"));

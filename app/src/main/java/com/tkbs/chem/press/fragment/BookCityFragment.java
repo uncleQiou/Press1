@@ -189,6 +189,7 @@ public class BookCityFragment extends BaseFragment implements View.OnClickListen
         if ("Refresh".endsWith(messageEvent.getMessage())) {
             mRecyclerView.showSwipeRefresh();
             getBannerData(true);
+            Logger.e("RefreshRefreshRefreshRefreshRefresh");
         }
     }
     private class MyLoader extends ImageLoader {

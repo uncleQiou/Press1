@@ -45,6 +45,15 @@ public class UserBean {
     private String department;
     private String job;
     private String equipment;
+    private int member_type;
+
+    public int getMember_type() {
+        return member_type;
+    }
+
+    public void setMember_type(int member_type) {
+        this.member_type = member_type;
+    }
 
     public String getEquipment() {
         return equipment;
