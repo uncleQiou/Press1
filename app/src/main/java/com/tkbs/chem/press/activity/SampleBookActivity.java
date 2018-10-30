@@ -15,8 +15,14 @@ import com.bumptech.glide.Glide;
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.base.BaseActivity;
 import com.tkbs.chem.press.base.BaseApplication;
+import com.tkbs.chem.press.bean.HttpResponse;
+import com.tkbs.chem.press.bean.SampleBookDetailDataBean;
+import com.tkbs.chem.press.bean.SampleBookManageDataBean;
+import com.tkbs.chem.press.net.ApiCallback;
+import com.tkbs.chem.press.util.TimeUtils;
 import com.tkbs.chem.press.view.DialogApprovalBook;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -71,7 +77,11 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
     RefreshRecyclerView recycler;
     private int page = 1;
     private Handler mHandler;
+    private String guid;
+    private String name;
+    private String job;
 
+    private ArrayList<SampleBookDetailDataBean> bookList;
     private MyAdapter myAdapter;
     private List<String> books = Arrays.asList("你瞅啥", "瞅你咋地", "心灵不在它生活的地方，但在它所爱的地方", "人要正直，因为在其中有雄辩和德行的秘诀，有道德的影响力",
             "我们活着不能与草木同腐，不能醉生梦死，枉度人生，要有所做为。", "人要独立生活，学习有用的技艺",
@@ -91,6 +101,9 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
     @Override
     protected void initdata() {
         mHandler = new Handler();
+        guid = getIntent().getStringExtra("guid");
+        name = getIntent().getStringExtra("name");
+        job = getIntent().getStringExtra("job");
         myAdapter = new MyAdapter(this);
         recycler.setSwipeRefreshColors(0xFF437845, 0xFFE44F98, 0xFF2FAC21);
         recycler.setLayoutManager(new GridLayoutManager(this, 1));
@@ -99,14 +112,14 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
             @Override
             public void onAction() {
                 page = 1;
-                getData(true);
+                getSampleDetail(true);
             }
         });
         recycler.setLoadMoreAction(new Action() {
             @Override
             public void onAction() {
                 page++;
-                getData(false);
+                getSampleDetail(false);
 
             }
         });
@@ -115,7 +128,7 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
             @Override
             public void run() {
                 recycler.showSwipeRefresh();
-                getData(true);
+                getSampleDetail(true);
             }
         });
         recycler.getNoMoreView().setText("没有更多数据了");
@@ -123,6 +136,53 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
 
     @Override
     protected void initTitle() {
+        tvTeacherName.setText(name);
+        tvTeacherSubject.setText(job);
+    }
+
+    /**
+     * 获取详情列表
+     *
+     * @param isRefresh
+     */
+    private void getSampleDetail(final boolean isRefresh) {
+        showProgressDialog();
+        addSubscription(apiStores.SampleBookDetail(guid), new ApiCallback<HttpResponse<ArrayList<SampleBookDetailDataBean>>>() {
+            @Override
+            public void onSuccess(HttpResponse<ArrayList<SampleBookDetailDataBean>> model) {
+                if (model.isStatus()) {
+                    if (isRefresh) {
+                        page = 1;
+                        bookList = model.getData();
+                        myAdapter.clear();
+                        myAdapter.addAll(bookList);
+                        recycler.dismissSwipeRefresh();
+                        recycler.getRecyclerView().scrollToPosition(0);
+
+                    } else {
+                        bookList.addAll(model.getData());
+                        myAdapter.addAll(model.getData());
+                    }
+                    if (model.getData().size() < 10) {
+                        recycler.showNoMore();
+                    }
+                } else {
+                    recycler.dismissSwipeRefresh();
+                    toastShow(model.getErrorDescription());
+                }
+
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                toastShow(msg);
+            }
+
+            @Override
+            public void onFinish() {
+                dismissProgressDialog();
+            }
+        });
 
     }
 
@@ -133,12 +193,12 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
                 if (isRefresh) {
                     page = 1;
                     myAdapter.clear();
-                    myAdapter.addAll(getTestData());
+//                    myAdapter.addAll(getTestData());
                     recycler.dismissSwipeRefresh();
                     recycler.getRecyclerView().scrollToPosition(0);
                     recycler.showNoMore();
                 } else {
-                    myAdapter.addAll(getTestData());
+//                    myAdapter.addAll(getTestData());
                     if (page >= 3) {
                         recycler.showNoMore();
                     }
@@ -175,7 +235,7 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
         }
     }
 
-    class MyAdapter extends RecyclerAdapter<MyDataItemData> {
+    class MyAdapter extends RecyclerAdapter<SampleBookDetailDataBean> {
         private Context context;
         /**
          * 实现单选，保存当前选中的position
@@ -188,12 +248,12 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
         }
 
         @Override
-        public BaseViewHolder<MyDataItemData> onCreateBaseViewHolder(ViewGroup parent, int viewType) {
+        public BaseViewHolder<SampleBookDetailDataBean> onCreateBaseViewHolder(ViewGroup parent, int viewType) {
             return new MyHolder(parent);
         }
 
 
-        class MyHolder extends BaseViewHolder<MyDataItemData> {
+        class MyHolder extends BaseViewHolder<SampleBookDetailDataBean> {
 
             private TextView tv_book_name;
             private TextView tv_book_price;
@@ -218,12 +278,31 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
             }
 
             @Override
-            public void setData(MyDataItemData data) {
+            public void setData(SampleBookDetailDataBean data) {
                 super.setData(data);
-                tv_book_name.setText(data.getName());
-                tv_book_price.setText("价格：40.0Y");
-                tv_apply_time.setText("申请时间：2018年10月15日19:04:53");
-                btn_state.setText(R.string.approval);
+                tv_book_name.setText(data.getTitle());
+                tv_book_price.setText("价格：" + data.getPrice() + "￥");
+                tv_apply_time.setText("申请时间：" + TimeUtils.getTime(data.getOperateDate()));
+                /**
+                 * 0、已审核
+                 * 1、未审核
+                 * 2、未通过
+                 */
+                if (0 == data.getState()) {
+                    img_state.setImageResource(R.mipmap.book_guanli_label_approved);
+                    btn_state.setVisibility(View.GONE);
+
+                } else if (1 == data.getState()) {
+                    img_state.setImageResource(R.mipmap.book_guanli_label_unapproved);
+                    btn_state.setVisibility(View.VISIBLE);
+                    btn_state.setText(R.string.approval);
+
+                } else if (2 == data.getState()) {
+                    img_state.setImageResource(R.mipmap.book_guanli_label_unthrough);
+                    btn_state.setVisibility(View.VISIBLE);
+                    btn_state.setText(R.string.reason);
+                }
+
                 Glide.with(context).load("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1539859348&di=8b469335b1c844071278bde5488ba5f4&imgtype=jpg&er=1&src=http%3A%2F%2Fpic2.ooopic.com%2F13%2F38%2F51%2F47b1OOOPIC37.jpg")
                         .apply(BaseApplication.options)
                         .into(img_cover);
@@ -251,7 +330,7 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
             }
 
             @Override
-            public void onItemViewClick(MyDataItemData data) {
+            public void onItemViewClick(SampleBookDetailDataBean data) {
                 super.onItemViewClick(data);
 
             }

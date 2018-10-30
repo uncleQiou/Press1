@@ -189,7 +189,6 @@ public class BookCityFragment extends BaseFragment implements View.OnClickListen
         if ("Refresh".endsWith(messageEvent.getMessage())) {
             mRecyclerView.showSwipeRefresh();
             getBannerData(true);
-            Logger.e("RefreshRefreshRefreshRefreshRefresh");
         }
     }
     private class MyLoader extends ImageLoader {
@@ -387,7 +386,7 @@ public class BookCityFragment extends BaseFragment implements View.OnClickListen
             fragment_bookcity_indicator.setOnTransitionListener
                     (new OnTransitionTextListener().setColor(getResources().getColor(R.color.tab_main_text_2), Color.GRAY));
             fragment_bookcity_viewPager.setOffscreenPageLimit(4);
-            // TODO 设置三级分类  indicators
+            //  设置三级分类  indicators
             BookCityIndicatorAdapter bookCityIndicatorAdapter = new BookCityIndicatorAdapter();
             List<BookCityResultDataList> resultDataLists = data.getResultDataList();
 //            List<String> list = new ArrayList<>();
@@ -401,7 +400,7 @@ public class BookCityFragment extends BaseFragment implements View.OnClickListen
                 @Override
                 public void onClick(View view) {
                     int subexists = data.getResCatagory().getSubexists();
-                    // TODO 分类是否含有子节点 有：二级页面 无：三级页面
+                    //  分类是否含有子节点 有：二级页面 无：三级页面
                     if (subexists == 1) {
                         Intent intent = new Intent(getActivity(), SecondaryClassificationActivity.class);
                         intent.putExtra("guid", data.getResCatagory().getGuid());
@@ -490,7 +489,7 @@ public class BookCityFragment extends BaseFragment implements View.OnClickListen
             RecyclerView recyclerView = (RecyclerView) convertView;
             recyclerView.setLayoutManager(layoutManage);
             recyclerView.addItemDecoration(new GridSpacingItemDecoration(spanCount, spacing, includeEdge));
-            // TODO  设置三级书籍 九本
+            //   设置三级书籍 九本
             BookCityItemAdapter bookCityItemAdapter = new BookCityItemAdapter(getActivity(), indicatorList.get(position).getResDocuments());
             recyclerView.setAdapter(bookCityItemAdapter);
             recyclerView.setNestedScrollingEnabled(false);

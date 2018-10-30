@@ -5,6 +5,8 @@ import com.tkbs.chem.press.bean.BannerDataBean;
 import com.tkbs.chem.press.bean.BookCityDataBean;
 import com.tkbs.chem.press.bean.BookCityResCatagory;
 import com.tkbs.chem.press.bean.HttpResponse;
+import com.tkbs.chem.press.bean.SampleBookDetailDataBean;
+import com.tkbs.chem.press.bean.SampleBookManageDataBean;
 import com.tkbs.chem.press.bean.SecondClassifyDataBean;
 import com.tkbs.chem.press.bean.ThreeClassifyDataBena;
 import com.tkbs.chem.press.bean.UserBean;
@@ -85,11 +87,23 @@ public interface ApiStores {
 
     /**
      * 我的定制
+     *
      * @return
      */
     @POST("resDocument/interestIndex")
     Observable<HttpResponse<ArrayList<ThreeClassifyDataBena>>> MyCustomData();
 
+    /**
+     * 样书管理列表
+     */
+    @POST("salesman/info")
+    Observable<HttpResponse<ArrayList<SampleBookManageDataBean>>> SampleBookManageList();
+
+    /**
+     * 样书管理详情
+     */
+    @POST("salesman/sampleInfo/{guid}")
+    Observable<HttpResponse<ArrayList<SampleBookDetailDataBean>>> SampleBookDetail(@Path("guid") String guid);
     /*************************************************************************************************************/
 
 }

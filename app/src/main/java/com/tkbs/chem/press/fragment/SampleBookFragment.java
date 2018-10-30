@@ -16,6 +16,12 @@ import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.activity.SampleBookActivity;
 import com.tkbs.chem.press.activity.SearchActivity;
 import com.tkbs.chem.press.base.BaseFragment;
+import com.tkbs.chem.press.bean.HttpResponse;
+import com.tkbs.chem.press.bean.SampleBookManageDataBean;
+import com.tkbs.chem.press.bean.ThreeClassifyDataBena;
+import com.tkbs.chem.press.net.ApiCallback;
+
+import java.util.ArrayList;
 
 import cn.lemon.view.RefreshRecyclerView;
 import cn.lemon.view.adapter.Action;
@@ -38,6 +44,7 @@ public class SampleBookFragment extends BaseFragment implements View.OnClickList
     private ImageView img_sort_state;
 
     private SampBookAdapter myAdapter;
+    private ArrayList<SampleBookManageDataBean> bookList;
     private int page = 1;
     private Handler mHandler;
 
@@ -71,14 +78,14 @@ public class SampleBookFragment extends BaseFragment implements View.OnClickList
             @Override
             public void onAction() {
                 page = 1;
-                getData(true);
+                getSampleBookList(true);
             }
         });
         recycler.setLoadMoreAction(new Action() {
             @Override
             public void onAction() {
                 page++;
-                getData(false);
+                getSampleBookList(false);
 
             }
         });
@@ -87,10 +94,51 @@ public class SampleBookFragment extends BaseFragment implements View.OnClickList
             @Override
             public void run() {
                 recycler.showSwipeRefresh();
-                getData(true);
+                getSampleBookList(true);
             }
         });
         recycler.getNoMoreView().setText("没有更多数据了");
+    }
+
+    private void getSampleBookList(final boolean isRefresh) {
+        showProgressDialog();
+        addSubscription(apiStores.SampleBookManageList(), new ApiCallback<HttpResponse<ArrayList<SampleBookManageDataBean>>>() {
+            @Override
+            public void onSuccess(HttpResponse<ArrayList<SampleBookManageDataBean>> model) {
+                if (model.isStatus()) {
+                    if (isRefresh) {
+                        page = 1;
+                        bookList = model.getData();
+                        myAdapter.clear();
+                        myAdapter.addAll(bookList);
+                        recycler.dismissSwipeRefresh();
+                        recycler.getRecyclerView().scrollToPosition(0);
+
+                    } else {
+                        bookList.addAll(model.getData());
+                        myAdapter.addAll(model.getData());
+                    }
+                    if (model.getData().size() < 10) {
+                        recycler.showNoMore();
+                    }
+                } else {
+                    recycler.dismissSwipeRefresh();
+                    toastShow(model.getErrorDescription());
+                }
+
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                toastShow(msg);
+            }
+
+            @Override
+            public void onFinish() {
+                dismissProgressDialog();
+            }
+        });
+
     }
 
     public void getData(final boolean isRefresh) {
@@ -100,12 +148,12 @@ public class SampleBookFragment extends BaseFragment implements View.OnClickList
                 if (isRefresh) {
                     page = 1;
                     myAdapter.clear();
-                    myAdapter.addAll(getTestData());
+//                    myAdapter.addAll(getTestData());
                     recycler.dismissSwipeRefresh();
                     recycler.getRecyclerView().scrollToPosition(0);
                     recycler.showNoMore();
                 } else {
-                    myAdapter.addAll(getTestData());
+//                    myAdapter.addAll(getTestData());
                     if (page >= 3) {
                         recycler.showNoMore();
                     }
@@ -138,7 +186,7 @@ public class SampleBookFragment extends BaseFragment implements View.OnClickList
         }
     }
 
-    class SampBookAdapter extends RecyclerAdapter<SimpleBookData> {
+    class SampBookAdapter extends RecyclerAdapter<SampleBookManageDataBean> {
         private Context context;
         /**
          * 实现单选，保存当前选中的position
@@ -151,12 +199,12 @@ public class SampleBookFragment extends BaseFragment implements View.OnClickList
         }
 
         @Override
-        public BaseViewHolder<SimpleBookData> onCreateBaseViewHolder(ViewGroup parent, int viewType) {
+        public BaseViewHolder<SampleBookManageDataBean> onCreateBaseViewHolder(ViewGroup parent, int viewType) {
             return new MyApplyHolder(parent);
         }
 
 
-        class MyApplyHolder extends BaseViewHolder<SimpleBookData> {
+        class MyApplyHolder extends BaseViewHolder<SampleBookManageDataBean> {
 
             private TextView tv_teacher_name;
             private TextView tv_teacher_postion;
@@ -181,22 +229,26 @@ public class SampleBookFragment extends BaseFragment implements View.OnClickList
             }
 
             @Override
-            public void setData(SimpleBookData data) {
+            public void setData(SampleBookManageDataBean data) {
                 super.setData(data);
-                tv_teacher_name.setText(data.getName());
-                tv_teacher_postion.setText("教学主任");
-                tv_teacher_subject.setText("清华大学-土木工程系");
-                tv_unapproved_num.setText("1本");
-                tv_approved_fail.setText("2本");
-                tv_approved_success.setText("3本");
+                tv_teacher_name.setText(data.getUsername());
+                tv_teacher_postion.setText(data.getJob());
+                tv_teacher_subject.setText(data.getSchool());
+                tv_unapproved_num.setText(data.getUnapproved() + "本");
+                tv_approved_fail.setText(data.getUnpass() + "本");
+                tv_approved_success.setText(data.getApproved() + "本");
 
 
             }
 
             @Override
-            public void onItemViewClick(SimpleBookData data) {
+            public void onItemViewClick(SampleBookManageDataBean data) {
                 super.onItemViewClick(data);
-                getActivity().startActivity(new Intent(getActivity(), SampleBookActivity.class));
+                Intent intent = new Intent(getActivity(), SampleBookActivity.class);
+                intent.putExtra("guid", data.getGuid());
+                intent.putExtra("name", data.getUsername());
+                intent.putExtra("job", data.getJob());
+                getActivity().startActivity(intent);
 
             }
 

@@ -14,7 +14,6 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.orhanobut.logger.Logger;
 import com.tkbs.chem.press.activity.SearchActivity;
 import com.tkbs.chem.press.base.BaseActivity;
@@ -29,11 +28,10 @@ import com.tkbs.chem.press.myinterface.HomeInterface;
 import com.tkbs.chem.press.net.ApiCallback;
 import com.tkbs.chem.press.util.Config;
 import com.tkbs.chem.press.util.MessageEvent;
-import com.tkbs.chem.press.util.UiUtils;
-
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import de.greenrobot.event.ThreadMode;
 
@@ -63,6 +61,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     TextView tvClassfy;
     @BindView(R.id.ll_title_serach)
     LinearLayout llTitleSerach;
+    @BindView(R.id.rbtn_tab_discover)
+    RadioButton rbtnTabDiscover;
 
     private Fragment[] mFragments;
     private int mIndex = 1;
@@ -76,9 +76,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private MineTeacherFragment mineTeacherFragment;
     // 管理
     private SalesmanManageFragment salesmanManageFragment;
+    // 用户身份
+    private int user_type = 4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        EventBus.getDefault().register(this);
         super.onCreate(savedInstanceState);
     }
 
@@ -89,6 +92,18 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     protected void initdata() {
+        user_type = preference.getInt(Config.MEMBER_TYPE, 3);
+
+        /**
+         * 根据用户信息显示底部导航
+         */
+        if (user_type == 2) {
+            rbtnTabManage.setVisibility(View.VISIBLE);
+            rbtnTabDiscover.setVisibility(View.GONE);
+        } else {
+            rbtnTabDiscover.setVisibility(View.VISIBLE);
+            rbtnTabManage.setVisibility(View.GONE);
+        }
         getWebPath();
         initTabs();
     }
@@ -103,6 +118,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     public void RefreshUi(MessageEvent messageEvent) {
         if ("Refresh".endsWith(messageEvent.getMessage())) {
             getWebPath();
+            user_type = preference.getInt(Config.MEMBER_TYPE, 3);
+            initdata();
         }
     }
 
@@ -128,13 +145,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         /**
          * 1、超级管理员 2、业务员 3、教师 4、游客
          */
-        int user_type = preference.getInt(Config.MEMBER_TYPE, 3);
-        if (3 == user_type || 4 == user_type) {
-            // 教师
-            mFragments = new Fragment[]{bookShelfFragment, bookCityFragment, discoverFragment, mineTeacherFragment};
-        } else if (2 == user_type) {
+
+        if (2 == user_type) {
             // 业务员
             mFragments = new Fragment[]{bookShelfFragment, bookCityFragment, salesmanManageFragment, mineTeacherFragment};
+        } else {
+            // 教师
+            mFragments = new Fragment[]{bookShelfFragment, bookCityFragment, discoverFragment, mineTeacherFragment};
 
         }
 
@@ -198,7 +215,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     @OnClick({R.id.rbtn_tab_bookshelf, R.id.rbtn_tab_bookcity,
-            R.id.rbtn_tab_manage, R.id.rbtn_tab_mine, R.id.ll_search})
+            R.id.rbtn_tab_manage, R.id.rbtn_tab_mine, R.id.ll_search,
+            R.id.rbtn_tab_discover})
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -222,6 +240,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 setIndexSelected(2);
                 titleHomeRight.setVisibility(View.GONE);
                 titleHome.setText(R.string.home_table3);
+                break;
+            case R.id.rbtn_tab_discover:
+                rlTitlebarNomal.setVisibility(View.VISIBLE);
+                llTitleSerach.setVisibility(View.GONE);
+                setIndexSelected(2);
+                titleHomeRight.setVisibility(View.GONE);
+                titleHome.setText(R.string.discover);
                 break;
             case R.id.rbtn_tab_mine:
                 setIndexSelected(3);

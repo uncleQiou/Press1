@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.tkbs.chem.press.MainActivity;
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.base.BaseActivity;
 import com.tkbs.chem.press.base.BaseApplication;
@@ -238,6 +239,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     edit.commit();
                     // TODO refresh MainActivity
                     EventBus.getDefault().post(new MessageEvent("Refresh"));
+                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
                     finish();
                 } else {
                     toastShow(model.getErrorDescription());

@@ -45,10 +45,17 @@
                 android:text="@string/home_table2" />
 
             <RadioButton
+                android:visibility="gone"
                 android:id="@+id/rbtn_tab_manage"
                 style="@style/main_tab"
-                android:drawableTop="@drawable/selector_btn_find"
+                android:drawableTop="@drawable/selector_btn_manage"
                 android:text="@string/home_table3" />
+
+            <RadioButton
+                android:id="@+id/rbtn_tab_discover"
+                style="@style/main_tab"
+                android:drawableTop="@drawable/selector_btn_find"
+                android:text="@string/discover" />
 
             <RadioButton
                 android:id="@+id/rbtn_tab_mine"

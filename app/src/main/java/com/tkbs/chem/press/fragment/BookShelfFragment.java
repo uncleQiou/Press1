@@ -9,12 +9,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.orhanobut.logger.Logger;
 import com.shizhefei.view.indicator.IndicatorViewPager;
 import com.shizhefei.view.indicator.ScrollIndicatorView;
 import com.shizhefei.view.indicator.slidebar.ColorBar;
 import com.shizhefei.view.indicator.transition.OnTransitionTextListener;
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.base.BaseFragment;
+import com.tkbs.chem.press.util.Config;
+import com.tkbs.chem.press.util.MessageEvent;
+
+import de.greenrobot.event.EventBus;
+import de.greenrobot.event.Subscribe;
+import de.greenrobot.event.ThreadMode;
 
 /**
  * Created by Administrator on 2018/10/12.
@@ -24,6 +31,7 @@ public class BookShelfFragment extends BaseFragment {
     private ScrollIndicatorView bookSelfIndicator;
     private ViewPager bookShelfViewPager;
     private IndicatorViewPager indicatorViewPager;
+    private int user_type;
 
     @Override
     protected View getPreviewLayout(LayoutInflater inflater, ViewGroup container) {
@@ -33,6 +41,8 @@ public class BookShelfFragment extends BaseFragment {
     @Override
     protected void onCreateViewLazy(Bundle savedInstanceState) {
         super.onCreateViewLazy(savedInstanceState);
+        EventBus.getDefault().register(this);
+        user_type = preference.getInt(Config.MEMBER_TYPE, 3);
         setContentView(R.layout.fragment_book_shelf);
         bookSelfIndicator = (ScrollIndicatorView) findViewById(R.id.book_shelf_indicator);
         bookShelfViewPager = (ViewPager) findViewById(R.id.book_shelf_viewPager);
@@ -49,6 +59,14 @@ public class BookShelfFragment extends BaseFragment {
 
     }
 
+    @Subscribe(threadMode = ThreadMode.MainThread)
+    public void RefreshUi(MessageEvent messageEvent) {
+        if ("Refresh".endsWith(messageEvent.getMessage())) {
+            user_type = preference.getInt(Config.MEMBER_TYPE, 3);
+            indicatorViewPager.setAdapter(new MyBookShelfAdapter(getChildFragmentManager()));
+        }
+    }
+
     private class MyBookShelfAdapter extends IndicatorViewPager.IndicatorFragmentPagerAdapter {
 
         public MyBookShelfAdapter(FragmentManager fragmentManager) {
@@ -57,8 +75,12 @@ public class BookShelfFragment extends BaseFragment {
 
         @Override
         public int getCount() {
-            // TODO 根据身份 教师 4 业务员 2
-            return 4;
+            //  根据身份 教师 4 业务员 2
+            if (2 == user_type) {
+                return 2;
+            } else {
+                return 4;
+            }
         }
 
         @Override
@@ -68,14 +90,23 @@ public class BookShelfFragment extends BaseFragment {
                         .inflate(R.layout.tab_top, container, false);
             }
             TextView textView = (TextView) convertView;
-            if (position == 0) {
-                textView.setText(R.string.bf_free_book);
-            } else if (position == 1) {
-                textView.setText(R.string.bf_give_book);
-            } else if (position == 2) {
-                textView.setText(R.string.bf_buy_book);
-            } else if (position == 3) {
-                textView.setText(R.string.bf_collect_book);
+            if (2 == user_type) {
+                if (position == 0) {
+                    textView.setText(R.string.bf_my_book);
+                } else if (position == 1) {
+                    textView.setText(R.string.bf_collect_book);
+                }
+            } else {
+                if (position == 0) {
+                    textView.setText(R.string.bf_free_book);
+                } else if (position == 1) {
+                    textView.setText(R.string.bf_give_book);
+                } else if (position == 2) {
+                    textView.setText(R.string.bf_buy_book);
+                } else if (position == 3) {
+                    textView.setText(R.string.bf_collect_book);
+                }
+
             }
             return convertView;
         }

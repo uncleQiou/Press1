@@ -17,6 +17,7 @@
     <string name="bf_give_book">我的赠送</string>
     <string name="bf_buy_book">已购图书</string>
     <string name="bf_collect_book">我的收藏</string>
+    <string name="bf_my_book">我的图书</string>
     <string name="no_more_data">没有更多数据了</string>
     <string name="click_look">点击查看</string>
     <string name="personal_information">个人信息</string>
@@ -109,6 +110,7 @@
     <string name="please_input">请输入</string>
     <string name="confirm">确认</string>
     <string name="details">详情</string>
+    <string name="discover">发现</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
