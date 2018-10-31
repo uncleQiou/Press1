@@ -10,6 +10,8 @@ import com.tkbs.chem.press.bean.SampleBookManageDataBean;
 import com.tkbs.chem.press.bean.SecondClassifyDataBean;
 import com.tkbs.chem.press.bean.ThreeClassifyDataBena;
 import com.tkbs.chem.press.bean.UserBean;
+import com.tkbs.chem.press.bean.UserInfoManageDataBean;
+import com.tkbs.chem.press.bean.UserManageDataBean;
 
 import java.util.ArrayList;
 
@@ -104,6 +106,23 @@ public interface ApiStores {
      */
     @POST("salesman/sampleInfo/{guid}")
     Observable<HttpResponse<ArrayList<SampleBookDetailDataBean>>> SampleBookDetail(@Path("guid") String guid);
+
+    /**
+     * 用户管理列表
+     *
+     * @return
+     */
+    @POST("salesmanUser/userList")
+    Observable<HttpResponse<ArrayList<UserManageDataBean>>> UserManageDataList();
+
+    /**
+     * 用户管理——用户信息
+     *
+     * @param guid
+     * @return
+     */
+    @POST("salesmanUser/userInfo/{guid}")
+    Observable<HttpResponse<UserInfoManageDataBean>> UserDetail(@Path("guid") String guid);
     /*************************************************************************************************************/
 
 }

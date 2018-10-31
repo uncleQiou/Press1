@@ -46,6 +46,10 @@ public class UserManageActivity extends BaseActivity implements View.OnClickList
     private IndicatorViewPager indicatorViewPager;
     private String[] indicators;
 
+    private String guid;
+    private String name;
+    private long date;
+    private int state;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +63,12 @@ public class UserManageActivity extends BaseActivity implements View.OnClickList
 
     @Override
     protected void initdata() {
-        tvTeacherName.setText("王大宝");
-        tvTeacherSubject.setText("委员长");
+        guid = getIntent().getStringExtra("guid");
+        name = getIntent().getStringExtra("name");
+        date = getIntent().getLongExtra("date", 0);
+        state = getIntent().getIntExtra("state", 0);
+        tvTeacherName.setText(name);
+        tvTeacherSubject.setText("状态：" + state);
         indicators = new String[]{getResources().getString(R.string.personal_information),
                 getResources().getString(R.string.sample_book_list),
                 getResources().getString(R.string.buy_book_list)};
@@ -121,7 +129,7 @@ public class UserManageActivity extends BaseActivity implements View.OnClickList
                 TeacherInforFragment teacherInforFragment = new TeacherInforFragment();
                 Bundle bundle = new Bundle();
                 bundle.putString("111", "这是第==" + position);
-                bundle.putInt("Type", position);
+                bundle.putString("guid", guid);
                 teacherInforFragment.setArguments(bundle);
                 return teacherInforFragment;
             } else if (1 == position) {

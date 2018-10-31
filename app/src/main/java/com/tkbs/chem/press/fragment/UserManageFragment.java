@@ -16,6 +16,12 @@ import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.activity.SearchActivity;
 import com.tkbs.chem.press.activity.UserManageActivity;
 import com.tkbs.chem.press.base.BaseFragment;
+import com.tkbs.chem.press.bean.HttpResponse;
+import com.tkbs.chem.press.bean.SampleBookManageDataBean;
+import com.tkbs.chem.press.bean.UserManageDataBean;
+import com.tkbs.chem.press.net.ApiCallback;
+
+import java.util.ArrayList;
 
 import cn.lemon.view.RefreshRecyclerView;
 import cn.lemon.view.adapter.Action;
@@ -34,6 +40,8 @@ public class UserManageFragment extends BaseFragment implements View.OnClickList
     private ImageView img_sort_time;
     private TextView tv_sort_state;
     private ImageView img_sort_state;
+
+    private ArrayList<UserManageDataBean> userList;
 
     private UserManageAdapter myAdapter;
     private int page = 1;
@@ -67,14 +75,14 @@ public class UserManageFragment extends BaseFragment implements View.OnClickList
             @Override
             public void onAction() {
                 page = 1;
-                getData(true);
+                getUserList(true);
             }
         });
         recycler.setLoadMoreAction(new Action() {
             @Override
             public void onAction() {
                 page++;
-                getData(false);
+                getUserList(false);
 
             }
         });
@@ -83,45 +91,53 @@ public class UserManageFragment extends BaseFragment implements View.OnClickList
             @Override
             public void run() {
                 recycler.showSwipeRefresh();
-                getData(true);
+                getUserList(true);
             }
         });
         recycler.getNoMoreView().setText("没有更多数据了");
     }
 
-    public void getData(final boolean isRefresh) {
-        mHandler.postDelayed(new Runnable() {
+    private void getUserList(final boolean isRefresh) {
+        showProgressDialog();
+        addSubscription(apiStores.UserManageDataList(), new ApiCallback<HttpResponse<ArrayList<UserManageDataBean>>>() {
             @Override
-            public void run() {
-                if (isRefresh) {
-                    page = 1;
-                    myAdapter.clear();
-                    myAdapter.addAll(getTestData());
-                    recycler.dismissSwipeRefresh();
-                    recycler.getRecyclerView().scrollToPosition(0);
-                    recycler.showNoMore();
-                } else {
-                    myAdapter.addAll(getTestData());
-                    if (page >= 3) {
+            public void onSuccess(HttpResponse<ArrayList<UserManageDataBean>> model) {
+                if (model.isStatus()) {
+                    if (isRefresh) {
+                        page = 1;
+                        userList = model.getData();
+                        myAdapter.clear();
+                        myAdapter.addAll(userList);
+                        recycler.dismissSwipeRefresh();
+                        recycler.getRecyclerView().scrollToPosition(0);
+
+                    } else {
+                        userList.addAll(model.getData());
+                        myAdapter.addAll(model.getData());
+                    }
+                    if (model.getData().size() < 10) {
                         recycler.showNoMore();
                     }
+                } else {
+                    recycler.dismissSwipeRefresh();
+                    toastShow(model.getErrorDescription());
                 }
+
             }
-        }, 1000);
+
+            @Override
+            public void onFailure(String msg) {
+                toastShow(msg);
+            }
+
+            @Override
+            public void onFinish() {
+                dismissProgressDialog();
+            }
+        });
+
     }
 
-    private UserManageData[] getTestData() {
-        return new UserManageData[]{
-                new UserManageData("张三"),
-                new UserManageData("李四"),
-                new UserManageData("王五"),
-                new UserManageData("黄山"),
-                new UserManageData("泰山"),
-                new UserManageData("赵本山"),
-                new UserManageData("呵呵姑娘"),
-
-        };
-    }
 
     @Override
     public void onClick(View view) {
@@ -134,7 +150,7 @@ public class UserManageFragment extends BaseFragment implements View.OnClickList
         }
     }
 
-    class UserManageAdapter extends RecyclerAdapter<UserManageData> {
+    class UserManageAdapter extends RecyclerAdapter<UserManageDataBean> {
         private Context context;
         /**
          * 实现单选，保存当前选中的position
@@ -147,12 +163,12 @@ public class UserManageFragment extends BaseFragment implements View.OnClickList
         }
 
         @Override
-        public BaseViewHolder<UserManageData> onCreateBaseViewHolder(ViewGroup parent, int viewType) {
+        public BaseViewHolder<UserManageDataBean> onCreateBaseViewHolder(ViewGroup parent, int viewType) {
             return new UserManageHolder(parent);
         }
 
 
-        class UserManageHolder extends BaseViewHolder<UserManageData> {
+        class UserManageHolder extends BaseViewHolder<UserManageDataBean> {
 
             private TextView tv_teacher_name;
             private TextView tv_teacher_postion;
@@ -179,13 +195,13 @@ public class UserManageFragment extends BaseFragment implements View.OnClickList
             }
 
             @Override
-            public void setData(UserManageData data) {
+            public void setData(UserManageDataBean data) {
                 super.setData(data);
-                tv_teacher_name.setText(data.getName());
-                tv_teacher_postion.setText("教学主任");
-                tv_teacher_subject.setText("清华大学-土木工程系");
-                tv_samplebook_num.setText("1本");
-                tv_givebook_num.setText("2本");
+                tv_teacher_name.setText(data.getUsername());
+                tv_teacher_postion.setText(data.getJob());
+                tv_teacher_subject.setText(data.getFaculty());
+                tv_samplebook_num.setText(data.getSampleBookNumber() + "本");
+                tv_givebook_num.setText(data.getGiveBookNumber() + "本");
                 tv_give_book.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -202,9 +218,14 @@ public class UserManageFragment extends BaseFragment implements View.OnClickList
             }
 
             @Override
-            public void onItemViewClick(UserManageData data) {
+            public void onItemViewClick(UserManageDataBean data) {
                 super.onItemViewClick(data);
-                getActivity().startActivity(new Intent(getActivity(), UserManageActivity.class));
+                Intent intent = new Intent(getActivity(), UserManageActivity.class);
+                intent.putExtra("guid", data.getGuid());
+                intent.putExtra("name", data.getUsername());
+                intent.putExtra("date", data.getDate());
+                intent.putExtra("state", data.getState());
+                getActivity().startActivity(intent);
             }
 
 
@@ -213,20 +234,5 @@ public class UserManageFragment extends BaseFragment implements View.OnClickList
 
     }
 
-    class UserManageData {
-        private String name;
-
-        public UserManageData(String name) {
-            this.name = name;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-    }
 
 }
