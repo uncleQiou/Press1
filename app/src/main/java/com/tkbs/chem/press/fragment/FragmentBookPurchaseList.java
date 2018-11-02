@@ -11,6 +11,13 @@ import android.widget.TextView;
 
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.base.BaseFragment;
+import com.tkbs.chem.press.bean.GiveBookListBean;
+import com.tkbs.chem.press.bean.HttpResponse;
+import com.tkbs.chem.press.bean.SampleBookManageDataBean;
+import com.tkbs.chem.press.net.ApiCallback;
+import com.tkbs.chem.press.util.TimeUtils;
+
+import java.util.ArrayList;
 
 import cn.lemon.view.RefreshRecyclerView;
 import cn.lemon.view.adapter.Action;
@@ -23,8 +30,9 @@ import cn.lemon.view.adapter.RecyclerAdapter;
 public class FragmentBookPurchaseList extends BaseFragment {
     private RefreshRecyclerView recycler;
     private int page = 1;
-    private Handler mHandler;
     private BookPurchaseListAdapter myAdapter;
+    private String guid;
+    private ArrayList<GiveBookListBean> bookList;
 
     @Override
     protected View getPreviewLayout(LayoutInflater inflater, ViewGroup container) {
@@ -35,7 +43,7 @@ public class FragmentBookPurchaseList extends BaseFragment {
     protected void onCreateViewLazy(Bundle savedInstanceState) {
         super.onCreateViewLazy(savedInstanceState);
         setContentView(R.layout.fragment_sample_booklist);
-        mHandler = new Handler();
+        guid = getArguments().getString("guid");
         myAdapter = new BookPurchaseListAdapter(getActivity());
         recycler = (RefreshRecyclerView) findViewById(R.id.recycler);
         recycler.setSwipeRefreshColors(0xFF437845, 0xFFE44F98, 0xFF2FAC21);
@@ -45,14 +53,14 @@ public class FragmentBookPurchaseList extends BaseFragment {
             @Override
             public void onAction() {
                 page = 1;
-                getData(true);
+                getGiveBookList(true);
             }
         });
         recycler.setLoadMoreAction(new Action() {
             @Override
             public void onAction() {
                 page++;
-                getData(false);
+                getGiveBookList(false);
 
             }
         });
@@ -61,47 +69,56 @@ public class FragmentBookPurchaseList extends BaseFragment {
             @Override
             public void run() {
                 recycler.showSwipeRefresh();
-                getData(true);
+                getGiveBookList(true);
             }
         });
         recycler.getNoMoreView().setText(R.string.no_more_data);
     }
 
-    public void getData(final boolean isRefresh) {
-        mHandler.postDelayed(new Runnable() {
+    private void getGiveBookList(final boolean isRefresh) {
+        showProgressDialog();
+        addSubscription(apiStores.GiveBookList(guid), new ApiCallback<HttpResponse<ArrayList<GiveBookListBean>>>() {
             @Override
-            public void run() {
-                if (isRefresh) {
-                    page = 1;
-                    myAdapter.clear();
-                    myAdapter.addAll(getTestData());
-                    recycler.dismissSwipeRefresh();
-                    recycler.getRecyclerView().scrollToPosition(0);
-                    recycler.showNoMore();
-                } else {
-                    myAdapter.addAll(getTestData());
-                    if (page >= 3) {
+            public void onSuccess(HttpResponse<ArrayList<GiveBookListBean>> model) {
+                if (model.isStatus()) {
+                    if (isRefresh) {
+                        page = 1;
+                        bookList = model.getData();
+                        myAdapter.clear();
+                        myAdapter.addAll(bookList);
+                        recycler.dismissSwipeRefresh();
+                        recycler.getRecyclerView().scrollToPosition(0);
+
+                    } else {
+                        bookList.addAll(model.getData());
+                        myAdapter.addAll(model.getData());
+                    }
+                    if (model.getData().size() < 10) {
                         recycler.showNoMore();
                     }
+                } else {
+                    recycler.dismissSwipeRefresh();
+                    toastShow(model.getErrorDescription());
                 }
+
             }
-        }, 1000);
+
+            @Override
+            public void onFailure(String msg) {
+                toastShow(msg);
+            }
+
+            @Override
+            public void onFinish() {
+                dismissProgressDialog();
+            }
+        });
+
     }
 
-    private BookPurchaseListData[] getTestData() {
-        return new BookPurchaseListData[]{
-                new BookPurchaseListData("《呼啸山庄》"),
-                new BookPurchaseListData("《大卫·科波菲尔》"),
-                new BookPurchaseListData("《红与黑》"),
-                new BookPurchaseListData("《悲惨世界》"),
-                new BookPurchaseListData("《安娜·卡列尼娜》"),
-                new BookPurchaseListData("《约翰·克利斯朵夫》"),
-                new BookPurchaseListData("《飘》"),
 
-        };
-    }
 
-    class BookPurchaseListAdapter extends RecyclerAdapter<BookPurchaseListData> {
+    class BookPurchaseListAdapter extends RecyclerAdapter<GiveBookListBean> {
         private Context context;
         /**
          * 实现单选，保存当前选中的position
@@ -114,12 +131,12 @@ public class FragmentBookPurchaseList extends BaseFragment {
         }
 
         @Override
-        public BaseViewHolder<BookPurchaseListData> onCreateBaseViewHolder(ViewGroup parent, int viewType) {
+        public BaseViewHolder<GiveBookListBean> onCreateBaseViewHolder(ViewGroup parent, int viewType) {
             return new BookPurchaseListItemHolder(parent);
         }
 
 
-        class  BookPurchaseListItemHolder extends BaseViewHolder<BookPurchaseListData> {
+        class BookPurchaseListItemHolder extends BaseViewHolder<GiveBookListBean> {
 
             private TextView tv_book_name;
             private TextView tv_book_price;
@@ -140,40 +157,19 @@ public class FragmentBookPurchaseList extends BaseFragment {
             }
 
             @Override
-            public void setData(BookPurchaseListData data) {
+            public void setData(GiveBookListBean data) {
                 super.setData(data);
-                tv_date.setText("2018-10-12 19:43:19");
-                tv_book_price.setText("￥9.8");
-                tv_book_name.setText(data.getName());
-                tv_book_state.setText("到2018-10-12");
+                tv_date.setText(TimeUtils.getTime(data.getTime()));
+                tv_book_price.setText("￥" + data.getPrice());
+                tv_book_name.setText(data.getTitle());
+                tv_book_state.setText("到" + TimeUtils.getTime(data.getTime()));
 
             }
 
             @Override
-            public void onItemViewClick(BookPurchaseListData data) {
+            public void onItemViewClick(GiveBookListBean data) {
                 super.onItemViewClick(data);
-
             }
-
-
-        }
-
-
-    }
-
-    class BookPurchaseListData {
-        private String name;
-
-        public BookPurchaseListData(String name) {
-            this.name = name;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
         }
     }
 }

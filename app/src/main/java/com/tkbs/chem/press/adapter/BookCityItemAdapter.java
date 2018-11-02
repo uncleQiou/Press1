@@ -1,6 +1,7 @@
 package com.tkbs.chem.press.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.tkbs.chem.press.R;
+import com.tkbs.chem.press.activity.BookDetailActivity;
 import com.tkbs.chem.press.base.BaseApplication;
 import com.tkbs.chem.press.bean.BookCityResDocument;
 
@@ -42,11 +44,19 @@ public class BookCityItemAdapter extends RecyclerView.Adapter<BookCityItemAdapte
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
         holder.tv_book_name.setText(list.get(position).getTitle());
-        Glide.with(context).load("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1539859348&di=8b469335b1c844071278bde5488ba5f4&imgtype=jpg&er=1&src=http%3A%2F%2Fpic2.ooopic.com%2F13%2F38%2F51%2F47b1OOOPIC37.jpg")
+        Glide.with(context).load(list.get(position).getCover())
                 .apply(BaseApplication.options)
                 .into(holder.img_book_cover);
+        holder.ll_book_item.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, BookDetailActivity.class);
+                intent.putExtra("guid", list.get(position).getGuid());
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -60,15 +70,18 @@ public class BookCityItemAdapter extends RecyclerView.Adapter<BookCityItemAdapte
         }
     }
 
+
     //自定义的ViewHolder，持有每个Item的的所有界面元素
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView tv_book_name;
         public ImageView img_book_cover;
+        public LinearLayout ll_book_item;
 
         public ViewHolder(View view) {
             super(view);
             img_book_cover = (ImageView) view.findViewById(R.id.img_book_cover);
             tv_book_name = (TextView) view.findViewById(R.id.tv_book_name);
+            ll_book_item = (LinearLayout) view.findViewById(R.id.ll_book_item);
         }
     }
 }

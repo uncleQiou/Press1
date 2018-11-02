@@ -473,10 +473,10 @@ public class BookCityFragment extends BaseFragment implements View.OnClickListen
 
         @Override
         public View getViewForPage(int position, View convertView, ViewGroup container) {
-            if (convertView == null) {
+//            if (convertView == null) {
                 convertView = new RecyclerView(container.getContext());
 //                convertView = new TextView(container.getContext());
-            }
+//            }
             //  RecyclerView 三排显示
             FullyGridLayoutManager fullyGridLayoutManager = new FullyGridLayoutManager(getActivity(), 3);
             fullyGridLayoutManager.setOrientation(GridLayoutManager.VERTICAL);
@@ -484,15 +484,16 @@ public class BookCityFragment extends BaseFragment implements View.OnClickListen
 
             GridLayoutManager layoutManage = new GridLayoutManager(getContext(), 3);
             layoutManage.setOrientation(GridLayoutManager.VERTICAL);
-            layoutManage.setSmoothScrollbarEnabled(true);
+            layoutManage.setSmoothScrollbarEnabled(false);
+
 
             RecyclerView recyclerView = (RecyclerView) convertView;
             recyclerView.setLayoutManager(layoutManage);
             recyclerView.addItemDecoration(new GridSpacingItemDecoration(spanCount, spacing, includeEdge));
             //   设置三级书籍 九本
+            recyclerView.setNestedScrollingEnabled(false);
             BookCityItemAdapter bookCityItemAdapter = new BookCityItemAdapter(getActivity(), indicatorList.get(position).getResDocuments());
             recyclerView.setAdapter(bookCityItemAdapter);
-            recyclerView.setNestedScrollingEnabled(false);
             return convertView;
         }
 

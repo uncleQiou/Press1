@@ -136,14 +136,14 @@ public class UserManageActivity extends BaseActivity implements View.OnClickList
                 SampleBookListFragment sampleBookListFragment = new SampleBookListFragment();
                 Bundle bundle = new Bundle();
                 bundle.putString("111", "这是第==" + position);
-                bundle.putInt("Type", position);
+                bundle.putString("guid", guid);
                 sampleBookListFragment.setArguments(bundle);
                 return sampleBookListFragment;
             } else if (2 == position) {
                 FragmentBookPurchaseList fragmentBookPurchaseList = new FragmentBookPurchaseList();
                 Bundle bundle = new Bundle();
                 bundle.putString("111", "这是第==" + position);
-                bundle.putInt("Type", position);
+                bundle.putString("guid", guid);
                 fragmentBookPurchaseList.setArguments(bundle);
                 return fragmentBookPurchaseList;
             } else {

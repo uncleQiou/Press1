@@ -28,6 +28,7 @@ public class BookCityResDocument {
      * modifyDate : null
      * extInt : null
      * extStr : null
+     * cover
      */
 
     private int id;
@@ -38,6 +39,15 @@ public class BookCityResDocument {
     private String author;
     private long publishTime;
     private int price;
+    private String cover;
+
+    public String getCover() {
+        return cover;
+    }
+
+    public void setCover(String cover) {
+        this.cover = cover;
+    }
 
     public int getId() {
         return id;

@@ -4,6 +4,7 @@ package com.tkbs.chem.press.net;
 import com.tkbs.chem.press.bean.BannerDataBean;
 import com.tkbs.chem.press.bean.BookCityDataBean;
 import com.tkbs.chem.press.bean.BookCityResCatagory;
+import com.tkbs.chem.press.bean.GiveBookListBean;
 import com.tkbs.chem.press.bean.HttpResponse;
 import com.tkbs.chem.press.bean.SampleBookDetailDataBean;
 import com.tkbs.chem.press.bean.SampleBookManageDataBean;
@@ -123,6 +124,23 @@ public interface ApiStores {
      */
     @POST("salesmanUser/userInfo/{guid}")
     Observable<HttpResponse<UserInfoManageDataBean>> UserDetail(@Path("guid") String guid);
+
+    /**
+     * 用户管理——赠书清单
+     *
+     * @param guid
+     * @return
+     */
+    @POST("salesmanUser/givebookList/{guid}")
+    Observable<HttpResponse<ArrayList<GiveBookListBean>>> GiveBookList(@Path("guid") String guid);
+    /**
+     * 用户管理——样书清单
+     *
+     * @param guid
+     * @return
+     */
+    @POST("salesmanUser/samplebookList/{guid}")
+    Observable<HttpResponse<ArrayList<GiveBookListBean>>> SampleBookList(@Path("guid") String guid);
     /*************************************************************************************************************/
 
 }
