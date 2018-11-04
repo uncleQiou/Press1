@@ -12,9 +12,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
+import com.orhanobut.logger.Logger;
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.base.BaseActivity;
 import com.tkbs.chem.press.base.BaseApplication;
+import com.tkbs.chem.press.bean.ApprovalSubmitData;
 import com.tkbs.chem.press.bean.HttpResponse;
 import com.tkbs.chem.press.bean.SampleBookDetailDataBean;
 import com.tkbs.chem.press.bean.SampleBookManageDataBean;
@@ -32,6 +35,8 @@ import cn.lemon.view.RefreshRecyclerView;
 import cn.lemon.view.adapter.Action;
 import cn.lemon.view.adapter.BaseViewHolder;
 import cn.lemon.view.adapter.RecyclerAdapter;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 
 /**
  * @author Administrator
@@ -186,38 +191,47 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
 
     }
 
-    public void getData(final boolean isRefresh) {
-        mHandler.postDelayed(new Runnable() {
+
+    /**
+     * 审核信息提交
+     *
+     * @param submitData
+     */
+    private void approvalSubmit(ApprovalSubmitData submitData) {
+        final Gson gson = new Gson();
+        String route = gson.toJson(submitData);
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), route);
+        showProgressDialog();
+        addSubscription(apiStores.ApprovalDataSubmit(body), new ApiCallback<HttpResponse<Object>>() {
             @Override
-            public void run() {
-                if (isRefresh) {
-                    page = 1;
-                    myAdapter.clear();
-//                    myAdapter.addAll(getTestData());
-                    recycler.dismissSwipeRefresh();
-                    recycler.getRecyclerView().scrollToPosition(0);
-                    recycler.showNoMore();
+            public void onSuccess(HttpResponse<Object> model) {
+                if (model.isStatus()) {
+                    toastShow("保存成功");
+                    recycler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            recycler.showSwipeRefresh();
+                            getSampleDetail(true);
+                        }
+                    });
+
                 } else {
-//                    myAdapter.addAll(getTestData());
-                    if (page >= 3) {
-                        recycler.showNoMore();
-                    }
+                    toastShow(model.getErrorDescription());
                 }
+
+
             }
-        }, 1000);
-    }
 
-    private MyDataItemData[] getTestData() {
-        return new MyDataItemData[]{
-                new MyDataItemData("别林斯基"),
-                new MyDataItemData("蒙田"),
-                new MyDataItemData(" 德奥弗拉斯多"),
-                new MyDataItemData("斯里兰卡"),
-                new MyDataItemData("巴尔扎克"),
-                new MyDataItemData("歌德"),
-                new MyDataItemData("生活有度，人生添寿"),
+            @Override
+            public void onFailure(String msg) {
+                toastShow(msg);
+            }
 
-        };
+            @Override
+            public void onFinish() {
+                dismissProgressDialog();
+            }
+        });
     }
 
     @OnClick({R.id.img_back, R.id.one_key_approve})
@@ -278,7 +292,7 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
             }
 
             @Override
-            public void setData(SampleBookDetailDataBean data) {
+            public void setData(final SampleBookDetailDataBean data) {
                 super.setData(data);
                 tv_book_name.setText(data.getTitle());
                 tv_book_price.setText("价格：" + data.getPrice() + "￥");
@@ -317,10 +331,18 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
                             public void doConfirm() {
                                 confirmDialog.dismiss();
                                 //toUserHome(context);
+                                ApprovalSubmitData submitData = confirmDialog.getSubmitData();
+                                submitData.setGuid(data.getGuid());
+                                submitData.setIsPass(0);
+                                approvalSubmit(submitData);
                             }
 
                             @Override
                             public void doCancel() {
+                                ApprovalSubmitData submitData = confirmDialog.getSubmitData();
+                                submitData.setGuid(data.getGuid());
+                                submitData.setIsPass(1);
+                                approvalSubmit(submitData);
                                 confirmDialog.dismiss();
                             }
                         });
@@ -341,19 +363,5 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
 
     }
 
-    class MyDataItemData {
-        private String name;
 
-        public MyDataItemData(String name) {
-            this.name = name;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-    }
 }

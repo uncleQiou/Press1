@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.orhanobut.logger.Logger;
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.base.BaseActivity;
+import com.tkbs.chem.press.util.Config;
 import com.tkbs.chem.press.view.ReWebChomeClient;
 
 import butterknife.BindView;
@@ -34,7 +35,7 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
     WebView bookDetailWeb;
     private String guid;
 
-    private String bookUrl = "http://192.168.1.158:8281/app/hello/book_detail.html";
+    private String bookUrl = Config.API_SERVER + "hello/book_detail.html";
 
     @Override
     protected int getLayoutId() {
@@ -168,6 +169,11 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
                     preference.getString("PASSWORD", "");
 
             return user;
+        }
+
+        @JavascriptInterface
+        public void viewDirectory() {
+            toastShow("查看目录");
         }
 
 

@@ -133,6 +133,7 @@ public interface ApiStores {
      */
     @POST("salesmanUser/givebookList/{guid}")
     Observable<HttpResponse<ArrayList<GiveBookListBean>>> GiveBookList(@Path("guid") String guid);
+
     /**
      * 用户管理——样书清单
      *
@@ -141,6 +142,15 @@ public interface ApiStores {
      */
     @POST("salesmanUser/samplebookList/{guid}")
     Observable<HttpResponse<ArrayList<GiveBookListBean>>> SampleBookList(@Path("guid") String guid);
+
+    /**
+     * 样书审核
+     *
+     * @param body
+     * @return
+     */
+    @POST("salesman/updateInfo")
+    Observable<HttpResponse<Object>> ApprovalDataSubmit(@Body RequestBody body);
     /*************************************************************************************************************/
 
 }

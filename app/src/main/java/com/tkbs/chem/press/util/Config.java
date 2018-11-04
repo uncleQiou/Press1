@@ -7,13 +7,13 @@ public class Config {
     public static final String TOPIC = "topic";
 
     /**
-     * Zmy
+     * Xjl
      */
-//    public static String API_SERVER = "http://192.168.1.158:8281/app/";
+    public static String API_SERVER = "http://192.168.1.154:8281/app/";
     /**
      * 251
      */
-    public static String API_SERVER = "http://192.168.1.251:8281/app/";
+//    public static String API_SERVER = "http://192.168.1.251:8281/app/";
 
 
     /**

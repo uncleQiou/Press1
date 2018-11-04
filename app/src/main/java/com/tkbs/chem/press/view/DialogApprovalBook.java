@@ -20,6 +20,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.tkbs.chem.press.R;
+import com.tkbs.chem.press.bean.ApprovalSubmitData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +50,17 @@ public class DialogApprovalBook extends Dialog implements AdapterView.OnItemClic
         tv_time_limit.setText(mDatas.get(i));
         index = i;
         popupWindow.dismiss();
+    }
+
+    /**
+     * 获取审批数据
+     * @return
+     */
+    public ApprovalSubmitData getSubmitData() {
+        ApprovalSubmitData submitData = new ApprovalSubmitData();
+        submitData.setContent(edOpinion.getText().toString().trim());
+        submitData.setTimeLimit(index);
+        return submitData;
     }
 
     public interface ClickListenerInterface {

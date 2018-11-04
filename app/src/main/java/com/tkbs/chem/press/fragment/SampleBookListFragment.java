@@ -171,14 +171,7 @@ public class SampleBookListFragment extends BaseFragment {
             @Override
             public void onItemViewClick(GiveBookListBean data) {
                 super.onItemViewClick(data);
-
             }
-
-
         }
-
-
     }
-
-
 }
