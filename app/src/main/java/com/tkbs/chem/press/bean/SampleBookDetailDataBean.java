@@ -12,6 +12,7 @@ public class SampleBookDetailDataBean {
      * title : 150种生物柴油配方与制作
      * price : 36
      * cover :
+     * remark
      */
 
     private String guid;
@@ -20,6 +21,15 @@ public class SampleBookDetailDataBean {
     private String title;
     private int price;
     private String cover;
+    private String remark;
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
 
     public String getGuid() {
         return guid;

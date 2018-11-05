@@ -126,7 +126,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 break;
             case R.id.btn_register:
                 toastShow(R.string.register_now);
-                startActivity(new Intent(LoginActivity.this, ChangePasswordActivity.class));
+//                startActivity(new Intent(LoginActivity.this, ChangePasswordActivity.class));
+                startActivity(new Intent(LoginActivity.this, RegisterAvtivity.class));
                 break;
             case R.id.ll_qq_login:
                 toastShow(R.string.str_qq);

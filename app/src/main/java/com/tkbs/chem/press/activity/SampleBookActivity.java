@@ -323,29 +323,35 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
                 btn_state.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        final DialogApprovalBook confirmDialog = new DialogApprovalBook(context, "图书审核",
-                                getResources().getString(R.string.via), getResources().getString(R.string.no_via));
-                        confirmDialog.show();
-                        confirmDialog.setClicklistener(new DialogApprovalBook.ClickListenerInterface() {
-                            @Override
-                            public void doConfirm() {
-                                confirmDialog.dismiss();
-                                //toUserHome(context);
-                                ApprovalSubmitData submitData = confirmDialog.getSubmitData();
-                                submitData.setGuid(data.getGuid());
-                                submitData.setIsPass(0);
-                                approvalSubmit(submitData);
-                            }
+                        if (1 == data.getState()) {
+                            final DialogApprovalBook confirmDialog = new DialogApprovalBook(context, "图书审核",
+                                    getResources().getString(R.string.via), getResources().getString(R.string.no_via));
+                            confirmDialog.show();
+                            confirmDialog.setClicklistener(new DialogApprovalBook.ClickListenerInterface() {
+                                @Override
+                                public void doConfirm() {
+                                    confirmDialog.dismiss();
+                                    //toUserHome(context);
+                                    ApprovalSubmitData submitData = confirmDialog.getSubmitData();
+                                    submitData.setResGuid(data.getGuid());
+                                    submitData.setUserGuid(guid);
+                                    submitData.setIsPass(0);
+                                    approvalSubmit(submitData);
+                                }
 
-                            @Override
-                            public void doCancel() {
-                                ApprovalSubmitData submitData = confirmDialog.getSubmitData();
-                                submitData.setGuid(data.getGuid());
-                                submitData.setIsPass(1);
-                                approvalSubmit(submitData);
-                                confirmDialog.dismiss();
-                            }
-                        });
+                                @Override
+                                public void doCancel() {
+                                    ApprovalSubmitData submitData = confirmDialog.getSubmitData();
+                                    submitData.setResGuid(data.getGuid());
+                                    submitData.setIsPass(1);
+                                    submitData.setUserGuid(guid);
+                                    approvalSubmit(submitData);
+                                    confirmDialog.dismiss();
+                                }
+                            });
+                        }else {
+                            toastShow(data.getRemark());
+                        }
                     }
                 });
 

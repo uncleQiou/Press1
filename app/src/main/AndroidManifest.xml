@@ -89,8 +89,10 @@
             android:windowSoftInputMode="stateHidden|stateUnchanged" />
         <!-- 消息 -->
         <activity android:name=".activity.NewsActivity" />
-        <!--图书详情-->
+        <!-- 图书详情 -->
         <activity android:name=".activity.BookDetailActivity" />
+        <!--注册页面-->
+        <activity android:name=".activity.RegisterAvtivity"/>
     </application>
 
 </manifest>

@@ -2,6 +2,7 @@ package com.tkbs.chem.press.activity;
 
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.webkit.JavascriptInterface;
@@ -12,7 +13,6 @@ import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.orhanobut.logger.Logger;
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.base.BaseActivity;
 import com.tkbs.chem.press.util.Config;
@@ -21,9 +21,7 @@ import com.tkbs.chem.press.view.ReWebChomeClient;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-
-public class BookDetailActivity extends BaseActivity implements View.OnClickListener, ReWebChomeClient.OpenFileChooserCallBack {
-
+public class RegisterAvtivity extends BaseActivity implements View.OnClickListener, ReWebChomeClient.OpenFileChooserCallBack {
 
     @BindView(R.id.back)
     ImageView back;
@@ -31,27 +29,45 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
     TextView title;
     @BindView(R.id.tv_right)
     TextView tvRight;
-    @BindView(R.id.book_detail_web)
-    WebView bookDetailWeb;
-    private String guid;
+    @BindView(R.id.register_web)
+    WebView registerWeb;
 
-    private String bookUrl = Config.API_SERVER + "hello/book_detail.html";
+    private String baseUrl = Config.API_SERVER + "hello/register.html";
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     protected int getLayoutId() {
-        return R.layout.activity_book_detail;
+        return R.layout.activity_register_avtivity;
     }
-
 
     @Override
     protected void initdata() {
-        guid = getIntent().getStringExtra("guid");
         initWeb();
     }
 
+    @Override
+    protected void initTitle() {
+        title.setText(R.string.register);
+    }
+
+    @OnClick({R.id.back})
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.back:
+                finish();
+                break;
+            default:
+                break;
+        }
+    }
 
     private void initWeb() {
-        WebSettings setting = bookDetailWeb.getSettings();
+        WebSettings setting = registerWeb.getSettings();
         //允许加载javascript
         setting.setJavaScriptEnabled(true);
         //允许缩放
@@ -67,12 +83,12 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
         setting.setDomStorageEnabled(true);
         setting.setJavaScriptCanOpenWindowsAutomatically(true);
         setting.setSupportMultipleWindows(true);
-        bookDetailWeb.addJavascriptInterface(new BookDetailInterface(), "TKBS");
+        registerWeb.addJavascriptInterface(new RegisterInterface(), "TKBS");
         /*****************************************************************
          * 在点击请求的是链接时才会调用，重写此方法返回true表明点击网页里
          * 面的链接还是在当前的WebView里跳转，不会跳到浏览器上运行。
          *****************************************************************/
-        bookDetailWeb.setWebViewClient(new WebViewClient() {
+        registerWeb.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 view.loadUrl(url);
@@ -100,7 +116,7 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
                 super.onPageFinished(view, url);
             }
         });
-        bookDetailWeb.setWebChromeClient(new ReWebChomeClient(this) {
+        registerWeb.setWebChromeClient(new ReWebChomeClient(this) {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
                 super.onProgressChanged(view, newProgress);
@@ -110,26 +126,7 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
             }
         });
 
-        bookDetailWeb.loadUrl(bookUrl);
-    }
-
-
-    @Override
-    protected void initTitle() {
-        title.setText(R.string.book_detail_title);
-    }
-
-
-    @OnClick({R.id.back})
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.back:
-                finish();
-                break;
-            default:
-                break;
-        }
+        registerWeb.loadUrl(baseUrl);
     }
 
     @Override
@@ -137,9 +134,9 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
 
     }
 
-    private class BookDetailInterface {
+    private class RegisterInterface {
 
-        BookDetailInterface() {
+        RegisterInterface() {
         }
 
 
@@ -158,30 +155,12 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
         }
 
         @JavascriptInterface
-        private String getBookGuid() {
-            return guid;
-        }
-
-        @JavascriptInterface
         public String getUser() {
             String user = preference.getString("login_name", "") +
                     "," +
                     preference.getString("PASSWORD", "");
 
             return user;
-        }
-
-        @JavascriptInterface
-        public void viewDirectory() {
-            toastShow("查看目录");
-        }
-
-
-        @JavascriptInterface
-        public void getBookDetail(String guidStr) {
-            guid = guidStr;
-            // TODO 刷新界面
-            bookDetailWeb.loadUrl(bookUrl);
         }
 
         @JavascriptInterface

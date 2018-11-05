@@ -5,11 +5,14 @@ package com.tkbs.chem.press.util;
  */
 public class Config {
     public static final String TOPIC = "topic";
-
     /**
      * Xjl
      */
-    public static String API_SERVER = "http://192.168.1.154:8281/app/";
+//    public static String API_SERVER = "http://192.168.1.154:8281/app/";
+    /**
+     * Zmy
+     */
+    public static String API_SERVER = "http://192.168.1.153:8281/app/";
     /**
      * 251
      */
