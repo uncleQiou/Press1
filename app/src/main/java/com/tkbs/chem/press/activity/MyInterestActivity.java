@@ -16,7 +16,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.orhanobut.logger.Logger;
 import com.tkbs.chem.press.MainActivity;
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.base.BaseActivity;
@@ -35,7 +34,7 @@ import butterknife.OnClick;
 import de.greenrobot.event.EventBus;
 import okhttp3.RequestBody;
 
-public class RegisterAvtivity extends BaseActivity implements View.OnClickListener, ReWebChomeClient.OpenFileChooserCallBack {
+public class MyInterestActivity extends BaseActivity implements View.OnClickListener, ReWebChomeClient.OpenFileChooserCallBack {
 
     @BindView(R.id.back)
     ImageView back;
@@ -43,10 +42,9 @@ public class RegisterAvtivity extends BaseActivity implements View.OnClickListen
     TextView title;
     @BindView(R.id.tv_right)
     TextView tvRight;
-    @BindView(R.id.register_web)
-    WebView registerWeb;
-
-    private String baseUrl = Config.API_SERVER + "hello/register.html";
+    @BindView(R.id.interesr_web)
+    WebView interesrWeb;
+    private String baseUrl = Config.API_SERVER + "hello/interest.html";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +53,7 @@ public class RegisterAvtivity extends BaseActivity implements View.OnClickListen
 
     @Override
     protected int getLayoutId() {
-        return R.layout.activity_register_avtivity;
+        return R.layout.activity_my_interest;
     }
 
     @Override
@@ -65,7 +63,7 @@ public class RegisterAvtivity extends BaseActivity implements View.OnClickListen
 
     @Override
     protected void initTitle() {
-        title.setText(R.string.register);
+        title.setText(R.string.my_interest);
     }
 
     @OnClick({R.id.back})
@@ -81,7 +79,7 @@ public class RegisterAvtivity extends BaseActivity implements View.OnClickListen
     }
 
     private void initWeb() {
-        WebSettings setting = registerWeb.getSettings();
+        WebSettings setting = interesrWeb.getSettings();
         //允许加载javascript
         setting.setJavaScriptEnabled(true);
         //允许缩放
@@ -97,12 +95,12 @@ public class RegisterAvtivity extends BaseActivity implements View.OnClickListen
         setting.setDomStorageEnabled(true);
         setting.setJavaScriptCanOpenWindowsAutomatically(true);
         setting.setSupportMultipleWindows(true);
-        registerWeb.addJavascriptInterface(new RegisterInterface(), "TKBS");
+        interesrWeb.addJavascriptInterface(new InterestInterface(), "TKBS");
         /*****************************************************************
          * 在点击请求的是链接时才会调用，重写此方法返回true表明点击网页里
          * 面的链接还是在当前的WebView里跳转，不会跳到浏览器上运行。
          *****************************************************************/
-        registerWeb.setWebViewClient(new WebViewClient() {
+        interesrWeb.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 view.loadUrl(url);
@@ -130,7 +128,7 @@ public class RegisterAvtivity extends BaseActivity implements View.OnClickListen
                 super.onPageFinished(view, url);
             }
         });
-        registerWeb.setWebChromeClient(new ReWebChomeClient(this) {
+        interesrWeb.setWebChromeClient(new ReWebChomeClient(this) {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
                 super.onProgressChanged(view, newProgress);
@@ -140,7 +138,7 @@ public class RegisterAvtivity extends BaseActivity implements View.OnClickListen
             }
         });
 
-        registerWeb.loadUrl(baseUrl);
+        interesrWeb.loadUrl(baseUrl);
     }
 
     @Override
@@ -148,25 +146,9 @@ public class RegisterAvtivity extends BaseActivity implements View.OnClickListen
 
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            switch (requestCode) {
-                case 0:
-                    String result = data.getStringExtra("result");
-                    registerWeb.loadUrl("javascript:getInterestList(" + result + ")");
-                    Logger.e(result);
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
+    private class InterestInterface {
 
-    private class RegisterInterface {
-
-        RegisterInterface() {
+        InterestInterface() {
         }
 
 
@@ -188,66 +170,19 @@ public class RegisterAvtivity extends BaseActivity implements View.OnClickListen
         public String getUser() {
             String user = preference.getString("login_name", "") +
                     "," +
-                    preference.getString("PASSWORD", "") + "," + UiUtils.getid(RegisterAvtivity.this);
+                    preference.getString("PASSWORD", "") + "," + UiUtils.getid(MyInterestActivity.this);
 
             return user;
         }
 
         @JavascriptInterface
-        public void finshBookDetail() {
+        public void finshInterest(String result) {
+            Intent intent = new Intent();
+            intent.putExtra("result", result);
+            MyInterestActivity.this.setResult(RESULT_OK, intent);
             finish();
         }
 
-        @JavascriptInterface
-        public void MyInterest() {
-            startActivityForResult(new Intent(RegisterAvtivity.this, MyInterestActivity.class), 0);
-        }
 
-        @JavascriptInterface
-        public void login(String loginName, String password) {
-
-            //{"loginName":"xx000001","password":"1"}
-            LoginRequestBen loginRequestBen = new LoginRequestBen();
-            loginRequestBen.setLoginName(loginName);
-            loginRequestBen.setPassword(password);
-            final Gson gson = new Gson();
-            String route = gson.toJson(loginRequestBen);
-            RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), route);
-            showProgressDialog();
-            addSubscription(apiStores.PressLogin(body), new ApiCallback<HttpResponse<UserBean>>() {
-                @Override
-                public void onSuccess(HttpResponse<UserBean> model) {
-                    if (model.isStatus()) {
-                        UserBean user = model.getData();
-                        SharedPreferences.Editor edit = BaseApplication.preferences.edit();
-                        edit.putString(Config.LOGIN_NAME, user.getLogin_name());
-                        edit.putString(Config.PASSWORD, user.getPASSWORD());
-                        edit.putString(Config.NICK_NAME, user.getNick_name());
-                        edit.putString(Config.REAL_NAME, user.getReal_name());
-                        edit.putString(Config.WORKPHONE, user.getWorkphone());
-                        edit.putString(Config.PHONE, user.getPhone());
-                        edit.putInt(Config.MEMBER_TYPE, user.getMember_type());
-                        edit.commit();
-                        // TODO refresh MainActivity
-                        EventBus.getDefault().post(new MessageEvent("Refresh"));
-                        startActivity(new Intent(RegisterAvtivity.this, MainActivity.class));
-                        finish();
-                    } else {
-                        toastShow(model.getErrorDescription());
-                    }
-
-                }
-
-                @Override
-                public void onFailure(String msg) {
-                    toastShow(msg);
-                }
-
-                @Override
-                public void onFinish() {
-                    dismissProgressDialog();
-                }
-            });
-        }
     }
 }

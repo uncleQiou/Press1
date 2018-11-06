@@ -8,11 +8,11 @@ public class Config {
     /**
      * Xjl
      */
-//    public static String API_SERVER = "http://192.168.1.154:8281/app/";
+    public static String API_SERVER = "http://192.168.1.154:8281/app/";
     /**
      * Zmy
      */
-    public static String API_SERVER = "http://192.168.1.153:8281/app/";
+//    public static String API_SERVER = "http://192.168.1.153:8281/app/";
     /**
      * 251
      */
@@ -52,7 +52,7 @@ public class Config {
     public static final String WORKPHONE = "workphone";
     public static final String PHONE = "phone";
     /**
-     * 1、超级管理员 2、业务员 3、教师 4、游客
+     * 1、超级管理员 2、业务员 3、教师 4、普通用户 5、游客
      */
     public static final String MEMBER_TYPE = "member_type";
 
