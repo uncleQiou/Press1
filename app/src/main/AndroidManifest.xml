@@ -93,7 +93,10 @@
         <activity android:name=".activity.BookDetailActivity" />
         <!-- 注册页面 -->
         <activity android:name=".activity.RegisterAvtivity" />
-        <activity android:name=".activity.MyInterestActivity"></activity>
+        <!--我感兴趣的-->
+        <activity android:name=".activity.MyInterestActivity" />
+        <!--赠书管理-->
+        <activity android:name=".activity.GiveBookManagementActivity"/>
     </application>
 
 </manifest>

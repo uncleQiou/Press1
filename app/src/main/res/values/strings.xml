@@ -116,6 +116,7 @@
     <string name="sex_2">女</string>
     <string name="book_detail_title">图书详情</string>
     <string name="my_interest">我感兴趣的</string>
+    <string name="give_book_manage">赠书管理</string>
 
 
     <string name="hello_blank_fragment">Hello blank fragment</string>

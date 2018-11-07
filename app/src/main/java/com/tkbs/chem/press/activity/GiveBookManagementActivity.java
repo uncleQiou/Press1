@@ -1,7 +1,9 @@
 package com.tkbs.chem.press.activity;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.webkit.JavascriptInterface;
@@ -16,14 +18,15 @@ import com.orhanobut.logger.Logger;
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.base.BaseActivity;
 import com.tkbs.chem.press.util.Config;
+import com.tkbs.chem.press.util.MessageEvent;
+import com.tkbs.chem.press.util.UiUtils;
 import com.tkbs.chem.press.view.ReWebChomeClient;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import de.greenrobot.event.EventBus;
 
-
-public class BookDetailActivity extends BaseActivity implements View.OnClickListener, ReWebChomeClient.OpenFileChooserCallBack {
-
+public class GiveBookManagementActivity extends BaseActivity implements View.OnClickListener, ReWebChomeClient.OpenFileChooserCallBack {
 
     @BindView(R.id.back)
     ImageView back;
@@ -31,27 +34,54 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
     TextView title;
     @BindView(R.id.tv_right)
     TextView tvRight;
-    @BindView(R.id.book_detail_web)
-    WebView bookDetailWeb;
-    private String guid;
+    @BindView(R.id.give_book_web)
+    WebView giveBookWeb;
+    private String baseUrl = Config.API_SERVER + "hello/give_book.html";
+    private String tName;
+    private String tGuid;
 
-    private String bookUrl = Config.API_SERVER + "hello/book_detail.html";
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     protected int getLayoutId() {
-        return R.layout.activity_book_detail;
+        return R.layout.activity_give_book_management;
     }
-
 
     @Override
     protected void initdata() {
-        guid = getIntent().getStringExtra("guid");
+        tName = getIntent().getStringExtra("tName");
+        tGuid = getIntent().getStringExtra("tGuid");
+        Logger.e("tName == " + tName + "===gGuid == " + tGuid);
         initWeb();
     }
 
+    @Override
+    protected void initTitle() {
+        title.setText(R.string.give_book_manage);
+    }
+
+    @Override
+    public void openFileChooserCallBack(ValueCallback<Uri> uploadMsg, String acceptType) {
+
+    }
+
+    @OnClick({R.id.back})
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.back:
+                finish();
+                break;
+            default:
+                break;
+        }
+    }
 
     private void initWeb() {
-        WebSettings setting = bookDetailWeb.getSettings();
+        WebSettings setting = giveBookWeb.getSettings();
         //允许加载javascript
         setting.setJavaScriptEnabled(true);
         //允许缩放
@@ -67,12 +97,12 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
         setting.setDomStorageEnabled(true);
         setting.setJavaScriptCanOpenWindowsAutomatically(true);
         setting.setSupportMultipleWindows(true);
-        bookDetailWeb.addJavascriptInterface(new BookDetailInterface(), "TKBS");
+        giveBookWeb.addJavascriptInterface(new GiveBookInterface(), "TKBS");
         /*****************************************************************
          * 在点击请求的是链接时才会调用，重写此方法返回true表明点击网页里
          * 面的链接还是在当前的WebView里跳转，不会跳到浏览器上运行。
          *****************************************************************/
-        bookDetailWeb.setWebViewClient(new WebViewClient() {
+        giveBookWeb.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 view.loadUrl(url);
@@ -100,7 +130,7 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
                 super.onPageFinished(view, url);
             }
         });
-        bookDetailWeb.setWebChromeClient(new ReWebChomeClient(this) {
+        giveBookWeb.setWebChromeClient(new ReWebChomeClient(this) {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
                 super.onProgressChanged(view, newProgress);
@@ -110,36 +140,12 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
             }
         });
 
-        bookDetailWeb.loadUrl(bookUrl);
+        giveBookWeb.loadUrl(baseUrl);
     }
 
+    private class GiveBookInterface {
 
-    @Override
-    protected void initTitle() {
-        title.setText(R.string.book_detail_title);
-    }
-
-
-    @OnClick({R.id.back})
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.back:
-                finish();
-                break;
-            default:
-                break;
-        }
-    }
-
-    @Override
-    public void openFileChooserCallBack(ValueCallback<Uri> uploadMsg, String acceptType) {
-
-    }
-
-    private class BookDetailInterface {
-
-        BookDetailInterface() {
+        GiveBookInterface() {
         }
 
 
@@ -158,35 +164,26 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
         }
 
         @JavascriptInterface
-        public String getBookGuid() {
-            return guid;
-        }
-
-        @JavascriptInterface
         public String getUser() {
             String user = preference.getString("login_name", "") +
                     "," +
                     preference.getString("PASSWORD", "");
-
             return user;
         }
 
         @JavascriptInterface
-        public void viewDirectory() {
-            toastShow("查看目录");
-        }
-
-
-        @JavascriptInterface
-        public void getBookDetail(String guidStr) {
-            guid = guidStr;
-            // TODO 刷新界面
-            bookDetailWeb.loadUrl(bookUrl);
+        public String getTeaMessage() {
+            String teaUser = tName + "," + tGuid;
+            return teaUser;
         }
 
         @JavascriptInterface
-        public void finshBookDetail() {
+        public void finshGiveBook() {
+            //  refresh UserManageFragment
+            EventBus.getDefault().post(new MessageEvent("UserManageFragment"));
             finish();
         }
+
+
     }
 }

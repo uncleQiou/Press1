@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.tkbs.chem.press.R;
+import com.tkbs.chem.press.activity.GiveBookManagementActivity;
 import com.tkbs.chem.press.activity.SearchActivity;
 import com.tkbs.chem.press.activity.UserManageActivity;
 import com.tkbs.chem.press.base.BaseFragment;
@@ -20,6 +21,8 @@ import com.tkbs.chem.press.bean.HttpResponse;
 import com.tkbs.chem.press.bean.SampleBookManageDataBean;
 import com.tkbs.chem.press.bean.UserManageDataBean;
 import com.tkbs.chem.press.net.ApiCallback;
+import com.tkbs.chem.press.util.Config;
+import com.tkbs.chem.press.util.MessageEvent;
 
 import java.util.ArrayList;
 
@@ -27,6 +30,9 @@ import cn.lemon.view.RefreshRecyclerView;
 import cn.lemon.view.adapter.Action;
 import cn.lemon.view.adapter.BaseViewHolder;
 import cn.lemon.view.adapter.RecyclerAdapter;
+import de.greenrobot.event.EventBus;
+import de.greenrobot.event.Subscribe;
+import de.greenrobot.event.ThreadMode;
 
 /**
  * Created by Administrator on 2018/10/17.
@@ -56,6 +62,7 @@ public class UserManageFragment extends BaseFragment implements View.OnClickList
     protected void onCreateViewLazy(Bundle savedInstanceState) {
         super.onCreateViewLazy(savedInstanceState);
         setContentView(R.layout.fragment_user_manage);
+        EventBus.getDefault().register(this);
         ll_search = (LinearLayout) findViewById(R.id.ll_search);
         ll_search.setOnClickListener(this);
         ll_sort_time = (LinearLayout) findViewById(R.id.ll_sort_time);
@@ -97,6 +104,20 @@ public class UserManageFragment extends BaseFragment implements View.OnClickList
         recycler.getNoMoreView().setText("没有更多数据了");
     }
 
+    @Subscribe(threadMode = ThreadMode.MainThread)
+    public void RefreshUi(MessageEvent messageEvent) {
+        if ("UserManageFragment".endsWith(messageEvent.getMessage())) {
+            recycler.post(new Runnable() {
+                @Override
+                public void run() {
+                    recycler.showSwipeRefresh();
+                    page = 1 ;
+                    getUserList(true);
+                }
+            });
+        }
+    }
+
     private void getUserList(final boolean isRefresh) {
         showProgressDialog();
         addSubscription(apiStores.UserManageDataList(), new ApiCallback<HttpResponse<ArrayList<UserManageDataBean>>>() {
@@ -110,7 +131,7 @@ public class UserManageFragment extends BaseFragment implements View.OnClickList
                         myAdapter.addAll(userList);
                         recycler.dismissSwipeRefresh();
                         recycler.getRecyclerView().scrollToPosition(0);
-
+                        recycler.showNoMore();
                     } else {
                         userList.addAll(model.getData());
                         myAdapter.addAll(model.getData());
@@ -127,6 +148,7 @@ public class UserManageFragment extends BaseFragment implements View.OnClickList
 
             @Override
             public void onFailure(String msg) {
+                dismissProgressDialog();
                 toastShow(msg);
             }
 
@@ -195,7 +217,7 @@ public class UserManageFragment extends BaseFragment implements View.OnClickList
             }
 
             @Override
-            public void setData(UserManageDataBean data) {
+            public void setData(final UserManageDataBean data) {
                 super.setData(data);
                 tv_teacher_name.setText(data.getUsername());
                 tv_teacher_postion.setText(data.getJob());
@@ -206,6 +228,10 @@ public class UserManageFragment extends BaseFragment implements View.OnClickList
                     @Override
                     public void onClick(View view) {
                         toastShow(R.string.give_book1);
+                        Intent intent = new Intent(getActivity(), GiveBookManagementActivity.class);
+                        intent.putExtra("tName", data.getUsername());
+                        intent.putExtra("tGuid", data.getGuid());
+                        getActivity().startActivity(intent);
                     }
                 });
                 tv_black_list.setOnClickListener(new View.OnClickListener() {
