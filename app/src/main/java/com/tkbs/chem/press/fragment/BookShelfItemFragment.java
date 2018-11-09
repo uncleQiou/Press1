@@ -17,6 +17,10 @@ import com.orhanobut.logger.Logger;
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.base.BaseApplication;
 import com.tkbs.chem.press.base.BaseFragment;
+import com.tkbs.chem.press.bean.BookCityDataBean;
+import com.tkbs.chem.press.bean.HttpResponse;
+import com.tkbs.chem.press.bean.SampleBookItemDataBean;
+import com.tkbs.chem.press.net.ApiCallback;
 import com.tkbs.chem.press.util.MessageEvent;
 
 import java.text.Collator;
@@ -57,6 +61,9 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
     private int page = 1;
     private Handler mHandler;
     private boolean editFlg = false;
+    private int type;
+
+    private ArrayList<SampleBookItemDataBean> dataList;
 
     @Override
     protected View getPreviewLayout(LayoutInflater inflater, ViewGroup container) {
@@ -67,6 +74,7 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
     protected void onCreateViewLazy(Bundle savedInstanceState) {
         super.onCreateViewLazy(savedInstanceState);
         setContentView(R.layout.fragment_bookshelf_item);
+        type = getArguments().getInt("Type");
         EventBus.getDefault().register(this);
         ll_sort_edit = (LinearLayout) findViewById(R.id.ll_sort_edit);
         ll_sort_edit.setOnClickListener(this);
@@ -105,8 +113,8 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
             }
         });
         String values = getArguments().getString("111");
-        recycler_bookshelf.getNoMoreView().setText(values);
-//        recycler_bookshelf.getNoMoreView().setText("没有更多数据了");
+//        recycler_bookshelf.getNoMoreView().setText(values);
+        recycler_bookshelf.getNoMoreView().setText(R.string.no_more_data);
     }
 
     @Subscribe(threadMode = ThreadMode.MainThread)
@@ -117,39 +125,223 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
         }
     }
 
-    public void getData(final boolean isRefresh) {
-        mHandler.postDelayed(new Runnable() {
+    /**
+     * 获取样书数据
+     */
+    private void getSampleBookListData(final boolean isRefresh) {
+        showProgressDialog();
+        addSubscription(apiStores.getSampleBookList(page), new ApiCallback<HttpResponse<ArrayList<SampleBookItemDataBean>>>() {
             @Override
-            public void run() {
-                if (isRefresh) {
-                    page = 1;
-                    bookShelfItemAdapter.clear();
-                    bookShelfItemAdapter.addAll(getTestData());
-                    recycler_bookshelf.dismissSwipeRefresh();
-                    recycler_bookshelf.getRecyclerView().scrollToPosition(0);
-                    recycler_bookshelf.showNoMore();
-                } else {
-                    bookShelfItemAdapter.addAll(getTestData());
-                    if (page >= 3) {
+            public void onSuccess(HttpResponse<ArrayList<SampleBookItemDataBean>> model) {
+                if (model.isStatus()) {
+                    if (isRefresh) {
+                        dataList = model.getData();
+                        page = 1;
+                        bookShelfItemAdapter.clear();
+                        bookShelfItemAdapter.addAll(dataList);
+                        recycler_bookshelf.dismissSwipeRefresh();
+                        recycler_bookshelf.getRecyclerView().scrollToPosition(0);
+
+                    } else {
+                        dataList.addAll(model.getData());
+                        bookShelfItemAdapter.addAll(model.getData());
+                    }
+                    if (model.getData().size() < 10) {
                         recycler_bookshelf.showNoMore();
                     }
+                } else {
+                    recycler_bookshelf.dismissSwipeRefresh();
+                    toastShow(model.getErrorDescription());
                 }
+
             }
-        }, 1000);
+
+            @Override
+            public void onFailure(String msg) {
+                toastShow(msg);
+            }
+
+            @Override
+            public void onFinish() {
+                recycler_bookshelf.dismissSwipeRefresh();
+                dismissProgressDialog();
+
+            }
+        });
+
     }
 
-    private BookShelfItemData[] getTestData() {
-        return new BookShelfItemData[]{
-                new BookShelfItemData("金属表面处理"),
-                new BookShelfItemData("钳工基础"),
-                new BookShelfItemData("机械装配钳工基础与技能"),
-                new BookShelfItemData("黄山"),
-                new BookShelfItemData("泰山"),
-                new BookShelfItemData("喜马拉雅山"),
-                new BookShelfItemData("明明白白炒黄金"),
+    /**
+     * 我的收藏
+     */
+    private void getCollectionBookListData(final boolean isRefresh) {
+        showProgressDialog();
+        addSubscription(apiStores.getCollectionBookList(page), new ApiCallback<HttpResponse<ArrayList<SampleBookItemDataBean>>>() {
+            @Override
+            public void onSuccess(HttpResponse<ArrayList<SampleBookItemDataBean>> model) {
+                if (model.isStatus()) {
+                    if (isRefresh) {
+                        dataList = model.getData();
+                        page = 1;
+                        bookShelfItemAdapter.clear();
+                        bookShelfItemAdapter.addAll(dataList);
+                        recycler_bookshelf.dismissSwipeRefresh();
+                        recycler_bookshelf.getRecyclerView().scrollToPosition(0);
 
-        };
+                    } else {
+                        dataList.addAll(model.getData());
+                        bookShelfItemAdapter.addAll(model.getData());
+                    }
+                    if (model.getData().size() < 10) {
+                        recycler_bookshelf.showNoMore();
+                    }
+                } else {
+                    recycler_bookshelf.dismissSwipeRefresh();
+                    toastShow(model.getErrorDescription());
+                }
+
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                toastShow(msg);
+            }
+
+            @Override
+            public void onFinish() {
+                recycler_bookshelf.dismissSwipeRefresh();
+                dismissProgressDialog();
+
+            }
+        });
+
     }
+
+    /**
+     * 我的收藏
+     */
+    private void getBuyedBookListData(final boolean isRefresh) {
+        showProgressDialog();
+        addSubscription(apiStores.getBuyedBookList(page), new ApiCallback<HttpResponse<ArrayList<SampleBookItemDataBean>>>() {
+            @Override
+            public void onSuccess(HttpResponse<ArrayList<SampleBookItemDataBean>> model) {
+                if (model.isStatus()) {
+                    if (isRefresh) {
+                        dataList = model.getData();
+                        page = 1;
+                        bookShelfItemAdapter.clear();
+                        bookShelfItemAdapter.addAll(dataList);
+                        recycler_bookshelf.dismissSwipeRefresh();
+                        recycler_bookshelf.getRecyclerView().scrollToPosition(0);
+
+                    } else {
+                        dataList.addAll(model.getData());
+                        bookShelfItemAdapter.addAll(model.getData());
+                    }
+                    if (model.getData().size() < 10) {
+                        recycler_bookshelf.showNoMore();
+                    }
+                } else {
+                    recycler_bookshelf.dismissSwipeRefresh();
+                    toastShow(model.getErrorDescription());
+                }
+
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                toastShow(msg);
+            }
+
+            @Override
+            public void onFinish() {
+                recycler_bookshelf.dismissSwipeRefresh();
+                dismissProgressDialog();
+
+            }
+        });
+
+    }
+
+    /**
+     * 我的收藏
+     */
+    private void getGiveBookListData(final boolean isRefresh) {
+        showProgressDialog();
+        addSubscription(apiStores.getGiveBookList(page), new ApiCallback<HttpResponse<ArrayList<SampleBookItemDataBean>>>() {
+            @Override
+            public void onSuccess(HttpResponse<ArrayList<SampleBookItemDataBean>> model) {
+                if (model.isStatus()) {
+                    if (isRefresh) {
+                        dataList = model.getData();
+                        page = 1;
+                        bookShelfItemAdapter.clear();
+                        bookShelfItemAdapter.addAll(dataList);
+                        recycler_bookshelf.dismissSwipeRefresh();
+                        recycler_bookshelf.getRecyclerView().scrollToPosition(0);
+
+                    } else {
+                        dataList.addAll(model.getData());
+                        bookShelfItemAdapter.addAll(model.getData());
+                    }
+                    if (model.getData().size() < 10) {
+                        recycler_bookshelf.showNoMore();
+                    }
+                } else {
+                    recycler_bookshelf.dismissSwipeRefresh();
+                    toastShow(model.getErrorDescription());
+                }
+
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                toastShow(msg);
+            }
+
+            @Override
+            public void onFinish() {
+                recycler_bookshelf.dismissSwipeRefresh();
+                dismissProgressDialog();
+
+            }
+        });
+
+    }
+
+    public void getData(final boolean isRefresh) {
+        switch (type) {
+            case 0:
+                // 免费样书
+                getSampleBookListData(isRefresh);
+                break;
+            case 1:
+                // 我的赠书
+                getGiveBookListData(isRefresh);
+                break;
+            case 2:
+                // 已购图书
+                getBuyedBookListData(isRefresh);
+                break;
+            case 3:
+                // 我的收藏
+                getCollectionBookListData(isRefresh);
+                break;
+            case 4:
+                // 业务员 我的图书
+                toastShow("业务员我的图书");
+                break;
+            case 5:
+                // 业务员 我的收藏
+                toastShow("业务员我的收藏");
+                getCollectionBookListData(isRefresh);
+                break;
+            default:
+                break;
+        }
+
+    }
+
 
     private void initView() {
         ll_bookshelf_edit = (LinearLayout) findViewById(R.id.ll_bookshelf_edit);
@@ -182,36 +374,46 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
                 }
                 break;
             case R.id.tv_sort_book_name:
-                List<BookShelfItemData> tData = new ArrayList<>();
-                BookShelfItemData[] rData = getTestData();
-                for (int i = 0; i < rData.length; i++) {
-                    tData.add(rData[i]);
-                }
-                SortByBookName(tData);
-                for (int i = 0; i < tData.size(); i++) {
-                    Logger.e(tData.get(i).getName());
-                }
+                recycler_bookshelf.showSwipeRefresh();
+                SortByBookName();
+                bookShelfItemAdapter.clear();
+                bookShelfItemAdapter.addAll(dataList);
+                recycler_bookshelf.dismissSwipeRefresh();
+                recycler_bookshelf.getRecyclerView().scrollToPosition(0);
                 break;
             default:
                 break;
         }
     }
 
+    private BookShelfItemData[] getTestData() {
+        return new BookShelfItemData[]{
+                new BookShelfItemData("金属表面处理"),
+                new BookShelfItemData("钳工基础"),
+                new BookShelfItemData("机械装配钳工基础与技能"),
+                new BookShelfItemData("黄山"),
+                new BookShelfItemData("泰山"),
+                new BookShelfItemData("喜马拉雅山"),
+                new BookShelfItemData("明明白白炒黄金"),
+
+        };
+    }
+
     /**
      * 按书名排序
      */
-    private void SortByBookName(final List<BookShelfItemData> data) {
+    private void SortByBookName() {
         final RuleBasedCollator collator = (RuleBasedCollator) Collator.getInstance(Locale.CHINA);
-        Collections.sort(data, new Comparator<BookShelfItemData>() {
+        Collections.sort(dataList, new Comparator<SampleBookItemDataBean>() {
             @Override
-            public int compare(BookShelfItemData bookShelfItemData, BookShelfItemData t1) {
-                return collator.compare(bookShelfItemData.getName(),  t1.getName()) < 0 ? -1 : 1;
+            public int compare(SampleBookItemDataBean bookShelfItemData, SampleBookItemDataBean t1) {
+                return collator.compare(bookShelfItemData.getTitle(), t1.getTitle()) < 0 ? -1 : 1;
             }
         });
 
     }
 
-    class BookShelfItemAdapter extends RecyclerAdapter<BookShelfItemData> {
+    class BookShelfItemAdapter extends RecyclerAdapter<SampleBookItemDataBean> {
         private Context context;
         /**
          * 实现单选，保存当前选中的position
@@ -224,12 +426,12 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
         }
 
         @Override
-        public BaseViewHolder<BookShelfItemData> onCreateBaseViewHolder(ViewGroup parent, int viewType) {
+        public BaseViewHolder<SampleBookItemDataBean> onCreateBaseViewHolder(ViewGroup parent, int viewType) {
             return new BookShelfItemHolder(parent);
         }
 
 
-        class BookShelfItemHolder extends BaseViewHolder<BookShelfItemData> {
+        class BookShelfItemHolder extends BaseViewHolder<SampleBookItemDataBean> {
 
             private CheckBox cb_select_item;
             private TextView tv_book_name;
@@ -254,9 +456,9 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
             }
 
             @Override
-            public void setData(BookShelfItemData data) {
+            public void setData(SampleBookItemDataBean data) {
                 super.setData(data);
-                tv_book_name.setText(data.getName());
+                tv_book_name.setText(data.getTitle());
                 tv_buy_time.setVisibility(View.GONE);
                 cb_select_item.setVisibility(View.GONE);
                 tv_book_page.setText("页数：100 页");
@@ -268,7 +470,7 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
             }
 
             @Override
-            public void onItemViewClick(BookShelfItemData data) {
+            public void onItemViewClick(SampleBookItemDataBean data) {
                 super.onItemViewClick(data);
 
             }

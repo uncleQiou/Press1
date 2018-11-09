@@ -180,6 +180,9 @@ public class SecondaryClassificationFragment extends BaseFragment {
         class MyHolder extends BaseViewHolder<SecondClassifyDataBean> {
 
             private LinearLayout ll_more;
+            private LinearLayout ll_book2;
+            private LinearLayout ll_book1;
+            private LinearLayout ll_book3;
             private TextView tv_title;
             private ImageView img_book_cover1;
             private TextView tv_book_name1;
@@ -203,31 +206,71 @@ public class SecondaryClassificationFragment extends BaseFragment {
                 tv_book_name2 = findViewById(R.id.tv_book_name2);
                 img_book_cover3 = findViewById(R.id.img_book_cover3);
                 tv_book_name3 = findViewById(R.id.tv_book_name3);
+                ll_book1 = findViewById(R.id.ll_book1);
+                ll_book2 = findViewById(R.id.ll_book2);
+                ll_book3 = findViewById(R.id.ll_book3);
             }
 
             @Override
             public void setData(final SecondClassifyDataBean data) {
                 super.setData(data);
                 tv_title.setText(data.getResCatagory().getTitle());
-                tv_book_name1.setText(data.getResDocumentList().get(0).getTitle());
-                tv_book_name2.setText(data.getResDocumentList().get(1).getTitle());
-                tv_book_name3.setText(data.getResDocumentList().get(2).getTitle());
-                Glide.with(context).load("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1539859348&di=8b469335b1c844071278bde5488ba5f4&imgtype=jpg&er=1&src=http%3A%2F%2Fpic2.ooopic.com%2F13%2F38%2F51%2F47b1OOOPIC37.jpg")
-                        .apply(BaseApplication.options)
-                        .into(img_book_cover1);
-                Glide.with(context).load("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1539859348&di=8b469335b1c844071278bde5488ba5f4&imgtype=jpg&er=1&src=http%3A%2F%2Fpic2.ooopic.com%2F13%2F38%2F51%2F47b1OOOPIC37.jpg")
-                        .apply(BaseApplication.options)
-                        .into(img_book_cover2);
-                Glide.with(context).load("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1539859348&di=8b469335b1c844071278bde5488ba5f4&imgtype=jpg&er=1&src=http%3A%2F%2Fpic2.ooopic.com%2F13%2F38%2F51%2F47b1OOOPIC37.jpg")
-                        .apply(BaseApplication.options)
-                        .into(img_book_cover3);
+                int len = data.getResDocumentList().size();
+                if (len == 3) {
+                    // 全显示
+                    ll_book1.setVisibility(View.VISIBLE);
+                    ll_book2.setVisibility(View.VISIBLE);
+                    ll_book3.setVisibility(View.VISIBLE);
+                    tv_book_name1.setText(data.getResDocumentList().get(0).getTitle());
+                    tv_book_name2.setText(data.getResDocumentList().get(1).getTitle());
+                    tv_book_name3.setText(data.getResDocumentList().get(2).getTitle());
+                    Glide.with(context).load(data.getResDocumentList().get(0).getCover())
+                            .apply(BaseApplication.options)
+                            .into(img_book_cover1);
+                    Glide.with(context).load(data.getResDocumentList().get(1).getCover())
+                            .apply(BaseApplication.options)
+                            .into(img_book_cover2);
+                    Glide.with(context).load(data.getResDocumentList().get(2).getCover())
+                            .apply(BaseApplication.options)
+                            .into(img_book_cover3);
+                } else if (len == 2) {
+                    ll_book1.setVisibility(View.VISIBLE);
+                    ll_book2.setVisibility(View.VISIBLE);
+                    ll_book3.setVisibility(View.GONE);
+                    tv_book_name1.setText(data.getResDocumentList().get(0).getTitle());
+                    tv_book_name2.setText(data.getResDocumentList().get(1).getTitle());
+                    Glide.with(context).load(data.getResDocumentList().get(0).getCover())
+                            .apply(BaseApplication.options)
+                            .into(img_book_cover1);
+                    Glide.with(context).load(data.getResDocumentList().get(1).getCover())
+                            .apply(BaseApplication.options)
+                            .into(img_book_cover2);
+                } else if (len == 1) {
+                    ll_book1.setVisibility(View.VISIBLE);
+                    ll_book2.setVisibility(View.GONE);
+                    ll_book3.setVisibility(View.GONE);
+                    tv_book_name1.setText(data.getResDocumentList().get(0).getTitle());
+                    Glide.with(context).load(data.getResDocumentList().get(0).getCover())
+                            .apply(BaseApplication.options)
+                            .into(img_book_cover1);
+
+                } else {
+                    ll_book1.setVisibility(View.GONE);
+                    ll_book2.setVisibility(View.GONE);
+                    ll_book3.setVisibility(View.GONE);
+                }
+
                 ll_more.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent intent = new Intent(getActivity(), ThreeClassificActivity.class);
-                        intent.putExtra("guid", data.getResCatagory().getGuid());
-                        intent.putExtra("title", data.getResCatagory().getTitle());
-                        getActivity().startActivity(intent);
+                        if (data.getResDocumentList().size() > 0) {
+                            Intent intent = new Intent(getActivity(), ThreeClassificActivity.class);
+                            intent.putExtra("guid", data.getResCatagory().getGuid());
+                            intent.putExtra("title", data.getResCatagory().getTitle());
+                            getActivity().startActivity(intent);
+                        } else {
+                            toastShow(R.string.no_more_data);
+                        }
                     }
                 });
 

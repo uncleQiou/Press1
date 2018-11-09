@@ -180,7 +180,7 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
         @JavascriptInterface
         public void getBookDetail(String guidStr) {
             guid = guidStr;
-            // TODO 刷新界面
+            //  刷新界面
             bookDetailWeb.loadUrl(bookUrl);
         }
 

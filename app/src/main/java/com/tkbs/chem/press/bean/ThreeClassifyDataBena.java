@@ -29,6 +29,8 @@ public class ThreeClassifyDataBena {
      * modifyDate : 1540198310000
      * extInt : 1
      * extStr :
+     * "degree": null,
+     * "cover": null
      */
 
     private int id;
@@ -53,6 +55,24 @@ public class ThreeClassifyDataBena {
     private long modifyDate;
     private int extInt;
     private String extStr;
+    private String degree;
+    private String cover;
+
+    public String getDegree() {
+        return degree;
+    }
+
+    public void setDegree(String degree) {
+        this.degree = degree;
+    }
+
+    public String getCover() {
+        return cover;
+    }
+
+    public void setCover(String cover) {
+        this.cover = cover;
+    }
 
     public int getId() {
         return id;

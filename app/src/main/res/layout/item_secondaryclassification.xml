@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
     android:layout_marginBottom="@dimen/margin_8dp"
+    android:background="@color/white"
     android:orientation="vertical">
 
     <LinearLayout
@@ -55,6 +55,7 @@
         android:layout_height="wrap_content">
 
         <LinearLayout
+            android:id="@+id/ll_book1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -79,6 +80,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/ll_book2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -103,6 +105,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/ll_book3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"

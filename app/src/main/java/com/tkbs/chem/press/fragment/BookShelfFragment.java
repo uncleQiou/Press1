@@ -116,7 +116,11 @@ public class BookShelfFragment extends BaseFragment {
             BookShelfItemFragment bookShelfItemFragment = new BookShelfItemFragment();
             Bundle bundle = new Bundle();
             bundle.putString("111", "这是第==" + position);
-            bundle.putInt("Type", position);
+            if (user_type == 2) {
+                bundle.putInt("Type", position + 4);
+            } else {
+                bundle.putInt("Type", position);
+            }
             bookShelfItemFragment.setArguments(bundle);
             return bookShelfItemFragment;
 //            if (position == 0) {

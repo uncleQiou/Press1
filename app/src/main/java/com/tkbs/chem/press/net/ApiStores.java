@@ -7,6 +7,7 @@ import com.tkbs.chem.press.bean.BookCityResCatagory;
 import com.tkbs.chem.press.bean.GiveBookListBean;
 import com.tkbs.chem.press.bean.HttpResponse;
 import com.tkbs.chem.press.bean.SampleBookDetailDataBean;
+import com.tkbs.chem.press.bean.SampleBookItemDataBean;
 import com.tkbs.chem.press.bean.SampleBookManageDataBean;
 import com.tkbs.chem.press.bean.SecondClassifyDataBean;
 import com.tkbs.chem.press.bean.ThreeClassifyDataBena;
@@ -151,6 +152,42 @@ public interface ApiStores {
      */
     @POST("salesman/updateInfo")
     Observable<HttpResponse<Object>> ApprovalDataSubmit(@Body RequestBody body);
+
+    /**
+     * 书架 ——免费样书 教师
+     *
+     * @param pageNum
+     * @return
+     */
+    @POST("sampleBook/{pageNum}/10")
+    Observable<HttpResponse<ArrayList<SampleBookItemDataBean>>> getSampleBookList(@Path("pageNum") int pageNum);
+
+    /**
+     * 书架 ——我的收藏 教师
+     *
+     * @param pageNum
+     * @return
+     */
+    @POST("collection/{pageNum}/10")
+    Observable<HttpResponse<ArrayList<SampleBookItemDataBean>>> getCollectionBookList(@Path("pageNum") int pageNum);
+
+    /**
+     * 书架 ——已购图书 教师
+     *
+     * @param pageNum
+     * @return
+     */
+    @POST("order/{pageNum}/10")
+    Observable<HttpResponse<ArrayList<SampleBookItemDataBean>>> getBuyedBookList(@Path("pageNum") int pageNum);
+
+    /**
+     * 书架 ——我的赠书 教师
+     *
+     * @param pageNum
+     * @return
+     */
+    @POST("giveBook/{pageNum}/10")
+    Observable<HttpResponse<ArrayList<SampleBookItemDataBean>>> getGiveBookList(@Path("pageNum") int pageNum);
     /*************************************************************************************************************/
 
 }
