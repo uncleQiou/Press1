@@ -123,28 +123,6 @@ public class BookShelfFragment extends BaseFragment {
             }
             bookShelfItemFragment.setArguments(bundle);
             return bookShelfItemFragment;
-//            if (position == 0) {
-//                TextFragment textFragment = new TextFragment();
-//                Bundle bundle = new Bundle();
-//                bundle.putString("111", "这是第==" + position);
-//                bundle.putInt("Type", position);
-//                textFragment.setArguments(bundle);
-//                return textFragment;
-//            } else if (position == 1) {
-//                TextFragment textFragment = new TextFragment();
-//                Bundle bundle = new Bundle();
-//                bundle.putString("111", "这是第==" + position);
-//                bundle.putInt("Type", position);
-//                textFragment.setArguments(bundle);
-//                return textFragment;
-//            } else {
-//                TextFragment textFragment = new TextFragment();
-//                Bundle bundle = new Bundle();
-//                bundle.putString("111", "这是第==" + position);
-//                bundle.putInt("Type", position);
-//                textFragment.setArguments(bundle);
-//                return textFragment;
-//            }
 
         }
     }

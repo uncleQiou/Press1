@@ -18,9 +18,7 @@ import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.base.BaseActivity;
 import com.tkbs.chem.press.bean.BookCityResCatagory;
 import com.tkbs.chem.press.bean.HttpResponse;
-import com.tkbs.chem.press.fragment.BookShelfItemFragment;
 import com.tkbs.chem.press.fragment.SecondaryClassificationFragment;
-import com.tkbs.chem.press.fragment.TextFragment;
 import com.tkbs.chem.press.net.ApiCallback;
 
 import java.util.ArrayList;

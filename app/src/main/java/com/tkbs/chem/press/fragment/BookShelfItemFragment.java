@@ -463,7 +463,7 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
                 cb_select_item.setVisibility(View.GONE);
                 tv_book_page.setText("页数：100 页");
                 tv_book_endtime.setText("截止时间：永久");
-                Glide.with(context).load("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1539859348&di=8b469335b1c844071278bde5488ba5f4&imgtype=jpg&er=1&src=http%3A%2F%2Fpic2.ooopic.com%2F13%2F38%2F51%2F47b1OOOPIC37.jpg")
+                Glide.with(context).load(data.getCover())
                         .apply(BaseApplication.options)
                         .into(bookshelf_cover);
 

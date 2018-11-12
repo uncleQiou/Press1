@@ -8,7 +8,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -18,7 +17,6 @@ import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.activity.ThreeClassificActivity;
 import com.tkbs.chem.press.base.BaseApplication;
 import com.tkbs.chem.press.base.BaseFragment;
-import com.tkbs.chem.press.bean.BookCityResCatagory;
 import com.tkbs.chem.press.bean.HttpResponse;
 import com.tkbs.chem.press.bean.SecondClassifyDataBean;
 import com.tkbs.chem.press.net.ApiCallback;
@@ -88,7 +86,7 @@ public class SecondaryClassificationFragment extends BaseFragment {
 
     private void getClassifyData(final boolean isRefresh) {
         showProgressDialog();
-        addSubscription(apiStores.SecondClassifyData(guid), new ApiCallback<HttpResponse<ArrayList<SecondClassifyDataBean>>>() {
+        addSubscription(apiStores.SecondClassifyData(guid, page), new ApiCallback<HttpResponse<ArrayList<SecondClassifyDataBean>>>() {
             @Override
             public void onSuccess(HttpResponse<ArrayList<SecondClassifyDataBean>> model) {
                 if (model.isStatus()) {
@@ -98,7 +96,6 @@ public class SecondaryClassificationFragment extends BaseFragment {
                         myAdapter.addAll(model.getData());
                         recycler.dismissSwipeRefresh();
                         recycler.getRecyclerView().scrollToPosition(0);
-
                     } else {
                         myAdapter.addAll(model.getData());
                     }

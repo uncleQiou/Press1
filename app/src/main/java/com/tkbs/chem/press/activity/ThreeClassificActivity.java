@@ -16,7 +16,6 @@ import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.base.BaseActivity;
 import com.tkbs.chem.press.base.BaseApplication;
 import com.tkbs.chem.press.bean.HttpResponse;
-import com.tkbs.chem.press.bean.SecondClassifyDataBean;
 import com.tkbs.chem.press.bean.ThreeClassifyDataBena;
 import com.tkbs.chem.press.net.ApiCallback;
 
@@ -124,7 +123,7 @@ public class ThreeClassificActivity extends BaseActivity implements View.OnClick
 
     private void getClassifyData(final boolean isRefresh) {
         showProgressDialog();
-        addSubscription(apiStores.ThreeClassifyData(guid), new ApiCallback<HttpResponse<ArrayList<ThreeClassifyDataBena>>>() {
+        addSubscription(apiStores.ThreeClassifyData(guid, page), new ApiCallback<HttpResponse<ArrayList<ThreeClassifyDataBena>>>() {
             @Override
             public void onSuccess(HttpResponse<ArrayList<ThreeClassifyDataBena>> model) {
                 if (model.isStatus()) {

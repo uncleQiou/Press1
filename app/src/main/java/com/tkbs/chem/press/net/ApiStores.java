@@ -68,26 +68,26 @@ public interface ApiStores {
      *
      * @return
      */
-    @POST("resDocument/customizationTwo{guid}")
+    @POST("resDocument/customizationTwo/{guid}")
     Observable<HttpResponse<ArrayList<BookCityResCatagory>>> SecondClassificIndicator(@Path("guid") String guid);
 
     /**
      * 书城二级页面
      *
-     * @param guid
+     * @param
      * @return
      */
-    @POST("resDocument/customization{guid}")
-    Observable<HttpResponse<ArrayList<SecondClassifyDataBean>>> SecondClassifyData(@Path("guid") String guid);
+    @POST("resDocument/customization/{guid}/{pageNum}/10")
+    Observable<HttpResponse<ArrayList<SecondClassifyDataBean>>> SecondClassifyData(@Path("guid") String guid, @Path("pageNum") int pageNum);
 
     /**
      * 书城三级页面
      *
-     * @param guid
+     * @param
      * @return
      */
-    @POST("resDocument/customizationFour{guid}")
-    Observable<HttpResponse<ArrayList<ThreeClassifyDataBena>>> ThreeClassifyData(@Path("guid") String guid);
+    @POST("resDocument/customizationFour/{guid}/{pageNum}/10")
+    Observable<HttpResponse<ArrayList<ThreeClassifyDataBena>>> ThreeClassifyData(@Path("guid") String guid, @Path("pageNum") int pageNum);
 
     /**
      * 我的定制
