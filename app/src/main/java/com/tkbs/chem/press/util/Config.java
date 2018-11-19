@@ -13,7 +13,7 @@ public class Config {
      * Zmy
      */
     public static String API_SERVER = "http://192.168.1.153:8281/app/";
-    /**5404
+    /**
      * 251
      */
 //    public static String API_SERVER = "http://192.168.1.251:8281/app/";

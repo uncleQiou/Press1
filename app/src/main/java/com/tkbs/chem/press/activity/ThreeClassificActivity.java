@@ -216,7 +216,6 @@ public class ThreeClassificActivity extends BaseActivity implements View.OnClick
                 finish();
                 break;
             case R.id.img_sort_edit:
-                toastShow("显示方式");
                 if (1 == disType) {
                     disType = 2;
                     imgSortEdit.setImageResource(R.mipmap.customized_btn_list);

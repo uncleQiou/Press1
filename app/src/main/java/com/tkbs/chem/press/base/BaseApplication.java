@@ -36,7 +36,7 @@ public class BaseApplication extends Application {
         options = new RequestOptions();
         options.placeholder(R.drawable.ic_default_image);
         options.error(R.drawable.ic_default_image);
-        options.centerCrop();
+        options.fitCenter();
 
         context = getApplicationContext();
         preferences = getSharedPreferences("press", MODE_PRIVATE);

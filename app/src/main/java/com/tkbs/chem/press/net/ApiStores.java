@@ -83,7 +83,7 @@ public interface ApiStores {
     /**
      * 书城三级页面
      *
-     * @param
+     * @param guid
      * @return
      */
     @POST("resDocument/customizationFour/{guid}/{pageNum}/10")

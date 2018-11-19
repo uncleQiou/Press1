@@ -1,6 +1,7 @@
 package com.tkbs.chem.press.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.GridLayoutManager;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.orhanobut.logger.Logger;
 import com.tkbs.chem.press.R;
+import com.tkbs.chem.press.activity.BookDetailActivity;
 import com.tkbs.chem.press.base.BaseApplication;
 import com.tkbs.chem.press.base.BaseFragment;
 import com.tkbs.chem.press.bean.BookCityDataBean;
@@ -25,9 +27,11 @@ import com.tkbs.chem.press.util.MessageEvent;
 
 import java.text.Collator;
 import java.text.RuleBasedCollator;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -63,6 +67,8 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
     private boolean editFlg = false;
     private int type;
 
+    // 升序
+    private boolean isAscendingOrder = true;
     private ArrayList<SampleBookItemDataBean> dataList;
 
     @Override
@@ -218,7 +224,7 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
     }
 
     /**
-     * 我的收藏
+     * 我购买的
      */
     private void getBuyedBookListData(final boolean isRefresh) {
         showProgressDialog();
@@ -264,7 +270,7 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
     }
 
     /**
-     * 我的收藏
+     * 我的赠书
      */
     private void getGiveBookListData(final boolean isRefresh) {
         showProgressDialog();
@@ -359,6 +365,7 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
         tv_delete = (TextView) findViewById(R.id.tv_delete);
         recycler_bookshelf = (RefreshRecyclerView) findViewById(R.id.recycler_bookshelf);
         tv_sort_book_name.setOnClickListener(this);
+        ll_sort_time.setOnClickListener(this);
     }
 
     @Override
@@ -374,8 +381,29 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
                 }
                 break;
             case R.id.tv_sort_book_name:
+                if (null == dataList) {
+                    return;
+                }
                 recycler_bookshelf.showSwipeRefresh();
-                SortByBookName();
+                sortByBookName();
+                bookShelfItemAdapter.clear();
+                bookShelfItemAdapter.addAll(dataList);
+                recycler_bookshelf.dismissSwipeRefresh();
+                recycler_bookshelf.getRecyclerView().scrollToPosition(0);
+                break;
+            case R.id.ll_sort_time:
+                if (null == dataList) {
+                    return;
+                }
+                recycler_bookshelf.showSwipeRefresh();
+                img_sort_time.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down : R.mipmap.bookshelf_icon_up);
+                if (isAscendingOrder) {
+                    isAscendingOrder = false;
+                    sortByDateUp();
+                } else {
+                    isAscendingOrder = true;
+                    sortByDateDown();
+                }
                 bookShelfItemAdapter.clear();
                 bookShelfItemAdapter.addAll(dataList);
                 recycler_bookshelf.dismissSwipeRefresh();
@@ -402,12 +430,66 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
     /**
      * 按书名排序
      */
-    private void SortByBookName() {
+    private void sortByBookName() {
         final RuleBasedCollator collator = (RuleBasedCollator) Collator.getInstance(Locale.CHINA);
         Collections.sort(dataList, new Comparator<SampleBookItemDataBean>() {
             @Override
             public int compare(SampleBookItemDataBean bookShelfItemData, SampleBookItemDataBean t1) {
                 return collator.compare(bookShelfItemData.getTitle(), t1.getTitle()) < 0 ? -1 : 1;
+            }
+        });
+
+    }
+
+    /**
+     * 按时间排序 升序
+     */
+    private void sortByDateUp() {
+        Collections.sort(dataList, new Comparator<SampleBookItemDataBean>() {
+            @Override
+            public int compare(SampleBookItemDataBean o1, SampleBookItemDataBean o2) {
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                try {
+                    Date dt1 = format.parse(o1.getPublish_time());
+                    Date dt2 = format.parse(o2.getPublish_time());
+                    if (dt1.getTime() > dt2.getTime()) {
+                        return 1;
+                    } else if (dt1.getTime() < dt2.getTime()) {
+                        return -1;
+                    } else {
+                        return 0;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return 0;
+            }
+        });
+
+    }
+
+    /**
+     * 按时间排序 降序
+     */
+    private void sortByDateDown() {
+        Collections.sort(dataList, new Comparator<SampleBookItemDataBean>() {
+            @Override
+            public int compare(SampleBookItemDataBean o1, SampleBookItemDataBean o2) {
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                try {
+                    Date dt1 = format.parse(o1.getPublish_time());
+                    Date dt2 = format.parse(o2.getPublish_time());
+                    if (dt1.getTime() > dt2.getTime()) {
+                        return -1;
+                    } else if (dt1.getTime() < dt2.getTime()) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return 0;
             }
         });
 
@@ -472,6 +554,9 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
             @Override
             public void onItemViewClick(SampleBookItemDataBean data) {
                 super.onItemViewClick(data);
+                Intent intent = new Intent(context, BookDetailActivity.class);
+                intent.putExtra("guid", data.getGuid());
+                context.startActivity(intent);
 
             }
 

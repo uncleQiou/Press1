@@ -10,7 +10,7 @@
         android:layout_width="@dimen/margin_100dp"
         android:layout_height="@dimen/margin_100dp"
         android:layout_margin="@dimen/margin_5dp"
-        android:scaleType="fitXY"
+        android:scaleType="fitCenter"
         android:src="@drawable/ic_default_image" />
 
     <TextView
