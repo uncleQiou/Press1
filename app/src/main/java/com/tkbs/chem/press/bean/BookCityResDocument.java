@@ -33,13 +33,22 @@ public class BookCityResDocument {
 
     private int id;
     private String guid;
-    private Object docno;
-    private Object shortdocno;
+    private long docno;
+    private long shortdocno;
     private String title;
     private String author;
     private long publishTime;
     private int price;
+    private int degree;
     private String cover;
+
+    public int getDegree() {
+        return degree;
+    }
+
+    public void setDegree(int degree) {
+        this.degree = degree;
+    }
 
     public String getCover() {
         return cover;
@@ -65,19 +74,19 @@ public class BookCityResDocument {
         this.guid = guid;
     }
 
-    public Object getDocno() {
+    public long getDocno() {
         return docno;
     }
 
-    public void setDocno(Object docno) {
+    public void setDocno(long docno) {
         this.docno = docno;
     }
 
-    public Object getShortdocno() {
+    public long getShortdocno() {
         return shortdocno;
     }
 
-    public void setShortdocno(Object shortdocno) {
+    public void setShortdocno(long shortdocno) {
         this.shortdocno = shortdocno;
     }
 

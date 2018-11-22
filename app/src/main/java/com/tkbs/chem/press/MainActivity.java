@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.orhanobut.logger.Logger;
 import com.tkbs.chem.press.activity.SearchActivity;
+import com.tkbs.chem.press.activity.SearchClassifyActivity;
 import com.tkbs.chem.press.base.BaseActivity;
 import com.tkbs.chem.press.base.BaseApplication;
 import com.tkbs.chem.press.bean.HttpResponse;
@@ -216,7 +217,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     @OnClick({R.id.rbtn_tab_bookshelf, R.id.rbtn_tab_bookcity,
             R.id.rbtn_tab_manage, R.id.rbtn_tab_mine, R.id.ll_search,
-            R.id.rbtn_tab_discover})
+            R.id.rbtn_tab_discover, R.id.tv_classfy})
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -258,9 +259,31 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             case R.id.ll_search:
                 startActivity(new Intent(MainActivity.this, SearchActivity.class));
                 break;
+            case R.id.tv_classfy:
+                startActivityForResult(new Intent(MainActivity.this, SearchClassifyActivity.class), 0);
+                break;
 
             default:
                 break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case 0:
+                    //  将获取的结果 发送给 搜索接口
+                    String result = data.getStringExtra("result");
+                    Logger.e(result);
+                    Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+                    intent.putExtra("Classy", result);
+                    startActivity(intent);
+                    break;
+                default:
+                    break;
+            }
         }
     }
 

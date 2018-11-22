@@ -4,11 +4,15 @@ package com.tkbs.chem.press.net;
 import com.tkbs.chem.press.bean.BannerDataBean;
 import com.tkbs.chem.press.bean.BookCityDataBean;
 import com.tkbs.chem.press.bean.BookCityResCatagory;
+import com.tkbs.chem.press.bean.BookCityResDocument;
+import com.tkbs.chem.press.bean.BookDetailBean;
 import com.tkbs.chem.press.bean.GiveBookListBean;
 import com.tkbs.chem.press.bean.HttpResponse;
+import com.tkbs.chem.press.bean.OrderInfo;
 import com.tkbs.chem.press.bean.SampleBookDetailDataBean;
 import com.tkbs.chem.press.bean.SampleBookItemDataBean;
 import com.tkbs.chem.press.bean.SampleBookManageDataBean;
+import com.tkbs.chem.press.bean.SearchHotKey;
 import com.tkbs.chem.press.bean.SecondClassifyDataBean;
 import com.tkbs.chem.press.bean.ThreeClassifyDataBena;
 import com.tkbs.chem.press.bean.UserBean;
@@ -16,11 +20,14 @@ import com.tkbs.chem.press.bean.UserInfoManageDataBean;
 import com.tkbs.chem.press.bean.UserManageDataBean;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import okhttp3.RequestBody;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
+import retrofit2.http.QueryMap;
 import rx.Observable;
 
 public interface ApiStores {
@@ -188,6 +195,45 @@ public interface ApiStores {
      */
     @POST("giveBook/{pageNum}/10")
     Observable<HttpResponse<ArrayList<SampleBookItemDataBean>>> getGiveBookList(@Path("pageNum") int pageNum);
+
+    /**
+     * 搜索结果
+     *
+     * @param pageNum
+     * @return
+     */
+    @POST("search/queryDocumentBySearch/{pageNum}/10")
+    Observable<HttpResponse<ArrayList<BookCityResDocument>>> getSearchList(@Path("pageNum") int pageNum, @Body RequestBody body);
+
+    /**
+     * 搜索结果
+     *
+     * @param pageNum
+     * @return
+     */
+    @POST("searchWord/{pageNum}/10")
+    Observable<HttpResponse<ArrayList<SearchHotKey>>> getSearchHotKey(@Path("pageNum") int pageNum);
+
+    /**
+     * 查询图书详情
+     *
+     * @param guid
+     * @return
+     */
+    @POST("resDocument/queryDocument/{guid}")
+    Observable<HttpResponse<BookDetailBean>> getBookDetail(@Path("guid") String guid);
+
+    /**
+     * 支付宝 支付
+     *
+     * @param documentGUID
+     * @return
+     */
+    @POST("pay/payReadyAlipay/{documentGUID}")
+    Observable<HttpResponse<OrderInfo>> payReadyAlipay(@Path("documentGUID") String documentGUID);
+
+//    Observable<HttpResponse<OrderInfo>> payReadyAlipay(@QueryMap Map<String, String> options);
+
     /*************************************************************************************************************/
 
 }

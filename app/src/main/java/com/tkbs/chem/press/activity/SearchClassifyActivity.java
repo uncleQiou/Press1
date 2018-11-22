@@ -3,6 +3,7 @@ package com.tkbs.chem.press.activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.webkit.JavascriptInterface;
@@ -13,18 +14,16 @@ import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.orhanobut.logger.Logger;
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.base.BaseActivity;
 import com.tkbs.chem.press.util.Config;
+import com.tkbs.chem.press.util.UiUtils;
 import com.tkbs.chem.press.view.ReWebChomeClient;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 
-
-public class BookDetailActivity extends BaseActivity implements View.OnClickListener, ReWebChomeClient.OpenFileChooserCallBack {
-
+public class SearchClassifyActivity extends BaseActivity implements View.OnClickListener, ReWebChomeClient.OpenFileChooserCallBack {
 
     @BindView(R.id.back)
     ImageView back;
@@ -32,27 +31,50 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
     TextView title;
     @BindView(R.id.tv_right)
     TextView tvRight;
-    @BindView(R.id.book_detail_web)
-    WebView bookDetailWeb;
-    private String guid;
+    @BindView(R.id.classify_web)
+    WebView classifyWeb;
+    private String baseUrl = Config.API_SERVER + "hello/classify.html";
 
-    private String bookUrl = Config.API_SERVER + "hello/book_detail.html";
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     protected int getLayoutId() {
-        return R.layout.activity_book_detail;
+        return R.layout.activity_search_classify;
     }
-
 
     @Override
     protected void initdata() {
-        guid = getIntent().getStringExtra("guid");
         initWeb();
+
     }
 
+    @OnClick({R.id.back})
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.back:
+                finish();
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public void openFileChooserCallBack(ValueCallback<Uri> uploadMsg, String acceptType) {
+
+    }
+
+    @Override
+    protected void initTitle() {
+        title.setText(R.string.classify);
+    }
 
     private void initWeb() {
-        WebSettings setting = bookDetailWeb.getSettings();
+        WebSettings setting = classifyWeb.getSettings();
         //允许加载javascript
         setting.setJavaScriptEnabled(true);
         //允许缩放
@@ -68,12 +90,12 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
         setting.setDomStorageEnabled(true);
         setting.setJavaScriptCanOpenWindowsAutomatically(true);
         setting.setSupportMultipleWindows(true);
-        bookDetailWeb.addJavascriptInterface(new BookDetailInterface(), "TKBS");
+        classifyWeb.addJavascriptInterface(new ClassifyInterface(), "TKBS");
         /*****************************************************************
          * 在点击请求的是链接时才会调用，重写此方法返回true表明点击网页里
          * 面的链接还是在当前的WebView里跳转，不会跳到浏览器上运行。
          *****************************************************************/
-        bookDetailWeb.setWebViewClient(new WebViewClient() {
+        classifyWeb.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 view.loadUrl(url);
@@ -101,7 +123,7 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
                 super.onPageFinished(view, url);
             }
         });
-        bookDetailWeb.setWebChromeClient(new ReWebChomeClient(this) {
+        classifyWeb.setWebChromeClient(new ReWebChomeClient(this) {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
                 super.onProgressChanged(view, newProgress);
@@ -111,36 +133,12 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
             }
         });
 
-        bookDetailWeb.loadUrl(bookUrl);
+        classifyWeb.loadUrl(baseUrl);
     }
 
+    private class ClassifyInterface {
 
-    @Override
-    protected void initTitle() {
-        title.setText(R.string.book_detail_title);
-    }
-
-
-    @OnClick({R.id.back})
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.back:
-                finish();
-                break;
-            default:
-                break;
-        }
-    }
-
-    @Override
-    public void openFileChooserCallBack(ValueCallback<Uri> uploadMsg, String acceptType) {
-
-    }
-
-    private class BookDetailInterface {
-
-        BookDetailInterface() {
+        ClassifyInterface() {
         }
 
 
@@ -159,42 +157,22 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
         }
 
         @JavascriptInterface
-        public String getBookGuid() {
-            return guid;
-        }
-
-        @JavascriptInterface
         public String getUser() {
             String user = preference.getString("login_name", "") +
                     "," +
-                    preference.getString("PASSWORD", "");
+                    preference.getString("PASSWORD", "") + "," + UiUtils.getid(SearchClassifyActivity.this);
 
             return user;
         }
 
         @JavascriptInterface
-        public void viewDirectory() {
-            toastShow("查看目录");
-        }
-
-
-        @JavascriptInterface
-        public void getBookDetail(String guidStr) {
-            guid = guidStr;
-            //  刷新界面
-            bookDetailWeb.loadUrl(bookUrl);
-        }
-
-        @JavascriptInterface
-        public void goBuyBook() {
-            Intent intent = new Intent(BookDetailActivity.this,PayActivity.class);
-            intent.putExtra("guid",guid);
-            startActivity(intent);
-        }
-
-        @JavascriptInterface
-        public void finshBookDetail() {
+        public void finshClassify(String result) {
+            Intent intent = new Intent();
+            intent.putExtra("result", result);
+            SearchClassifyActivity.this.setResult(RESULT_OK, intent);
             finish();
         }
+
+
     }
 }

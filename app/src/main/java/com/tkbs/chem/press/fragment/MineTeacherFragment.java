@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.tkbs.chem.press.R;
+import com.tkbs.chem.press.activity.ChartDemoActivity;
 import com.tkbs.chem.press.activity.MyApplyActivity;
 import com.tkbs.chem.press.activity.MyCustomizedActivity;
 import com.tkbs.chem.press.activity.MyOpinionActivity;
@@ -88,7 +89,7 @@ public class MineTeacherFragment extends BaseFragment implements View.OnClickLis
         switch (view.getId()) {
             case R.id.ll_personal_information:
                 toastShow(R.string.personal_information);
-
+                getActivity().startActivity(new Intent(getActivity(), ChartDemoActivity.class));
                 break;
             case R.id.ll_my_apply:
                 toastShow(R.string.my_apply);

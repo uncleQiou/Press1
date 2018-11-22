@@ -117,6 +117,15 @@
     <string name="book_detail_title">图书详情</string>
     <string name="my_interest">我感兴趣的</string>
     <string name="give_book_manage">赠书管理</string>
+    <string name="classify">分类</string>
+    <string name="str_pay">支付</string>
+    <string name="file_size">文件大小：</string>
+    <string name="order_number">订单编号</string>
+    <string name="transaction_number">交易号</string>
+    <string name="pay_way">支付方式</string>
+    <string name="transaction_amount">交易金额</string>
+    <string name="str_download">下载</string>
+    <string name="sure_pay_amount">确认支付：</string>
 
 
     <string name="hello_blank_fragment">Hello blank fragment</string>

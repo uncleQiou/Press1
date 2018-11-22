@@ -13,7 +13,7 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -76,6 +76,31 @@
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
                 android:background="@color/cc_bk_dark" />
+            <!--分类-->
+            <RelativeLayout
+                android:id="@+id/ll_classfy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/margin_8dp">
+
+                <TextView
+                    android:id="@+id/tv_classfy_titel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/margin_10dp"
+                    android:text="当前搜索分类："
+                    android:textColor="@color/text_main_3"
+                    android:textSize="@dimen/text_16sp" />
+
+                <TextView
+                    android:id="@+id/tv_classfy"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/tv_classfy_titel"
+                    android:paddingTop="@dimen/margin_10dp"
+                    android:textColor="@color/text_main_6"
+                    android:textSize="@dimen/text_14sp" />
+            </RelativeLayout>
             <!--搜索历史-->
             <LinearLayout
                 android:id="@+id/ll_search_history"
@@ -97,7 +122,7 @@
                         android:padding="@dimen/margin_10dp"
                         android:text="@string/str_search_history"
                         android:textColor="@color/text_main_3"
-                        android:textSize="@dimen/text_18sp" />
+                        android:textSize="@dimen/text_16sp" />
 
                     <TextView
                         android:id="@+id/tv_sreach_delete"
@@ -137,14 +162,14 @@
                     android:padding="@dimen/margin_10dp"
                     android:text="@string/hot_search"
                     android:textColor="@color/text_main_3"
-                    android:textSize="@dimen/text_18sp" />
+                    android:textSize="@dimen/text_16sp" />
 
-                <android.support.v7.widget.RecyclerView
+                <cn.lemon.view.RefreshRecyclerView
                     android:id="@+id/recyclerview_search_hot"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/margin_20dp"
+                    android:layout_height="@dimen/margin_300dp"
                     android:nestedScrollingEnabled="false" />
+
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

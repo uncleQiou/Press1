@@ -1,6 +1,7 @@
 package com.tkbs.chem.press.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.GridLayoutManager;
@@ -12,14 +13,22 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.orhanobut.logger.Logger;
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.base.BaseActivity;
 import com.tkbs.chem.press.base.BaseApplication;
+import com.tkbs.chem.press.bean.BookCityResDocument;
 import com.tkbs.chem.press.bean.HttpResponse;
 import com.tkbs.chem.press.bean.ThreeClassifyDataBena;
 import com.tkbs.chem.press.net.ApiCallback;
 
+import java.text.Collator;
+import java.text.RuleBasedCollator;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -68,6 +77,8 @@ public class ThreeClassificActivity extends BaseActivity implements View.OnClick
     private String guid;
     private String titleStr;
     private int disType = 2;
+    // 升序
+    private boolean isAscendingOrder = true;
     private ArrayList<ThreeClassifyDataBena> bookDatas;
 
     @Override
@@ -208,18 +219,25 @@ public class ThreeClassificActivity extends BaseActivity implements View.OnClick
         };
     }
 
-    @OnClick({R.id.back, R.id.img_sort_edit})
+    @OnClick({R.id.back, R.id.img_sort_edit, R.id.img_serache, R.id.img_classification,
+            R.id.ll_sort_time, R.id.tv_sort_hot, R.id.tv_sort_book_name})
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.back:
                 finish();
                 break;
+            case R.id.img_classification:
+                startActivityForResult(new Intent(ThreeClassificActivity.this, SearchClassifyActivity.class), 0);
+                break;
+            case R.id.img_serache:
+                startActivity(new Intent(ThreeClassificActivity.this, SearchActivity.class));
+                break;
             case R.id.img_sort_edit:
                 if (1 == disType) {
                     disType = 2;
                     imgSortEdit.setImageResource(R.mipmap.customized_btn_list);
-                    myAdapter = new MyAdapter(this);
+//                    myAdapter = new MyAdapter(this);
                     myAdapter.clear();
                     myAdapter.addAll(bookDatas);
                     recycler.setLayoutManager(new GridLayoutManager(this, 3));
@@ -236,9 +254,163 @@ public class ThreeClassificActivity extends BaseActivity implements View.OnClick
                     recycler.showNoMore();
                 }
                 break;
+            case R.id.ll_sort_time:
+                if (null == bookDatas) {
+                    return;
+                }
+                recycler.showSwipeRefresh();
+                imgSortTime.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down : R.mipmap.bookshelf_icon_up);
+                if (isAscendingOrder) {
+                    isAscendingOrder = false;
+                    sortByDateUp();
+                } else {
+                    isAscendingOrder = true;
+                    sortByDateDown();
+                }
+                myAdapter.clear();
+                myAdapter.addAll(bookDatas);
+                recycler.dismissSwipeRefresh();
+                recycler.getRecyclerView().scrollToPosition(0);
+                break;
+            case R.id.tv_sort_book_name:
+                if (null == bookDatas) {
+                    return;
+                }
+                recycler.showSwipeRefresh();
+                sortByBookName();
+                myAdapter.clear();
+                myAdapter.addAll(bookDatas);
+                recycler.dismissSwipeRefresh();
+                recycler.getRecyclerView().scrollToPosition(0);
+                break;
+            case R.id.tv_sort_hot:
+                if (null == bookDatas) {
+                    return;
+                }
+                recycler.showSwipeRefresh();
+                sortBydEgreeDown();
+                myAdapter.clear();
+                myAdapter.addAll(bookDatas);
+                recycler.dismissSwipeRefresh();
+                recycler.getRecyclerView().scrollToPosition(0);
+                break;
             default:
                 break;
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case 0:
+                    //  将获取的结果 发送给 搜索接口
+                    String result = data.getStringExtra("result");
+                    Logger.e(result);
+                    Intent intent = new Intent(ThreeClassificActivity.this, SearchActivity.class);
+                    intent.putExtra("Classy", result);
+                    startActivity(intent);
+//                    finish();
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    /**
+     * 按书名排序
+     */
+    private void sortByBookName() {
+        final RuleBasedCollator collator = (RuleBasedCollator) Collator.getInstance(Locale.CHINA);
+        Collections.sort(bookDatas, new Comparator<ThreeClassifyDataBena>() {
+            @Override
+            public int compare(ThreeClassifyDataBena bookShelfItemData, ThreeClassifyDataBena t1) {
+                return collator.compare(bookShelfItemData.getTitle(), t1.getTitle()) < 0 ? -1 : 1;
+            }
+        });
+
+    }
+
+    /**
+     * 按时间排序 升序
+     */
+    private void sortByDateUp() {
+        Collections.sort(bookDatas, new Comparator<ThreeClassifyDataBena>() {
+            @Override
+            public int compare(ThreeClassifyDataBena o1, ThreeClassifyDataBena o2) {
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                try {
+//                    Date dt1 = format.parse(o1.getPublish_time());
+//                    Date dt2 = format.parse(o2.getPublish_time());
+                    if (o1.getPublishTime() > o2.getPublishTime()) {
+                        return 1;
+                    } else if (o1.getPublishTime() < o2.getPublishTime()) {
+                        return -1;
+                    } else {
+                        return 0;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return 0;
+            }
+        });
+
+    }
+
+    /**
+     * 按时间排序 降序
+     */
+    private void sortByDateDown() {
+        Collections.sort(bookDatas, new Comparator<ThreeClassifyDataBena>() {
+            @Override
+            public int compare(ThreeClassifyDataBena o1, ThreeClassifyDataBena o2) {
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                try {
+//                    Date dt1 = format.parse(o1.getPublishTime());
+//                    Date dt2 = format.parse(o2.getPublish_time());
+                    if (o1.getPublishTime() > o2.getPublishTime()) {
+                        return -1;
+                    } else if (o1.getPublishTime() < o2.getPublishTime()) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return 0;
+            }
+        });
+
+    }
+
+    /**
+     * 按热度 降序
+     */
+    private void sortBydEgreeDown() {
+        Collections.sort(bookDatas, new Comparator<ThreeClassifyDataBena>() {
+            @Override
+            public int compare(ThreeClassifyDataBena o1, ThreeClassifyDataBena o2) {
+
+                try {
+
+                    if (o1.getDegree() > o2.getDegree()) {
+                        return -1;
+                    } else if (o1.getDegree() < o2.getDegree()) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return 0;
+            }
+        });
+
     }
 
     class MyAdapter extends RecyclerAdapter<ThreeClassifyDataBena> {

@@ -55,14 +55,14 @@ public class ThreeClassifyDataBena {
     private long modifyDate;
     private int extInt;
     private String extStr;
-    private String degree;
+    private int degree;
     private String cover;
 
-    public String getDegree() {
+    public int getDegree() {
         return degree;
     }
 
-    public void setDegree(String degree) {
+    public void setDegree(int degree) {
         this.degree = degree;
     }
 

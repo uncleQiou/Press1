@@ -4,15 +4,15 @@ package com.tkbs.chem.press.util;
  * Created by Administrator on 2017/8/28.
  */
 public class Config {
-    public static final String TOPIC = "topic";
+    public static final String TOPIC = " ";
     /**
      * Xjl
      */
-//    public static String API_SERVER = "http://192.168.1.154:8281/app/";
+//    public static String API_SERVER = "http://192.168.113.146:8281/app/";
     /**
      * Zmy
      */
-    public static String API_SERVER = "http://192.168.1.153:8281/app/";
+    public static String API_SERVER = "http://192.168.113.147:8281/app/";
     /**
      * 251
      */

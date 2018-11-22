@@ -1,5 +1,6 @@
 package com.tkbs.chem.press.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.orhanobut.logger.Logger;
 import com.shizhefei.view.indicator.IndicatorViewPager;
 import com.shizhefei.view.indicator.ScrollIndicatorView;
 import com.shizhefei.view.indicator.slidebar.ColorBar;
@@ -105,15 +107,41 @@ public class SecondaryClassificationActivity extends BaseActivity implements Vie
         tvTitle.setText(titleStr);
     }
 
-    @OnClick({R.id.back})
+    @OnClick({R.id.back, R.id.img_serache, R.id.img_classification})
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.back:
                 finish();
                 break;
+            case R.id.img_classification:
+                startActivityForResult(new Intent(SecondaryClassificationActivity.this, SearchClassifyActivity.class), 0);
+                break;
+            case R.id.img_serache:
+                startActivity(new Intent(SecondaryClassificationActivity.this, SearchActivity.class));
+                break;
             default:
                 break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case 0:
+                    //  将获取的结果 发送给 搜索接口
+                    String result = data.getStringExtra("result");
+                    Logger.e(result);
+                    Intent intent = new Intent(SecondaryClassificationActivity.this, SearchActivity.class);
+                    intent.putExtra("Classy", result);
+                    startActivity(intent);
+//                    finish();
+                    break;
+                default:
+                    break;
+            }
         }
     }
 

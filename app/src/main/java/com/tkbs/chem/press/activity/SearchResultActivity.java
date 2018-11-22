@@ -1,23 +1,44 @@
 package com.tkbs.chem.press.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.GridLayoutManager;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
+import com.orhanobut.logger.Logger;
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.adapter.BookCityItemAdapter;
 import com.tkbs.chem.press.base.BaseActivity;
 import com.tkbs.chem.press.base.BaseApplication;
+import com.tkbs.chem.press.bean.BookCityResDocument;
+import com.tkbs.chem.press.bean.ClassifyBean;
+import com.tkbs.chem.press.bean.ClassifyRequestBean;
+import com.tkbs.chem.press.bean.HttpResponse;
+import com.tkbs.chem.press.bean.SampleBookItemDataBean;
+import com.tkbs.chem.press.bean.ThreeClassifyDataBena;
+import com.tkbs.chem.press.net.ApiCallback;
+import com.tkbs.chem.press.util.Config;
+import com.tkbs.chem.press.util.SPManagement;
 
+import java.text.Collator;
+import java.text.RuleBasedCollator;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -25,8 +46,10 @@ import cn.lemon.view.RefreshRecyclerView;
 import cn.lemon.view.adapter.Action;
 import cn.lemon.view.adapter.BaseViewHolder;
 import cn.lemon.view.adapter.RecyclerAdapter;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 
-public class SearchResultActivity extends BaseActivity implements View.OnClickListener{
+public class SearchResultActivity extends BaseActivity implements View.OnClickListener {
 
     @BindView(R.id.back)
     ImageView back;
@@ -61,8 +84,17 @@ public class SearchResultActivity extends BaseActivity implements View.OnClickLi
     private SerachResultAdapter mAdapter;
     private int page = 1;
     private Handler mHandler;
+    private int disType = 2;
     private List<String> books = Arrays.asList("书籍1书籍1书籍1书籍1书籍1书籍1书籍1书籍1书籍1书籍1书籍1书籍1", "书籍2", "书籍3", "书籍4书籍4书籍4书籍4书籍4书籍4书籍4书籍4书籍4书籍4", "书籍5", "书籍6", "书籍7书籍7书籍7书籍7书籍7书籍7书籍7书籍7书籍7书籍7书籍7", "书籍8", "书籍9");
 
+    private ArrayList<String> classfyguid = new ArrayList<>();
+    private String searchKeyStr;
+    private List<String> classfyList = new ArrayList<>();
+
+    private ArrayList<BookCityResDocument> dataList;
+    // 升序
+    private boolean isAscendingOrder = true;
+    private SPManagement.SPUtil spUtilInstance;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,6 +107,9 @@ public class SearchResultActivity extends BaseActivity implements View.OnClickLi
 
     @Override
     protected void initdata() {
+        spUtilInstance = SPManagement.getSPUtilInstance(Config.SAVEDTAB);
+        classfyguid = getIntent().getStringArrayListExtra("Classfy");
+        searchKeyStr = getIntent().getStringExtra("SearchKey");
 
         mAdapter = new SerachResultAdapter(this);
         recycler.setSwipeRefreshColors(0xFF437845, 0xFFE44F98, 0xFF2FAC21);
@@ -85,14 +120,14 @@ public class SearchResultActivity extends BaseActivity implements View.OnClickLi
             @Override
             public void onAction() {
                 page = 1;
-                getData(true);
+                getSearchedData(true);
             }
         });
         recycler.setLoadMoreAction(new Action() {
             @Override
             public void onAction() {
                 page++;
-                getData(false);
+                getSearchedData(false);
 
             }
         });
@@ -101,7 +136,7 @@ public class SearchResultActivity extends BaseActivity implements View.OnClickLi
             @Override
             public void run() {
                 recycler.showSwipeRefresh();
-                getData(true);
+                getSearchedData(true);
             }
         });
         recycler.getNoMoreView().setText(R.string.no_more_data);
@@ -112,53 +147,265 @@ public class SearchResultActivity extends BaseActivity implements View.OnClickLi
 
     }
 
-    public void getData(final boolean isRefresh) {
-        mHandler.postDelayed(new Runnable() {
+
+    /**
+     * 获得搜索数据
+     */
+    private void getSearchedData(final boolean isRefresh) {
+        final Gson gson = new Gson();
+        ClassifyRequestBean requestData = new ClassifyRequestBean();
+        requestData.setContent(searchKeyStr);
+        if (null != classfyguid && classfyguid.size() > 0) {
+            for (String guid : classfyguid) {
+                classfyList.add(guid);
+            }
+        }
+        requestData.setCatagoryGuids(classfyList);
+        String route = gson.toJson(requestData);
+        Logger.e("====" + route + "===========");
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), route);
+        showProgressDialog();
+        addSubscription(apiStores.getSearchList(page, body), new ApiCallback<HttpResponse<ArrayList<BookCityResDocument>>>() {
             @Override
-            public void run() {
-                if (isRefresh) {
-                    page = 1;
-                    mAdapter.clear();
-                    mAdapter.addAll(getTestData());
-                    recycler.dismissSwipeRefresh();
-                    recycler.getRecyclerView().scrollToPosition(0);
-                    recycler.showNoMore();
-                } else {
-                    mAdapter.addAll(getTestData());
-                    if (page >= 3) {
+            public void onSuccess(HttpResponse<ArrayList<BookCityResDocument>> model) {
+                if (model.isStatus()) {
+                    //  搜索成功 添加 本地搜索记录
+                    spUtilInstance.putString(searchKeyStr, searchKeyStr);
+                    if (isRefresh) {
+                        dataList = model.getData();
+                        page = 1;
+                        mAdapter.clear();
+                        mAdapter.addAll(dataList);
+                        recycler.dismissSwipeRefresh();
+                        recycler.getRecyclerView().scrollToPosition(0);
+
+                    } else {
+                        dataList.addAll(model.getData());
+                        mAdapter.addAll(model.getData());
+                    }
+                    if (model.getData().size() < 10) {
                         recycler.showNoMore();
                     }
+                } else {
+                    recycler.dismissSwipeRefresh();
+                    toastShow(model.getErrorDescription());
                 }
+
             }
-        }, 1000);
+
+            @Override
+            public void onFailure(String msg) {
+                toastShow(msg);
+            }
+
+            @Override
+            public void onFinish() {
+                recycler.dismissSwipeRefresh();
+                dismissProgressDialog();
+
+            }
+        });
+
     }
 
-    private SerachResultData[] getTestData() {
-        return new SerachResultData[]{
-                new SerachResultData("忍受不了打击和挫折，陈守不住忽视和平淡"),
-                new SerachResultData("因为喜欢才牵挂，因为牵挂而忧伤，用心去感受对方的牵挂。牵挂是一份烂漫，一份深沉，一份纯美，一份质朴。"),
-                new SerachResultData("  苦口的是良药，逆耳必是忠言。改过必生智慧。护短心内非贤"),
-                new SerachResultData("  一百天，看似很长，切实很短。一天提高一小点，一百天就能够先进一大点。在这一百天里，我们要尽自己最大的努力往学习。相信自己，所有皆有可能!"),
-                new SerachResultData("  在人生的道路上，要懂得善待自己，只有这样我们才能获得精神的解脱，从容地走自己选择的路，做自己喜欢做的事"),
-                new SerachResultData("  只要不把自己束缚在心灵的牢笼里，谁也束缚不了你去展翅高飞"),
-                new SerachResultData(" 少壮须努力，用功要趁早。十年磨一剑，备战为高考。天道自古酬勤，付出才有回报。压力释放心情好，考前放松最重要。预祝高考顺利，金榜题名!"),
 
-        };
-    }
-
-    @OnClick({R.id.back})
+    @OnClick({R.id.back, R.id.img_classification, R.id.img_serache, R.id.img_sort_edit,
+            R.id.ll_sort_time, R.id.tv_sort_hot, R.id.tv_sort_book_name})
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.back:
                 finish();
+                break;
+            case R.id.img_classification:
+                startActivityForResult(new Intent(SearchResultActivity.this, SearchClassifyActivity.class), 0);
+                break;
+            case R.id.img_serache:
+                startActivity(new Intent(SearchResultActivity.this, SearchActivity.class));
+                finish();
+                break;
+            case R.id.img_sort_edit:
+                if (1 == disType) {
+                    disType = 2;
+                    imgSortEdit.setImageResource(R.mipmap.customized_btn_list);
+                    mAdapter = new SerachResultAdapter(this);
+                    mAdapter.clear();
+                    mAdapter.addAll(dataList);
+                    recycler.setLayoutManager(new GridLayoutManager(this, 3));
+                    recycler.setAdapter(mAdapter);
+                    recycler.showNoMore();
+                } else {
+                    disType = 1;
+                    imgSortEdit.setImageResource(R.mipmap.customized_btn_list_switching);
+                    mAdapter = new SerachResultAdapter(this);
+                    mAdapter.clear();
+                    mAdapter.addAll(dataList);
+                    recycler.setLayoutManager(new GridLayoutManager(this, 1));
+                    recycler.setAdapter(mAdapter);
+                    recycler.showNoMore();
+                }
+                break;
+            case R.id.ll_sort_time:
+                if (null == dataList) {
+                    return;
+                }
+                recycler.showSwipeRefresh();
+                imgSortTime.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down : R.mipmap.bookshelf_icon_up);
+                if (isAscendingOrder) {
+                    isAscendingOrder = false;
+                    sortByDateUp();
+                } else {
+                    isAscendingOrder = true;
+                    sortByDateDown();
+                }
+                mAdapter.clear();
+                mAdapter.addAll(dataList);
+                recycler.dismissSwipeRefresh();
+                recycler.getRecyclerView().scrollToPosition(0);
+                break;
+            case R.id.tv_sort_book_name:
+                if (null == dataList) {
+                    return;
+                }
+                recycler.showSwipeRefresh();
+                sortByBookName();
+                mAdapter.clear();
+                mAdapter.addAll(dataList);
+                recycler.dismissSwipeRefresh();
+                recycler.getRecyclerView().scrollToPosition(0);
+                break;
+            case R.id.tv_sort_hot:
+                if (null == dataList) {
+                    return;
+                }
+                recycler.showSwipeRefresh();
+                sortBydEgreeDown();
+                mAdapter.clear();
+                mAdapter.addAll(dataList);
+                recycler.dismissSwipeRefresh();
+                recycler.getRecyclerView().scrollToPosition(0);
                 break;
             default:
                 break;
         }
     }
 
-    class SerachResultAdapter extends RecyclerAdapter<SerachResultData> {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case 0:
+                    //  将获取的结果 发送给 搜索接口
+                    String result = data.getStringExtra("result");
+                    Logger.e(result);
+                    Intent intent = new Intent(SearchResultActivity.this, SearchActivity.class);
+                    intent.putExtra("Classy", result);
+                    startActivity(intent);
+                    finish();
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    /**
+     * 按书名排序
+     */
+    private void sortByBookName() {
+        final RuleBasedCollator collator = (RuleBasedCollator) Collator.getInstance(Locale.CHINA);
+        Collections.sort(dataList, new Comparator<BookCityResDocument>() {
+            @Override
+            public int compare(BookCityResDocument bookShelfItemData, BookCityResDocument t1) {
+                return collator.compare(bookShelfItemData.getTitle(), t1.getTitle()) < 0 ? -1 : 1;
+            }
+        });
+
+    }
+
+    /**
+     * 按时间排序 升序
+     */
+    private void sortByDateUp() {
+        Collections.sort(dataList, new Comparator<BookCityResDocument>() {
+            @Override
+            public int compare(BookCityResDocument o1, BookCityResDocument o2) {
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                try {
+//                    Date dt1 = format.parse(o1.getPublish_time());
+//                    Date dt2 = format.parse(o2.getPublish_time());
+                    if (o1.getPublishTime() > o2.getPublishTime()) {
+                        return 1;
+                    } else if (o1.getPublishTime() < o2.getPublishTime()) {
+                        return -1;
+                    } else {
+                        return 0;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return 0;
+            }
+        });
+
+    }
+
+    /**
+     * 按时间排序 降序
+     */
+    private void sortByDateDown() {
+        Collections.sort(dataList, new Comparator<BookCityResDocument>() {
+            @Override
+            public int compare(BookCityResDocument o1, BookCityResDocument o2) {
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                try {
+//                    Date dt1 = format.parse(o1.getPublishTime());
+//                    Date dt2 = format.parse(o2.getPublish_time());
+                    if (o1.getPublishTime() > o2.getPublishTime()) {
+                        return -1;
+                    } else if (o1.getPublishTime() < o2.getPublishTime()) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return 0;
+            }
+        });
+
+    }
+
+    /**
+     * 按热度 降序
+     */
+    private void sortBydEgreeDown() {
+        Collections.sort(dataList, new Comparator<BookCityResDocument>() {
+            @Override
+            public int compare(BookCityResDocument o1, BookCityResDocument o2) {
+
+                try {
+
+                    if (o1.getDegree() > o2.getDegree()) {
+                        return -1;
+                    } else if (o1.getDegree() < o2.getDegree()) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return 0;
+            }
+        });
+
+    }
+
+
+    class SerachResultAdapter extends RecyclerAdapter<BookCityResDocument> {
         private Context context;
         /**
          * 实现单选，保存当前选中的position
@@ -171,12 +418,17 @@ public class SearchResultActivity extends BaseActivity implements View.OnClickLi
         }
 
         @Override
-        public BaseViewHolder<SerachResultData> onCreateBaseViewHolder(ViewGroup parent, int viewType) {
-            return new SerachResultItemHolder(parent);
+        public BaseViewHolder<BookCityResDocument> onCreateBaseViewHolder(ViewGroup parent, int viewType) {
+//            return new SerachResultItemHolder(parent);
+            if (1 == disType) {
+                return new MyCustomItemHolder(parent);
+            } else {
+                return new SerachResultItemHolder(parent);
+            }
         }
 
 
-        class SerachResultItemHolder extends BaseViewHolder<SerachResultData> {
+        class SerachResultItemHolder extends BaseViewHolder<BookCityResDocument> {
 
             public TextView tv_book_name;
             public ImageView img_book_cover;
@@ -193,17 +445,20 @@ public class SearchResultActivity extends BaseActivity implements View.OnClickLi
             }
 
             @Override
-            public void setData(SerachResultData data) {
+            public void setData(BookCityResDocument data) {
                 super.setData(data);
-                tv_book_name.setText(data.getName());
-                Glide.with(context).load("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1539859348&di=8b469335b1c844071278bde5488ba5f4&imgtype=jpg&er=1&src=http%3A%2F%2Fpic2.ooopic.com%2F13%2F38%2F51%2F47b1OOOPIC37.jpg")
+                tv_book_name.setText(data.getTitle());
+                Glide.with(context).load(data.getCover())
                         .apply(BaseApplication.options)
                         .into(img_book_cover);
+//                Glide.with(context).load("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1539859348&di=8b469335b1c844071278bde5488ba5f4&imgtype=jpg&er=1&src=http%3A%2F%2Fpic2.ooopic.com%2F13%2F38%2F51%2F47b1OOOPIC37.jpg")
+//                        .apply(BaseApplication.options)
+//                        .into(img_book_cover);
 
             }
 
             @Override
-            public void onItemViewClick(SerachResultData data) {
+            public void onItemViewClick(BookCityResDocument data) {
                 super.onItemViewClick(data);
 
             }
@@ -211,22 +466,53 @@ public class SearchResultActivity extends BaseActivity implements View.OnClickLi
 
         }
 
+        class MyCustomItemHolder extends BaseViewHolder<BookCityResDocument> {
+
+            private CheckBox cb_select_item;
+            private TextView tv_book_name;
+            private TextView tv_book_page;
+            private TextView tv_book_endtime;
+            private TextView tv_buy_time;
+            private ImageView bookshelf_cover;
+
+            public MyCustomItemHolder(ViewGroup parent) {
+                super(parent, R.layout.item_bookshelf);
+            }
+
+            @Override
+            public void onInitializeView() {
+                super.onInitializeView();
+                cb_select_item = findViewById(R.id.cb_select_item);
+                tv_book_name = findViewById(R.id.tv_book_name);
+                tv_book_page = findViewById(R.id.tv_book_page);
+                tv_buy_time = findViewById(R.id.tv_buy_time);
+                tv_book_endtime = findViewById(R.id.tv_book_endtime);
+                bookshelf_cover = findViewById(R.id.bookshelf_cover);
+            }
+
+            @Override
+            public void setData(BookCityResDocument data) {
+                super.setData(data);
+                tv_book_name.setText(data.getTitle());
+                tv_buy_time.setVisibility(View.GONE);
+                cb_select_item.setVisibility(View.GONE);
+                tv_book_page.setText("￥" + data.getPrice());
+                tv_book_endtime.setText(data.getAuthor());
+                Glide.with(SearchResultActivity.this).load(data.getCover())
+                        .apply(BaseApplication.options)
+                        .into(bookshelf_cover);
+
+            }
+
+            @Override
+            public void onItemViewClick(BookCityResDocument data) {
+                super.onItemViewClick(data);
+
+            }
+        }
+
 
     }
 
-    class SerachResultData {
-        private String name;
 
-        public SerachResultData(String name) {
-            this.name = name;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-    }
 }
