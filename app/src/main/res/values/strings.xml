@@ -126,6 +126,10 @@
     <string name="transaction_amount">交易金额</string>
     <string name="str_download">下载</string>
     <string name="sure_pay_amount">确认支付：</string>
+    <string name="pay_success">支付成功</string>
+    <string name="pay_fail">支付失败</string>
+    <string name="pay_by_zfb">支付宝支付</string>
+    <string name="pay_by_wechat">微信支付</string>
 
 
     <string name="hello_blank_fragment">Hello blank fragment</string>

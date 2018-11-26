@@ -103,7 +103,9 @@
         <activity android:name=".activity.ChartDemoActivity" />
         <!-- 购买页面 -->
         <activity android:name=".activity.PayActivity" />
-        <activity android:name=".activity.PayCompleted"></activity>
+        <!--支付完成-->
+        <activity android:name=".activity.PayCompleted" />
+
     </application>
 
 </manifest>

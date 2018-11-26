@@ -55,5 +55,9 @@ public class Config {
      * 1、超级管理员 2、业务员 3、教师 4、普通用户 5、游客
      */
     public static final String MEMBER_TYPE = "member_type";
+    /**
+     * 支付宝 20 微信  10
+     */
+    public static final int ZFB_PAY_TYPE = 20;
 
 }

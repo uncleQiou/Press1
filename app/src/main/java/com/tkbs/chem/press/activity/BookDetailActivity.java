@@ -17,10 +17,14 @@ import com.orhanobut.logger.Logger;
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.base.BaseActivity;
 import com.tkbs.chem.press.util.Config;
+import com.tkbs.chem.press.util.MessageEvent;
 import com.tkbs.chem.press.view.ReWebChomeClient;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import de.greenrobot.event.EventBus;
+import de.greenrobot.event.Subscribe;
+import de.greenrobot.event.ThreadMode;
 
 
 public class BookDetailActivity extends BaseActivity implements View.OnClickListener, ReWebChomeClient.OpenFileChooserCallBack {
@@ -47,9 +51,25 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
     @Override
     protected void initdata() {
         guid = getIntent().getStringExtra("guid");
+        EventBus.getDefault().register(this);
         initWeb();
     }
 
+    @Subscribe(threadMode = ThreadMode.MainThread)
+    public void RefreshUi(MessageEvent messageEvent) {
+        if ("PaySuccess".endsWith(messageEvent.getMessage())) {
+
+            Logger.e("支付成功 刷新页面");
+            refreshUI();
+        }
+    }
+
+    /**
+     * 刷新图书详情页面
+     */
+    private void refreshUI() {
+        bookDetailWeb.loadUrl(bookUrl);
+    }
 
     private void initWeb() {
         WebSettings setting = bookDetailWeb.getSettings();
@@ -187,8 +207,8 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
 
         @JavascriptInterface
         public void goBuyBook() {
-            Intent intent = new Intent(BookDetailActivity.this,PayActivity.class);
-            intent.putExtra("guid",guid);
+            Intent intent = new Intent(BookDetailActivity.this, PayActivity.class);
+            intent.putExtra("guid", guid);
             startActivity(intent);
         }
 

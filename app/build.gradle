@@ -111,5 +111,6 @@ dependencies {
     compile 'de.greenrobot:eventbus:3.0.0-beta1'
     // 图表
     compile 'com.github.PhilJay:MPAndroidChart:v3.0.3'
-    compile files('libs/alipaySdk-20170725.jar')
+    // 支付宝
+    compile (name: 'alipaySdk-15.5.7-20181023110917', ext: 'aar')
 }

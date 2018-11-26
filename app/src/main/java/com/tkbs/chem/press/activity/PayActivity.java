@@ -1,5 +1,6 @@
 package com.tkbs.chem.press.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -9,30 +10,25 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.alipay.sdk.app.EnvUtils;
 import com.alipay.sdk.app.PayTask;
 import com.bumptech.glide.Glide;
-import com.google.gson.Gson;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.base.BaseActivity;
 import com.tkbs.chem.press.base.BaseApplication;
-import com.tkbs.chem.press.bean.BookCityResDocument;
 import com.tkbs.chem.press.bean.BookDetailBean;
 import com.tkbs.chem.press.bean.HttpResponse;
 import com.tkbs.chem.press.bean.OrderInfo;
-import com.tkbs.chem.press.bean.PayReadRequestBen;
 import com.tkbs.chem.press.bean.PayResult;
 import com.tkbs.chem.press.net.ApiCallback;
 
-import java.util.ArrayList;
 import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import de.greenrobot.event.EventBus;
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
 
 public class PayActivity extends BaseActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
@@ -77,11 +73,12 @@ public class PayActivity extends BaseActivity implements View.OnClickListener, C
 
     @Override
     protected void initdata() {
-//        EventBus.getDefault().register(this);
         cbRechargeZfb.setOnCheckedChangeListener(this);
         cbRechargeWx.setOnCheckedChangeListener(this);
         guid = getIntent().getStringExtra("guid");
         getBookDetail();
+        // TODO 支付宝 沙箱环境
+        EnvUtils.setEnv(EnvUtils.EnvEnum.SANDBOX);
     }
 
     /**
@@ -192,6 +189,7 @@ public class PayActivity extends BaseActivity implements View.OnClickListener, C
                 } else {
                     toastShow(model.getErrorDescription());
                 }
+                dismissProgressDialog();
             }
 
             @Override
@@ -216,7 +214,7 @@ public class PayActivity extends BaseActivity implements View.OnClickListener, C
                 PayTask alipay = new PayTask(PayActivity.this);
                 Map<String, String> result = alipay.payV2(orderinfo, true);
                 Logger.addLogAdapter(new AndroidLogAdapter());
-                Logger.e(result.toString());
+//                Logger.e(result.toString());
 
                 Message msg = new Message();
                 msg.what = 1;
@@ -229,6 +227,7 @@ public class PayActivity extends BaseActivity implements View.OnClickListener, C
     }
 
     private Handler zfbHandler = new Handler() {
+        @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 1: {
@@ -239,6 +238,7 @@ public class PayActivity extends BaseActivity implements View.OnClickListener, C
                      */
                     // 同步返回需要验证的信息
                     String resultInfo = payResult.getResult();
+                    Logger.e(resultInfo);
                     String resultStatus = payResult.getResultStatus();
                     // 判断resultStatus 为9000则代表支付成功
                     if (resultStatus.equals("9000")) {
@@ -254,6 +254,11 @@ public class PayActivity extends BaseActivity implements View.OnClickListener, C
                 }
                 case 2:
                     checkOrder(true);
+                    dismissProgressDialog();
+                    Intent intent = new Intent(PayActivity.this, PayCompleted.class);
+                    intent.putExtra("guid", guid);
+                    startActivity(intent);
+                    finish();
                     break;
 
                 default:
@@ -261,11 +266,14 @@ public class PayActivity extends BaseActivity implements View.OnClickListener, C
             }
         }
     };
+
     private void paysuccess() {
         // 和服务器校验
         showProgressDialog("订单生成中...");
-        zfbHandler.sendEmptyMessageDelayed(2, 1500);
+        zfbHandler.sendEmptyMessageDelayed(2, 3000);
+
     }
+
     /**
      * 订单信息确认和查询
      */

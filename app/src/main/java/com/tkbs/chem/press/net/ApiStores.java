@@ -9,6 +9,7 @@ import com.tkbs.chem.press.bean.BookDetailBean;
 import com.tkbs.chem.press.bean.GiveBookListBean;
 import com.tkbs.chem.press.bean.HttpResponse;
 import com.tkbs.chem.press.bean.OrderInfo;
+import com.tkbs.chem.press.bean.OrderInfoBean;
 import com.tkbs.chem.press.bean.SampleBookDetailDataBean;
 import com.tkbs.chem.press.bean.SampleBookItemDataBean;
 import com.tkbs.chem.press.bean.SampleBookManageDataBean;
@@ -27,6 +28,7 @@ import retrofit2.http.Body;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
 import rx.Observable;
 
@@ -232,7 +234,14 @@ public interface ApiStores {
     @POST("pay/payReadyAlipay/{documentGUID}")
     Observable<HttpResponse<OrderInfo>> payReadyAlipay(@Path("documentGUID") String documentGUID);
 
-//    Observable<HttpResponse<OrderInfo>> payReadyAlipay(@QueryMap Map<String, String> options);
+    /***
+     * 查询订单信息
+     *
+     * @param documentGuid
+     * @return
+     */
+    @POST("order/queryOrderInfo")
+    Observable<HttpResponse<OrderInfoBean>> checkOrderInfo(@Query("documentGuid") String documentGuid);
 
     /*************************************************************************************************************/
 

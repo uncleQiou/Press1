@@ -21,6 +21,10 @@ allprojects {
         maven{url 'http://maven.aliyun.com/nexus/content/groups/public/'}
         jcenter()
         maven { url "https://jitpack.io" }
+        // 支付宝 使用arr 添加下面的内容
+        flatDir {
+            dirs 'libs'
+        }
     }
 }
 

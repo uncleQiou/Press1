@@ -5,11 +5,20 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.base.BaseActivity;
+import com.tkbs.chem.press.base.BaseApplication;
+import com.tkbs.chem.press.bean.BookDetailBean;
+import com.tkbs.chem.press.bean.HttpResponse;
+import com.tkbs.chem.press.bean.OrderInfoBean;
+import com.tkbs.chem.press.net.ApiCallback;
+import com.tkbs.chem.press.util.Config;
+import com.tkbs.chem.press.util.MessageEvent;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import de.greenrobot.event.EventBus;
 
 public class PayCompleted extends BaseActivity implements View.OnClickListener {
 
@@ -35,6 +44,8 @@ public class PayCompleted extends BaseActivity implements View.OnClickListener {
     TextView tvTransactionAmount;
     @BindView(R.id.tv_download)
     TextView tvDownload;
+    private OrderInfoBean orderDetailData;
+    private String guid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,12 +59,56 @@ public class PayCompleted extends BaseActivity implements View.OnClickListener {
 
     @Override
     protected void initdata() {
-
+        guid = getIntent().getStringExtra("guid");
+        getOrderDetail();
     }
 
     @Override
     protected void initTitle() {
+        title.setText(getString(R.string.pay_success));
+    }
 
+    /**
+     * 获取图书详情
+     */
+    private void getOrderDetail() {
+        showProgressDialog();
+        addSubscription(apiStores.checkOrderInfo(guid), new ApiCallback<HttpResponse<OrderInfoBean>>() {
+            @Override
+            public void onSuccess(HttpResponse<OrderInfoBean> model) {
+                if (model.isStatus()) {
+                    //  添加书籍记录
+                    orderDetailData = model.getData();
+                    Glide.with(PayCompleted.this).load(orderDetailData.getCover())
+                            .apply(BaseApplication.options)
+                            .into(imgBookCover);
+                    tvBookName.setText(orderDetailData.getTitle());
+                    tvOrderNumber.setText(orderDetailData.getOrder_number());
+                    tvTransactionNumber.setText(orderDetailData.getPay_order_number());
+                    if (Config.ZFB_PAY_TYPE == orderDetailData.getPay_type()) {
+                        tvPayWay.setText(R.string.pay_by_zfb);
+                    } else {
+                        tvPayWay.setText(R.string.pay_by_wechat);
+                    }
+                    tvTransactionAmount.setText("￥：" + orderDetailData.getPay_price());
+                } else {
+                    toastShow(model.getErrorDescription());
+                }
+
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                toastShow(msg);
+                dismissProgressDialog();
+            }
+
+            @Override
+            public void onFinish() {
+                dismissProgressDialog();
+
+            }
+        });
     }
 
     @OnClick({R.id.back, R.id.tv_download})
@@ -69,5 +124,12 @@ public class PayCompleted extends BaseActivity implements View.OnClickListener {
             default:
                 break;
         }
+    }
+
+    @Override
+    public void finish() {
+        //  通知详情页面 刷新
+        EventBus.getDefault().post(new MessageEvent("PaySuccess"));
+        super.finish();
     }
 }
