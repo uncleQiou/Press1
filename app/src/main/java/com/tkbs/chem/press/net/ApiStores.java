@@ -172,6 +172,15 @@ public interface ApiStores {
     Observable<HttpResponse<ArrayList<SampleBookItemDataBean>>> getSampleBookList(@Path("pageNum") int pageNum);
 
     /**
+     * 书架 ——免费样书 教师  删除
+     *
+     * @param guids
+     * @return
+     */
+    @POST("sampleBook")
+    Observable<HttpResponse<Object>> deleteSampleBook(@Query("guids") String[] guids);
+
+    /**
      * 书架 ——我的收藏 教师
      *
      * @param pageNum
@@ -179,6 +188,15 @@ public interface ApiStores {
      */
     @POST("collection/{pageNum}/10")
     Observable<HttpResponse<ArrayList<SampleBookItemDataBean>>> getCollectionBookList(@Path("pageNum") int pageNum);
+
+    /**
+     * 书架 ——我的收藏 教师
+     *
+     * @param guids
+     * @return
+     */
+    @POST("collection")
+    Observable<HttpResponse<Object>> deleteCollectionBook(@Query("guids") String[] guids);
 
     /**
      * 书架 ——已购图书 教师
@@ -197,6 +215,15 @@ public interface ApiStores {
      */
     @POST("giveBook/{pageNum}/10")
     Observable<HttpResponse<ArrayList<SampleBookItemDataBean>>> getGiveBookList(@Path("pageNum") int pageNum);
+
+    /**
+     * 书架 ——我的赠书 教师 删除
+     *
+     * @param guids
+     * @return
+     */
+    @POST("giveBook")
+    Observable<HttpResponse<Object>> deleteGiveBook(@Query("guids") String[] guids);
 
     /**
      * 搜索结果

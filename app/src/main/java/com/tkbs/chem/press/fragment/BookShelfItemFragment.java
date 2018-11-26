@@ -2,6 +2,7 @@ package com.tkbs.chem.press.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.GridLayoutManager;
@@ -9,20 +10,26 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
 import com.orhanobut.logger.Logger;
+import com.tkbs.chem.press.MainActivity;
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.activity.BookDetailActivity;
 import com.tkbs.chem.press.base.BaseApplication;
 import com.tkbs.chem.press.base.BaseFragment;
 import com.tkbs.chem.press.bean.BookCityDataBean;
 import com.tkbs.chem.press.bean.HttpResponse;
+import com.tkbs.chem.press.bean.LoginRequestBen;
 import com.tkbs.chem.press.bean.SampleBookItemDataBean;
+import com.tkbs.chem.press.bean.UserBean;
 import com.tkbs.chem.press.net.ApiCallback;
+import com.tkbs.chem.press.util.Config;
 import com.tkbs.chem.press.util.MessageEvent;
 
 import java.text.Collator;
@@ -42,6 +49,7 @@ import cn.lemon.view.adapter.RecyclerAdapter;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import de.greenrobot.event.ThreadMode;
+import okhttp3.RequestBody;
 
 /**
  * Created by Administrator on 2018/10/12.
@@ -65,7 +73,9 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
     private int page = 1;
     private Handler mHandler;
     private boolean editFlg = false;
+    private boolean isAllCheck = false;
     private int type;
+
 
     // 升序
     private boolean isAscendingOrder = true;
@@ -85,8 +95,11 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
         ll_sort_edit = (LinearLayout) findViewById(R.id.ll_sort_edit);
         ll_sort_edit.setOnClickListener(this);
         ll_bottom_edit = (LinearLayout) findViewById(R.id.ll_bottom_edit);
+        ll_bottom_edit.setOnClickListener(this);
         bookShelfItemAdapter = new BookShelfItemAdapter(getActivity());
         mHandler = new Handler();
+        tv_delete = (TextView) findViewById(R.id.tv_delete);
+        tv_delete.setOnClickListener(this);
         initView();
         // 编辑界面隐藏
         ll_bookshelf_edit.setVisibility(View.VISIBLE);
@@ -339,7 +352,6 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
                 break;
             case 5:
                 // 业务员 我的收藏
-                toastShow("业务员我的收藏");
                 getCollectionBookListData(isRefresh);
                 break;
             default:
@@ -379,6 +391,7 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
                     editFlg = true;
                     ll_bottom_edit.setVisibility(View.VISIBLE);
                 }
+                bookShelfItemAdapter.notifyDataSetChanged();
                 break;
             case R.id.tv_sort_book_name:
                 if (null == dataList) {
@@ -409,9 +422,184 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
                 recycler_bookshelf.dismissSwipeRefresh();
                 recycler_bookshelf.getRecyclerView().scrollToPosition(0);
                 break;
+            case R.id.tv_delete:
+                switch (type) {
+                    case 0:
+                        // 免费样书 删除
+                        deleteSampleBooks();
+                        break;
+                    case 1:
+                        // 我的赠书 删除
+                        deleteGiveBooks();
+                        break;
+                    case 2:
+                        // TODO 已购图书 没有删除接口
+//                        getBuyedBookListData(isRefresh);
+                        break;
+                    case 3:
+                        // 我的收藏 删除
+                        deleteCollectionBooks();
+                        break;
+                    case 4:
+                        // TODO 业务员 我的图书 删除应该是本地操作 等下载功能完成后 继续删除操作
+                        break;
+                    case 5:
+                        // 业务员 我的收藏 删除
+                        deleteCollectionBooks();
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            case R.id.ll_bottom_edit:
+                //  显示checkBox
+                isAllCheck = isAllCheck ? false : true;
+                cb_select.setChecked(isAllCheck);
+                setEditAllCheck();
+                break;
             default:
                 break;
         }
+    }
+
+    /**
+     * 我的收藏 删除
+     */
+    private void deleteCollectionBooks() {
+        showProgressDialog();
+        List<SampleBookItemDataBean> bookList = bookShelfItemAdapter.getData();
+        String guidStr = "";
+        for (SampleBookItemDataBean data : bookList) {
+            if (data.isChecked()) {
+                guidStr += data.getGuid() + ",";
+            }
+        }
+        String[] guids = guidStr.split(",");
+        addSubscription(apiStores.deleteCollectionBook(guids), new ApiCallback<HttpResponse<UserBean>>() {
+            @Override
+            public void onSuccess(HttpResponse<UserBean> model) {
+                if (model.isStatus()) {
+                    recycler_bookshelf.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            recycler_bookshelf.showSwipeRefresh();
+                            getData(true);
+                        }
+                    });
+
+                } else {
+                    toastShow(model.getErrorDescription());
+                }
+
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                toastShow(msg);
+            }
+
+            @Override
+            public void onFinish() {
+                dismissProgressDialog();
+            }
+        });
+    }
+
+    /**
+     * 我的赠书 删除
+     */
+    private void deleteGiveBooks() {
+        showProgressDialog();
+        List<SampleBookItemDataBean> bookList = bookShelfItemAdapter.getData();
+        String guidStr = "";
+        for (SampleBookItemDataBean data : bookList) {
+            if (data.isChecked()) {
+                guidStr += data.getGuid() + ",";
+            }
+        }
+        String[] guids = guidStr.split(",");
+        addSubscription(apiStores.deleteGiveBook(guids), new ApiCallback<HttpResponse<UserBean>>() {
+            @Override
+            public void onSuccess(HttpResponse<UserBean> model) {
+                if (model.isStatus()) {
+                    recycler_bookshelf.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            recycler_bookshelf.showSwipeRefresh();
+                            getData(true);
+                        }
+                    });
+
+                } else {
+                    toastShow(model.getErrorDescription());
+                }
+
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                toastShow(msg);
+            }
+
+            @Override
+            public void onFinish() {
+                dismissProgressDialog();
+            }
+        });
+    }
+
+    /**
+     * 全选
+     */
+    private void setEditAllCheck() {
+        List<SampleBookItemDataBean> bookList = bookShelfItemAdapter.getData();
+        for (SampleBookItemDataBean data : bookList) {
+            data.setChecked(isAllCheck);
+        }
+        bookShelfItemAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * 样书删除
+     */
+    private void deleteSampleBooks() {
+        showProgressDialog();
+        List<SampleBookItemDataBean> bookList = bookShelfItemAdapter.getData();
+        String guidStr = "";
+        for (SampleBookItemDataBean data : bookList) {
+            if (data.isChecked()) {
+                guidStr += data.getGuid() + ",";
+            }
+        }
+        String[] guids = guidStr.split(",");
+        addSubscription(apiStores.deleteSampleBook(guids), new ApiCallback<HttpResponse<UserBean>>() {
+            @Override
+            public void onSuccess(HttpResponse<UserBean> model) {
+                if (model.isStatus()) {
+                    recycler_bookshelf.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            recycler_bookshelf.showSwipeRefresh();
+                            getData(true);
+                        }
+                    });
+
+                } else {
+                    toastShow(model.getErrorDescription());
+                }
+
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                toastShow(msg);
+            }
+
+            @Override
+            public void onFinish() {
+                dismissProgressDialog();
+            }
+        });
     }
 
     private BookShelfItemData[] getTestData() {
@@ -542,7 +730,8 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
                 super.setData(data);
                 tv_book_name.setText(data.getTitle());
                 tv_buy_time.setVisibility(View.GONE);
-                cb_select_item.setVisibility(View.GONE);
+                cb_select_item.setVisibility(editFlg ? View.VISIBLE : View.GONE);
+                cb_select_item.setChecked(data.isChecked());
                 tv_book_page.setText("页数：100 页");
                 tv_book_endtime.setText("截止时间：永久");
                 Glide.with(context).load(data.getCover())
@@ -554,9 +743,19 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
             @Override
             public void onItemViewClick(SampleBookItemDataBean data) {
                 super.onItemViewClick(data);
-                Intent intent = new Intent(context, BookDetailActivity.class);
-                intent.putExtra("guid", data.getGuid());
-                context.startActivity(intent);
+                if (editFlg) {
+                    if (data.isChecked()) {
+                        cb_select_item.setChecked(false);
+                        data.setChecked(false);
+                    } else {
+                        cb_select_item.setChecked(true);
+                        data.setChecked(true);
+                    }
+                } else {
+                    Intent intent = new Intent(context, BookDetailActivity.class);
+                    intent.putExtra("guid", data.getGuid());
+                    context.startActivity(intent);
+                }
 
             }
 

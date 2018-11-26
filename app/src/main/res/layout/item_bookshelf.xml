@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:button="@drawable/selector_btn_blue"
-        android:checked="true"
+        android:checked="false"
         android:clickable="false"
         android:focusable="false"
         android:focusableInTouchMode="false"
@@ -52,6 +52,7 @@
             android:text="订单时间：100"
             android:textColor="@color/text_main_6"
             android:textSize="@dimen/text_12sp" />
+
         <TextView
             android:id="@+id/tv_book_page"
             android:layout_width="wrap_content"

@@ -35,6 +35,16 @@ public class SampleBookItemDataBean {
     private String title;
     private String metadata_xml;
     private String cover;
+    private boolean isChecked;
+
+
+    public boolean isChecked() {
+        return isChecked;
+    }
+
+    public void setChecked(boolean checked) {
+        isChecked = checked;
+    }
 
     public String getShortdocno() {
         return shortdocno;

@@ -51,8 +51,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:padding="@dimen/margin_5dp"
-                android:visibility="gone"
-                android:src="@mipmap/bookshelf_icon_up" />
+                android:src="@mipmap/bookshelf_icon_up"
+                android:visibility="gone" />
         </LinearLayout>
 
         <View
@@ -86,6 +86,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+
         <cn.lemon.view.RefreshRecyclerView
             android:id="@+id/recycler_bookshelf"
             android:layout_width="match_parent"
@@ -106,7 +107,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="@dimen/margin_10dp"
                 android:button="@drawable/selector_btn_blue"
-                android:checked="true"
+                android:checked="false"
                 android:clickable="false"
                 android:focusable="false"
                 android:focusableInTouchMode="false"

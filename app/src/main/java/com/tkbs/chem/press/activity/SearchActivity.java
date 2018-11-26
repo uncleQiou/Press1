@@ -49,26 +49,46 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     TextView title;
     @BindView(R.id.tv_right)
     TextView tvRight;
-    @BindView(R.id.ed_search)
-    EditText edSearch;
-    @BindView(R.id.tv_sreach_delete)
-    TextView tvSreachDelete;
-    @BindView(R.id.ll_search_history)
-    LinearLayout llSearchHistory;
-    @BindView(R.id.id_flowlayout)
-    TagFlowLayout idFlowlayout;
-    @BindView(R.id.tv_do_search)
-    TextView tvDoSearch;
-    @BindView(R.id.img_search_classific)
-    ImageView imgSearchClassific;
-    @BindView(R.id.tv_classfy)
-    TextView tvClassfy;
-    @BindView(R.id.ll_classfy)
-    RelativeLayout llClassfy;
-    @BindView(R.id.tv_classfy_titel)
-    TextView tvClassfyTitel;
     @BindView(R.id.recyclerview_search_hot)
     RefreshRecyclerView recyclerviewSearchHot;
+
+    /**
+     * @BindView(R.id.ed_search)
+     */
+    EditText edSearch;
+    /**
+     * @BindView(R.id.tv_sreach_delete)
+     */
+    TextView tvSreachDelete;
+    /**
+     * @BindView(R.id.ll_search_history)
+     */
+    LinearLayout llSearchHistory;
+    /**
+     * @BindView(R.id.id_flowlayout)
+     */
+    TagFlowLayout idFlowlayout;
+    /**
+     * @BindView(R.id.tv_do_search)
+     */
+    TextView tvDoSearch;
+    /**
+     * @BindView(R.id.img_search_classific)
+     */
+    ImageView imgSearchClassific;
+    /**
+     * @BindView(R.id.tv_classfy)
+     */
+    TextView tvClassfy;
+    /**
+     * @BindView(R.id.ll_classfy)
+     */
+    RelativeLayout llClassfy;
+    /**
+     * @BindView(R.id.tv_classfy_titel)
+     */
+    TextView tvClassfyTitel;
+
 
     private SharedPreferences searchHistorySp;
     private Map<String, ?> map;
@@ -83,6 +103,9 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     private int page = 1;
 
     private ArrayList<SearchHotKey> dataList = new ArrayList<>();
+
+    private LayoutInflater inflate;
+    private View headView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,29 +124,33 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
 
     @Override
     protected void initdata() {
-        classfyStr = getIntent().getStringExtra("Classy");
-        if (null != classfyStr && classfyStr.length() > 0) {
-            llClassfy.setVisibility(View.VISIBLE);
-            //  解析
-            Gson gson = new Gson();
-            List<ClassifyBean> jsonListObject = gson.fromJson(classfyStr, new TypeToken<List<ClassifyBean>>() {
-            }.getType());
-            String searchClassify = "";
-            //把JSON格式的字符串转为List  
-            for (ClassifyBean classify : jsonListObject) {
-                searchClassify = searchClassify + classify.getCatagoryName() + "、";
-                Logger.e("把JSON格式的字符串转为List///  " + searchClassify);
-                classfyGuid.add(classify.getCatagoryGuid());
-            }
-            tvClassfy.setText(searchClassify);
-            llClassfy.setVisibility(View.VISIBLE);
-        } else {
-            llClassfy.setVisibility(View.GONE);
-        }
-        // 搜索历史
-        initSearchHistory();
-        // TODO 获取搜索热词  api:getSearchHotKey
+        //  获取搜索热词  api:getSearchHotKey
         searchHotAdapter = new SearchHotAdapter(this);
+        //添加Header
+        inflate = LayoutInflater.from(getApplicationContext());
+        headView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.search_head, null);
+        // @BindView(R.id.ed_search)
+        edSearch = (EditText) headView.findViewById(R.id.ed_search);
+        // @BindView(R.id.tv_sreach_delete)
+        tvSreachDelete = (TextView) headView.findViewById(R.id.tv_sreach_delete);
+        tvSreachDelete.setOnClickListener(this);
+        // @BindView(R.id.ll_search_history)
+        llSearchHistory = (LinearLayout) headView.findViewById(R.id.ll_search_history);
+        //  @BindView(R.id.id_flowlayout)
+        idFlowlayout = (TagFlowLayout) headView.findViewById(R.id.id_flowlayout);
+        // @BindView(R.id.tv_do_search)
+        tvDoSearch = (TextView) headView.findViewById(R.id.tv_do_search);
+        tvDoSearch.setOnClickListener(this);
+        //  @BindView(R.id.img_search_classific)
+        imgSearchClassific = (ImageView) headView.findViewById(R.id.img_search_classific);
+        imgSearchClassific.setOnClickListener(this);
+        // @BindView(R.id.tv_classfy)
+        tvClassfy = (TextView) headView.findViewById(R.id.tv_classfy);
+        //@BindView(R.id.ll_classfy)
+        llClassfy = (RelativeLayout) headView.findViewById(R.id.ll_classfy);
+        // @BindView(R.id.tv_classfy_titel)
+        tvClassfyTitel = (TextView) headView.findViewById(R.id.tv_classfy_titel);
+        searchHotAdapter.setHeader(headView);
         recyclerviewSearchHot.setSwipeRefreshColors(0xFF437845, 0xFFE44F98, 0xFF2FAC21);
         recyclerviewSearchHot.setLayoutManager(new GridLayoutManager(this, 1));
         recyclerviewSearchHot.setAdapter(searchHotAdapter);
@@ -151,22 +178,35 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             }
         });
         recyclerviewSearchHot.getNoMoreView().setText("没有更多数据了");
-//        searchHotAdapter = new SearchHotAdapter(this);
-//        recyclerviewSearchHot.setLayoutManager(new LinearLayoutManager(this));
-//        recyclerviewSearchHot.setAdapter(searchHotAdapter);
-//        data = new ArrayList<>();
-//        data.add(new SearchHotDataBean("会展工程与材料"));
-//        data.add(new SearchHotDataBean("会展工程与材料1"));
-//        data.add(new SearchHotDataBean("会展工程与材料2"));
-//        data.add(new SearchHotDataBean("会展工程与材料3"));
-//        data.add(new SearchHotDataBean("会展工程与材料4"));
-//        data.add(new SearchHotDataBean("会展工程与材料5"));
-//        data.add(new SearchHotDataBean("会展工程与材料6"));
-//        data.add(new SearchHotDataBean("会展工程与材料7"));
-//        data.add(new SearchHotDataBean("会展工程与材料8"));
-//        data.add(new SearchHotDataBean("会展工程与材料9"));
-//        data.add(new SearchHotDataBean("会展工程与材料10"));
-//        searchHotAdapter.addata(data);
+        // 是否有分类关键词带过来
+        classfyStr = getIntent().getStringExtra("Classy");
+        if (null != classfyStr && classfyStr.length() > 0) {
+            llClassfy.setVisibility(View.VISIBLE);
+            //  解析
+            initClassfy(classfyStr);
+        } else {
+            llClassfy.setVisibility(View.GONE);
+        }
+        // 搜索历史
+        initSearchHistory();
+    }
+
+    /**
+     * 设置搜索分类
+     */
+    private void initClassfy(String classfyStr) {
+        Gson gson = new Gson();
+        List<ClassifyBean> jsonListObject = gson.fromJson(classfyStr, new TypeToken<List<ClassifyBean>>() {
+        }.getType());
+        String searchClassify = "";
+        //把JSON格式的字符串转为List  
+        for (ClassifyBean classify : jsonListObject) {
+            searchClassify = searchClassify + classify.getCatagoryName() + "、";
+            Logger.e("把JSON格式的字符串转为List///  " + searchClassify);
+            classfyGuid.add(classify.getCatagoryGuid());
+        }
+        tvClassfy.setText(searchClassify);
+        llClassfy.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -223,7 +263,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         tvRight.setVisibility(View.GONE);
     }
 
-    @OnClick({R.id.back, R.id.tv_sreach_delete, R.id.tv_do_search, R.id.img_search_classific})
+    @OnClick({R.id.back})
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -313,6 +353,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
 
     }
 
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -322,19 +363,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                     //  将获取的结果 发送给 搜索接口
                     String result = data.getStringExtra("result");
                     if (null != result && result.length() > 0) {
-                        Logger.e(result);
-                        Gson gson = new Gson();
-                        List<ClassifyBean> jsonListObject = gson.fromJson(result, new TypeToken<List<ClassifyBean>>() {
-                        }.getType());
-                        //把JSON格式的字符串转为List  
-                        String searchClassify = "";
-                        for (ClassifyBean classify : jsonListObject) {
-                            searchClassify = searchClassify + classify.getCatagoryName() + "、";
-                            Logger.e("把JSON格式的字符串转为List///  " + searchClassify);
-                            classfyGuid.add(classify.getCatagoryGuid());
-                        }
-                        tvClassfy.setText(searchClassify);
-                        llClassfy.setVisibility(View.VISIBLE);
+                        initClassfy(result);
                     } else {
                         llClassfy.setVisibility(View.GONE);
                     }
