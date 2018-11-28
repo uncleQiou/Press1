@@ -55,7 +55,7 @@
                 <TextView
                     android:id="@+id/tv_sort_time"
                     style="@style/book_shelf_sort"
-                    android:text="@string/sort_time" />
+                    android:text="@string/sort_name" />
 
                 <ImageView
                     android:id="@+id/img_sort_time"
@@ -63,7 +63,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:padding="@dimen/margin_5dp"
-                    android:src="@mipmap/bookshelf_icon_up" />
+                    android:src="@mipmap/bookshelf_icon_up"
+                    android:visibility="gone" />
             </LinearLayout>
 
             <View

@@ -160,11 +160,16 @@ public class SampleBookListFragment extends BaseFragment {
             @Override
             public void setData(GiveBookListBean data) {
                 super.setData(data);
-                tv_date.setText(TimeUtils.getTime(data.getTime()));
+                tv_date.setText(TimeUtils.getTime(data.getTime_limit()));
                 tv_book_price.setText("￥"+data.getPrice());
                 tv_book_name.setText(data.getTitle());
-                // TODO 状态
-                tv_book_state.setText(R.string.expired);
+                //  状态  data.getTime_limit() 判断
+                if (System.currentTimeMillis() > data.getTime_limit()){
+                    tv_book_state.setText(R.string.expired);
+                }else {
+                    tv_book_state.setText(R.string.in_deadline);
+                }
+
 
             }
 

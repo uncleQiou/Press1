@@ -18,6 +18,7 @@ import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.base.BaseActivity;
 import com.tkbs.chem.press.base.BaseApplication;
 import com.tkbs.chem.press.bean.ApprovalSubmitData;
+import com.tkbs.chem.press.bean.BookCityResDocument;
 import com.tkbs.chem.press.bean.HttpResponse;
 import com.tkbs.chem.press.bean.SampleBookDetailDataBean;
 import com.tkbs.chem.press.bean.SampleBookManageDataBean;
@@ -25,9 +26,15 @@ import com.tkbs.chem.press.net.ApiCallback;
 import com.tkbs.chem.press.util.TimeUtils;
 import com.tkbs.chem.press.view.DialogApprovalBook;
 
+import java.text.Collator;
+import java.text.RuleBasedCollator;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -92,6 +99,8 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
             "我们活着不能与草木同腐，不能醉生梦死，枉度人生，要有所做为。", "人要独立生活，学习有用的技艺",
             "对于不屈不挠的人来说，没有失败这回事", "我想正是伸手摘星的精神，让我们很多人长时间地工作奋战。不论到哪，让作品充分表现这个精神，并且驱使我们放弃佳作，只求杰作",
             "爱情埋在心灵深处，并不是住在双唇之间");
+    // 升序
+    private boolean isAscendingOrder = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -234,12 +243,68 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
         });
     }
 
-    @OnClick({R.id.img_back, R.id.one_key_approve})
+    @OnClick({R.id.img_back, R.id.one_key_approve, R.id.ll_sort_time,
+            R.id.ll_sort_hot, R.id.ll_sort_book_name, R.id.ll_sort_state})
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.img_back:
                 finish();
+                break;
+            case R.id.ll_sort_time:
+                // 时间排序
+                if (null == bookList) {
+                    return;
+                }
+                recycler.showSwipeRefresh();
+                imgSortTime.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down : R.mipmap.bookshelf_icon_up);
+                if (isAscendingOrder) {
+                    isAscendingOrder = false;
+                    sortByDateUp();
+                } else {
+                    isAscendingOrder = true;
+                    sortByDateDown();
+                }
+                myAdapter.clear();
+                myAdapter.addAll(bookList);
+                recycler.dismissSwipeRefresh();
+                recycler.getRecyclerView().scrollToPosition(0);
+                break;
+            case R.id.ll_sort_hot:
+                //热度排序
+                if (null == bookList) {
+                    return;
+                }
+                recycler.showSwipeRefresh();
+                sortBydEgreeDown();
+                myAdapter.clear();
+                myAdapter.addAll(bookList);
+                recycler.dismissSwipeRefresh();
+                recycler.getRecyclerView().scrollToPosition(0);
+                break;
+            case R.id.ll_sort_book_name:
+                //书名排序
+                if (null == bookList) {
+                    return;
+                }
+                recycler.showSwipeRefresh();
+                sortByBookName();
+                myAdapter.clear();
+                myAdapter.addAll(bookList);
+                recycler.dismissSwipeRefresh();
+                recycler.getRecyclerView().scrollToPosition(0);
+                break;
+            case R.id.ll_sort_state:
+                //状态排序
+                if (null == bookList) {
+                    return;
+                }
+                recycler.showSwipeRefresh();
+                sortByState();
+                myAdapter.clear();
+                myAdapter.addAll(bookList);
+                recycler.dismissSwipeRefresh();
+                recycler.getRecyclerView().scrollToPosition(0);
                 break;
             case R.id.one_key_approve:
                 startActivity(new Intent(SampleBookActivity.this, OneKeyManageBookActivity.class));
@@ -247,6 +312,119 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
             default:
                 break;
         }
+    }
+
+    /**
+     * 按状态进行排序
+     */
+    private void sortByState() {
+        Collections.sort(bookList, new Comparator<SampleBookDetailDataBean>() {
+            @Override
+            public int compare(SampleBookDetailDataBean o1, SampleBookDetailDataBean o2) {
+                try {
+                    if (o1.getState() > o2.getState()) {
+                        return 1;
+                    } else if (o1.getState() < o2.getState()) {
+                        return -1;
+                    } else {
+                        return 0;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return 0;
+            }
+        });
+    }
+
+    /**
+     * 按书名排序
+     */
+    private void sortByBookName() {
+        final RuleBasedCollator collator = (RuleBasedCollator) Collator.getInstance(Locale.CHINA);
+        Collections.sort(bookList, new Comparator<SampleBookDetailDataBean>() {
+            @Override
+            public int compare(SampleBookDetailDataBean bookShelfItemData, SampleBookDetailDataBean t1) {
+                return collator.compare(bookShelfItemData.getTitle(), t1.getTitle()) < 0 ? -1 : 1;
+            }
+        });
+
+    }
+
+    /**
+     * 按热度 降序
+     */
+    private void sortBydEgreeDown() {
+        Collections.sort(bookList, new Comparator<SampleBookDetailDataBean>() {
+            @Override
+            public int compare(SampleBookDetailDataBean o1, SampleBookDetailDataBean o2) {
+
+                try {
+
+                    if (o1.getDegree() > o2.getDegree()) {
+                        return -1;
+                    } else if (o1.getDegree() < o2.getDegree()) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return 0;
+            }
+        });
+
+    }
+
+    /**
+     * 按时间排序 升序
+     */
+    private void sortByDateUp() {
+        Collections.sort(bookList, new Comparator<SampleBookDetailDataBean>() {
+            @Override
+            public int compare(SampleBookDetailDataBean o1, SampleBookDetailDataBean o2) {
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                try {
+                    if (o1.getCreateDate() > o2.getCreateDate()) {
+                        return 1;
+                    } else if (o1.getCreateDate() < o2.getCreateDate()) {
+                        return -1;
+                    } else {
+                        return 0;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return 0;
+            }
+        });
+
+    }
+
+    /**
+     * 按时间排序 降序
+     */
+    private void sortByDateDown() {
+        Collections.sort(bookList, new Comparator<SampleBookDetailDataBean>() {
+            @Override
+            public int compare(SampleBookDetailDataBean o1, SampleBookDetailDataBean o2) {
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                try {
+                    if (o1.getCreateDate() > o2.getCreateDate()) {
+                        return -1;
+                    } else if (o1.getCreateDate() < o2.getCreateDate()) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return 0;
+            }
+        });
+
     }
 
     class MyAdapter extends RecyclerAdapter<SampleBookDetailDataBean> {
@@ -296,7 +474,7 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
                 super.setData(data);
                 tv_book_name.setText(data.getTitle());
                 tv_book_price.setText("价格：" + data.getPrice() + "￥");
-                tv_apply_time.setText("申请时间：" + TimeUtils.getTime(data.getOperateDate()));
+                tv_apply_time.setText("申请时间：" + TimeUtils.getTime(data.getCreateDate()));
                 /**
                  * 0、已审核
                  * 1、未审核
@@ -317,7 +495,7 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
                     btn_state.setText(R.string.reason);
                 }
 
-                Glide.with(context).load("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1539859348&di=8b469335b1c844071278bde5488ba5f4&imgtype=jpg&er=1&src=http%3A%2F%2Fpic2.ooopic.com%2F13%2F38%2F51%2F47b1OOOPIC37.jpg")
+                Glide.with(context).load(data.getCover())
                         .apply(BaseApplication.options)
                         .into(img_cover);
                 btn_state.setOnClickListener(new View.OnClickListener() {
@@ -333,8 +511,7 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
                                     confirmDialog.dismiss();
                                     //toUserHome(context);
                                     ApprovalSubmitData submitData = confirmDialog.getSubmitData();
-                                    submitData.setResGuid(data.getGuid());
-                                    submitData.setUserGuid(guid);
+                                    submitData.setGuid(data.getGuid());
                                     submitData.setIsPass(0);
                                     approvalSubmit(submitData);
                                 }
@@ -342,14 +519,13 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
                                 @Override
                                 public void doCancel() {
                                     ApprovalSubmitData submitData = confirmDialog.getSubmitData();
-                                    submitData.setResGuid(data.getGuid());
+                                    submitData.setGuid(data.getGuid());
                                     submitData.setIsPass(1);
-                                    submitData.setUserGuid(guid);
                                     approvalSubmit(submitData);
                                     confirmDialog.dismiss();
                                 }
                             });
-                        }else {
+                        } else {
                             toastShow(data.getRemark());
                         }
                     }

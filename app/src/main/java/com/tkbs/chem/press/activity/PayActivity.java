@@ -9,12 +9,18 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alipay.sdk.app.EnvUtils;
 import com.alipay.sdk.app.PayTask;
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
+import com.tencent.mm.opensdk.constants.Build;
+import com.tencent.mm.opensdk.modelpay.PayReq;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
+import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.base.BaseActivity;
 import com.tkbs.chem.press.base.BaseApplication;
@@ -22,13 +28,19 @@ import com.tkbs.chem.press.bean.BookDetailBean;
 import com.tkbs.chem.press.bean.HttpResponse;
 import com.tkbs.chem.press.bean.OrderInfo;
 import com.tkbs.chem.press.bean.PayResult;
+import com.tkbs.chem.press.bean.RechargeResult;
 import com.tkbs.chem.press.net.ApiCallback;
+import com.tkbs.chem.press.util.Config;
 
 import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import de.greenrobot.event.EventBus;
+import de.greenrobot.event.Subscribe;
+import de.greenrobot.event.ThreadMode;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 
 public class PayActivity extends BaseActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
@@ -60,6 +72,7 @@ public class PayActivity extends BaseActivity implements View.OnClickListener, C
     private String guid;
 
     private BookDetailBean bookDetailData;
+    private IWXAPI api;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,8 +90,11 @@ public class PayActivity extends BaseActivity implements View.OnClickListener, C
         cbRechargeWx.setOnCheckedChangeListener(this);
         guid = getIntent().getStringExtra("guid");
         getBookDetail();
+        EventBus.getDefault().register(this);
         // TODO 支付宝 沙箱环境
         EnvUtils.setEnv(EnvUtils.EnvEnum.SANDBOX);
+        // 微信
+        api = WXAPIFactory.createWXAPI(this, Config.WX_APP_ID);
     }
 
     /**
@@ -168,7 +184,7 @@ public class PayActivity extends BaseActivity implements View.OnClickListener, C
                 } else {
                     // 微信支付
                     toastShow("微信支付");
-//                    payReadyWX();
+                    payReadyWX();
                 }
                 break;
             default:
@@ -176,6 +192,81 @@ public class PayActivity extends BaseActivity implements View.OnClickListener, C
         }
     }
 
+    /**
+     * 获取微信支付数据
+     */
+    private RechargeResult.WeChat payMent;
+
+    /**
+     * 微信支付
+     */
+    private void payReadyWX() {
+        // TODO 微信接口无法访问
+        showProgressDialog();
+        addSubscription(apiStores.payReadyWeChat(guid), new ApiCallback<HttpResponse<RechargeResult.WeChat>>() {
+            @Override
+            public void onSuccess(HttpResponse<RechargeResult.WeChat> model) {
+                if (model.isStatus()) {
+                    payMent = model.getData();
+                    wxpay();
+                } else {
+                    toastShow(model.getErrorDescription());
+                }
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                toastShow(msg);
+            }
+
+            @Override
+            public void onFinish() {
+                dismissProgressDialog();
+            }
+        });
+    }
+
+    private void wxpay() {
+        api.registerApp(payMent.getAppId());
+        boolean isPaySupported = api.getWXAppSupportAPI() >= Build.PAY_SUPPORTED_SDK_INT;
+        if (!isPaySupported) {
+            Toast.makeText(PayActivity.this, "您的微信版本太低，不支持支付功能", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Toast.makeText(PayActivity.this, "获取订单中...", Toast.LENGTH_SHORT).show();
+        try {
+            PayReq request = new PayReq();
+//            request.appId = "wxd930ea5d5a258f4f";
+//            request.partnerId = "1900000109";
+//            request.prepayId = "1101000000140415649af9fc314aa427";
+//            request.nonceStr = "1101000000140429eb40476f8896f4c9";
+//            request.timeStamp = "1398746574";
+//            request.sign = "7FFECB600D7157C5AA49810D2D8F28BC2811827B";
+            request.appId = payMent.getAppId();
+            request.partnerId = payMent.getPartnerId();
+            request.prepayId = payMent.getPrepayId();
+            request.packageValue = "Sign=WXPay";
+            request.nonceStr = payMent.getNoncestr();
+            request.timeStamp = payMent.getTimestamp();
+            request.sign = payMent.getSign();
+            api.sendReq(request);
+
+        } catch (Exception e) {
+            Toast.makeText(PayActivity.this, "异常：" + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+
+    }
+    @Subscribe(threadMode = ThreadMode.MainThread)
+    public void wxpayresult(Integer progress) {
+        if (progress == 0) {//支付成功
+            paysuccess();
+//            Toast.makeText(PayActivity.this, "支付成功", Toast.LENGTH_SHORT).show();
+//            finish();
+        } else {
+//            checkOrder(false);
+            toastShow("pay fail ");
+        }
+    }
     /**
      * 支付宝支付
      */

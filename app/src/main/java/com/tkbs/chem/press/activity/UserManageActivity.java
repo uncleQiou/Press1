@@ -21,6 +21,8 @@ import com.tkbs.chem.press.fragment.SampleBookListFragment;
 import com.tkbs.chem.press.fragment.SecondaryClassificationFragment;
 import com.tkbs.chem.press.fragment.TeacherInforFragment;
 import com.tkbs.chem.press.fragment.TextFragment;
+import com.tkbs.chem.press.util.TimeUtils;
+import com.tkbs.chem.press.util.UiUtils;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -72,7 +74,7 @@ public class UserManageActivity extends BaseActivity implements View.OnClickList
         indicators = new String[]{getResources().getString(R.string.personal_information),
                 getResources().getString(R.string.sample_book_list),
                 getResources().getString(R.string.buy_book_list)};
-        tvRegisterTime.setText("2018年10月18日18:47:17");
+        tvRegisterTime.setText(TimeUtils.getTime(date));
         int selectColor = getResources().getColor(R.color.hg_app_main_color);
         int unSelectColor = getResources().getColor(R.color.text_main_3);
         indicator.setScrollBar(new ColorBar(getApplicationContext(), getResources().getColor(R.color.hg_app_main_color), 2));

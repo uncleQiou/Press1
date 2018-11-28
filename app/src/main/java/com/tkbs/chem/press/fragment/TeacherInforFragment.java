@@ -79,20 +79,16 @@ public class TeacherInforFragment extends BaseFragment {
                 if (model.isStatus()) {
                     UserInfoManageDataBean dataBean = model.getData();
                     tvRealName.setText(dataBean.getRealName());
-                    if (1 == dataBean.getSex()) {
-                        tvSex.setText(R.string.sex_1);
-                    } else {
-                        tvSex.setText(R.string.sex_2);
-                    }
+                    tvSex.setText(dataBean.getSex());
                     tvBirthDate.setText(dataBean.getBirthday());
                     tvContactWay.setText(dataBean.getPhone());
                     tvMailbox.setText(dataBean.getMail());
-                    tvLocation.setText(dataBean.getOrganization());
-                    tvSchool.setText("清华大学");
-                    tvFaculty.setText("土木工程系");
-                    tvTeacherJob.setText("主任");
-                    tvOfficePhone.setText("010-110110");
-                    tvTeachingCourse.setText("工程造价");
+                    tvLocation.setText(dataBean.getAreaName());
+                    tvSchool.setText(dataBean.getOrganization());
+                    tvFaculty.setText(dataBean.getDepartment());
+                    tvTeacherJob.setText(dataBean.getJob());
+                    tvOfficePhone.setText(dataBean.getWorkphone());
+                    tvTeachingCourse.setText(dataBean.getCourse());
                 } else {
                     toastShow(model.getErrorDescription());
                 }

@@ -78,7 +78,7 @@
                 <TextView
                     android:id="@+id/tv_sort_book_name"
                     style="@style/book_shelf_sort"
-                    android:text="@string/sort_book_name" />
+                    android:text="@string/sort_name" />
 
                 <ImageView
                     android:id="@+id/img_sort_book_name"

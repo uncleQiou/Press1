@@ -6,54 +6,39 @@ package com.tkbs.chem.press.bean;
 public class UserManageDataBean {
 
     /**
-     * guid : 03B5781927A04588928CBEC03745E31E
+     * userGuid : 03B5781927A04588928CBEC03745E31E
      * username : 用户
      * job :
      * school :
      * faculty :
-     * approved : 1
-     * unapproved : 1
-     * unpass : 1
-     * sampleBookNumber : 2
-     * giveBookNumber : 1
+     * date : 1543375732197
+     * state : 0
+     * approvedNumber : 0
+     * unApprovedNumber : 0
+     * unPassNumber : 0
+     * sampleBookNumber : 0
+     * giveBookNumber : 15
      */
 
-    private String guid;
+    private String userGuid;
     private String username;
     private String job;
     private String school;
     private String faculty;
-    private int approved;
-    private int unapproved;
-    private int unpass;
-    private int sampleBookNumber;
-    private int giveBookNumber;
     private long date;
     private int state;
+    private int approvedNumber;
+    private int unApprovedNumber;
+    private int unPassNumber;
+    private int sampleBookNumber;
+    private int giveBookNumber;
 
-
-    public long getDate() {
-        return date;
+    public String getUserGuid() {
+        return userGuid;
     }
 
-    public void setDate(long date) {
-        this.date = date;
-    }
-
-    public int getState() {
-        return state;
-    }
-
-    public void setState(int state) {
-        this.state = state;
-    }
-
-    public String getGuid() {
-        return guid;
-    }
-
-    public void setGuid(String guid) {
-        this.guid = guid;
+    public void setUserGuid(String userGuid) {
+        this.userGuid = userGuid;
     }
 
     public String getUsername() {
@@ -88,28 +73,44 @@ public class UserManageDataBean {
         this.faculty = faculty;
     }
 
-    public int getApproved() {
-        return approved;
+    public long getDate() {
+        return date;
     }
 
-    public void setApproved(int approved) {
-        this.approved = approved;
+    public void setDate(long date) {
+        this.date = date;
     }
 
-    public int getUnapproved() {
-        return unapproved;
+    public int getState() {
+        return state;
     }
 
-    public void setUnapproved(int unapproved) {
-        this.unapproved = unapproved;
+    public void setState(int state) {
+        this.state = state;
     }
 
-    public int getUnpass() {
-        return unpass;
+    public int getApprovedNumber() {
+        return approvedNumber;
     }
 
-    public void setUnpass(int unpass) {
-        this.unpass = unpass;
+    public void setApprovedNumber(int approvedNumber) {
+        this.approvedNumber = approvedNumber;
+    }
+
+    public int getUnApprovedNumber() {
+        return unApprovedNumber;
+    }
+
+    public void setUnApprovedNumber(int unApprovedNumber) {
+        this.unApprovedNumber = unApprovedNumber;
+    }
+
+    public int getUnPassNumber() {
+        return unPassNumber;
+    }
+
+    public void setUnPassNumber(int unPassNumber) {
+        this.unPassNumber = unPassNumber;
     }
 
     public int getSampleBookNumber() {

@@ -117,7 +117,6 @@ public class FragmentBookPurchaseList extends BaseFragment {
     }
 
 
-
     class BookPurchaseListAdapter extends RecyclerAdapter<GiveBookListBean> {
         private Context context;
         /**
@@ -159,10 +158,10 @@ public class FragmentBookPurchaseList extends BaseFragment {
             @Override
             public void setData(GiveBookListBean data) {
                 super.setData(data);
-                tv_date.setText(TimeUtils.getTime(data.getTime()));
+                tv_date.setText("");
                 tv_book_price.setText("￥" + data.getPrice());
                 tv_book_name.setText(data.getTitle());
-                tv_book_state.setText("到" + TimeUtils.getTime(data.getTime()));
+                tv_book_state.setText("到" + TimeUtils.getTime(data.getTime_limit()));
 
             }
 

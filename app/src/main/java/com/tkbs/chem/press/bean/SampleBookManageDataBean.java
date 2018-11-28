@@ -7,35 +7,39 @@ public class SampleBookManageDataBean {
 
 
     /**
-     * guid : 03B5781927A04588928CBEC03745E31E
+     * userGuid : 03B5781927A04588928CBEC03745E31E
      * username : 用户
      * job :
      * school :
      * faculty :
-     * approved : 2
-     * unapproved : 0
-     * unpass : 0
-     * sampleBookNumber : 1
-     * giveBookNumber : 1
+     * date : null
+     * state : null
+     * approvedNumber : 0
+     * unApprovedNumber : 6
+     * unPassNumber : 0
+     * sampleBookNumber : null
+     * giveBookNumber : null
      */
 
-    private String guid;
+    private String userGuid;
     private String username;
     private String job;
     private String school;
     private String faculty;
-    private int approved;
-    private int unapproved;
-    private int unpass;
-    private int sampleBookNumber;
-    private int giveBookNumber;
+    private long date;
+    private int state;
+    private int approvedNumber;
+    private int unApprovedNumber;
+    private int unPassNumber;
+    private Object sampleBookNumber;
+    private Object giveBookNumber;
 
-    public String getGuid() {
-        return guid;
+    public String getUserGuid() {
+        return userGuid;
     }
 
-    public void setGuid(String guid) {
-        this.guid = guid;
+    public void setUserGuid(String userGuid) {
+        this.userGuid = userGuid;
     }
 
     public String getUsername() {
@@ -70,43 +74,59 @@ public class SampleBookManageDataBean {
         this.faculty = faculty;
     }
 
-    public int getApproved() {
-        return approved;
+    public long getDate() {
+        return date;
     }
 
-    public void setApproved(int approved) {
-        this.approved = approved;
+    public void setDate(int date) {
+        this.date = date;
     }
 
-    public int getUnapproved() {
-        return unapproved;
+    public int getState() {
+        return state;
     }
 
-    public void setUnapproved(int unapproved) {
-        this.unapproved = unapproved;
+    public void setState(int state) {
+        this.state = state;
     }
 
-    public int getUnpass() {
-        return unpass;
+    public int getApprovedNumber() {
+        return approvedNumber;
     }
 
-    public void setUnpass(int unpass) {
-        this.unpass = unpass;
+    public void setApprovedNumber(int approvedNumber) {
+        this.approvedNumber = approvedNumber;
     }
 
-    public int getSampleBookNumber() {
+    public int getUnApprovedNumber() {
+        return unApprovedNumber;
+    }
+
+    public void setUnApprovedNumber(int unApprovedNumber) {
+        this.unApprovedNumber = unApprovedNumber;
+    }
+
+    public int getUnPassNumber() {
+        return unPassNumber;
+    }
+
+    public void setUnPassNumber(int unPassNumber) {
+        this.unPassNumber = unPassNumber;
+    }
+
+    public Object getSampleBookNumber() {
         return sampleBookNumber;
     }
 
-    public void setSampleBookNumber(int sampleBookNumber) {
+    public void setSampleBookNumber(Object sampleBookNumber) {
         this.sampleBookNumber = sampleBookNumber;
     }
 
-    public int getGiveBookNumber() {
+    public Object getGiveBookNumber() {
         return giveBookNumber;
     }
 
-    public void setGiveBookNumber(int giveBookNumber) {
+    public void setGiveBookNumber(Object giveBookNumber) {
         this.giveBookNumber = giveBookNumber;
     }
 }

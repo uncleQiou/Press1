@@ -60,7 +60,7 @@ public class DialogApprovalBook extends Dialog implements AdapterView.OnItemClic
     public ApprovalSubmitData getSubmitData() {
         ApprovalSubmitData submitData = new ApprovalSubmitData();
         submitData.setContent(edOpinion.getText().toString().trim());
-        submitData.setTimeLimit(index + 1);
+        submitData.setLimitTime(index + 1);
         return submitData;
     }
 

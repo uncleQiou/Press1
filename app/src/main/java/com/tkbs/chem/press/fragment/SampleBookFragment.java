@@ -17,11 +17,19 @@ import com.tkbs.chem.press.activity.SampleBookActivity;
 import com.tkbs.chem.press.activity.SearchActivity;
 import com.tkbs.chem.press.base.BaseFragment;
 import com.tkbs.chem.press.bean.HttpResponse;
+import com.tkbs.chem.press.bean.SampleBookItemDataBean;
 import com.tkbs.chem.press.bean.SampleBookManageDataBean;
 import com.tkbs.chem.press.bean.ThreeClassifyDataBena;
 import com.tkbs.chem.press.net.ApiCallback;
 
+import java.text.Collator;
+import java.text.RuleBasedCollator;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.Locale;
 
 import cn.lemon.view.RefreshRecyclerView;
 import cn.lemon.view.adapter.Action;
@@ -47,6 +55,8 @@ public class SampleBookFragment extends BaseFragment implements View.OnClickList
     private ArrayList<SampleBookManageDataBean> bookList;
     private int page = 1;
     private Handler mHandler;
+    // 升序
+    private boolean isAscendingOrder = true;
 
     @Override
     protected View getPreviewLayout(LayoutInflater inflater, ViewGroup container) {
@@ -60,8 +70,11 @@ public class SampleBookFragment extends BaseFragment implements View.OnClickList
         ll_search = (LinearLayout) findViewById(R.id.ll_search);
         ll_search.setOnClickListener(this);
         ll_sort_time = (LinearLayout) findViewById(R.id.ll_sort_time);
+        ll_sort_time.setOnClickListener(this);
         ll_sort_book_name = (LinearLayout) findViewById(R.id.ll_sort_book_name);
+        ll_sort_book_name.setOnClickListener(this);
         ll_sort_state = (LinearLayout) findViewById(R.id.ll_sort_state);
+        ll_sort_state.setOnClickListener(this);
         recycler = (RefreshRecyclerView) findViewById(R.id.recycler);
         tv_sort_time = (TextView) findViewById(R.id.tv_sort_time);
         img_sort_time = (ImageView) findViewById(R.id.img_sort_time);
@@ -102,7 +115,7 @@ public class SampleBookFragment extends BaseFragment implements View.OnClickList
 
     private void getSampleBookList(final boolean isRefresh) {
         showProgressDialog();
-        addSubscription(apiStores.SampleBookManageList(), new ApiCallback<HttpResponse<ArrayList<SampleBookManageDataBean>>>() {
+        addSubscription(apiStores.SampleBookManageList(page), new ApiCallback<HttpResponse<ArrayList<SampleBookManageDataBean>>>() {
             @Override
             public void onSuccess(HttpResponse<ArrayList<SampleBookManageDataBean>> model) {
                 if (model.isStatus()) {
@@ -181,9 +194,138 @@ public class SampleBookFragment extends BaseFragment implements View.OnClickList
             case R.id.ll_search:
                 getActivity().startActivity(new Intent(getActivity(), SearchActivity.class));
                 break;
+            case R.id.ll_sort_time:
+                if (null == bookList) {
+                    return;
+                }
+                recycler.showSwipeRefresh();
+                img_sort_time.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down : R.mipmap.bookshelf_icon_up);
+                if (isAscendingOrder) {
+                    isAscendingOrder = false;
+                    sortByDateUp();
+                } else {
+                    isAscendingOrder = true;
+                    sortByDateDown();
+                }
+                myAdapter.clear();
+                myAdapter.addAll(bookList);
+                recycler.dismissSwipeRefresh();
+                recycler.getRecyclerView().scrollToPosition(0);
+                break;
+            case R.id.ll_sort_book_name:
+                if (null == bookList) {
+                    return;
+                }
+                recycler.showSwipeRefresh();
+                sortByTeaName();
+                myAdapter.clear();
+                myAdapter.addAll(bookList);
+                recycler.dismissSwipeRefresh();
+                recycler.getRecyclerView().scrollToPosition(0);
+
+                break;
+            case R.id.ll_sort_state:
+                if (null == bookList) {
+                    return;
+                }
+                recycler.showSwipeRefresh();
+                sortByState();
+                myAdapter.clear();
+                myAdapter.addAll(bookList);
+                recycler.dismissSwipeRefresh();
+                recycler.getRecyclerView().scrollToPosition(0);
+                break;
             default:
                 break;
         }
+    }
+
+    /**
+     * 按状态进行排序
+     */
+    private void sortByState() {
+        Collections.sort(bookList, new Comparator<SampleBookManageDataBean>() {
+            @Override
+            public int compare(SampleBookManageDataBean o1, SampleBookManageDataBean o2) {
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                try {
+                    if (o1.getState() > o2.getState()) {
+                        return 1;
+                    } else if (o1.getState() < o2.getState()) {
+                        return -1;
+                    } else {
+                        return 0;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return 0;
+            }
+        });
+    }
+
+    /**
+     * 按姓名排序
+     */
+    private void sortByTeaName() {
+        final RuleBasedCollator collator = (RuleBasedCollator) Collator.getInstance(Locale.CHINA);
+        Collections.sort(bookList, new Comparator<SampleBookManageDataBean>() {
+            @Override
+            public int compare(SampleBookManageDataBean bookShelfItemData, SampleBookManageDataBean t1) {
+                return collator.compare(bookShelfItemData.getUsername(), t1.getUsername()) < 0 ? -1 : 1;
+            }
+        });
+
+    }
+
+    /**
+     * 按时间排序 升序
+     */
+    private void sortByDateUp() {
+        Collections.sort(bookList, new Comparator<SampleBookManageDataBean>() {
+            @Override
+            public int compare(SampleBookManageDataBean o1, SampleBookManageDataBean o2) {
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                try {
+                    if (o1.getDate() > o2.getDate()) {
+                        return 1;
+                    } else if (o1.getDate() < o2.getDate()) {
+                        return -1;
+                    } else {
+                        return 0;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return 0;
+            }
+        });
+
+    }
+
+    /**
+     * 按时间排序 降序
+     */
+    private void sortByDateDown() {
+        Collections.sort(bookList, new Comparator<SampleBookManageDataBean>() {
+            @Override
+            public int compare(SampleBookManageDataBean o1, SampleBookManageDataBean o2) {
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                try {
+                    if (o1.getDate() > o2.getDate()) {
+                        return -1;
+                    } else if (o1.getDate() < o2.getDate()) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return 0;
+            }
+        });
+
     }
 
     class SampBookAdapter extends RecyclerAdapter<SampleBookManageDataBean> {
@@ -234,9 +376,9 @@ public class SampleBookFragment extends BaseFragment implements View.OnClickList
                 tv_teacher_name.setText(data.getUsername());
                 tv_teacher_postion.setText(data.getJob());
                 tv_teacher_subject.setText(data.getSchool());
-                tv_unapproved_num.setText(data.getUnapproved() + "本");
-                tv_approved_fail.setText(data.getUnpass() + "本");
-                tv_approved_success.setText(data.getApproved() + "本");
+                tv_unapproved_num.setText(data.getUnApprovedNumber() + "本");
+                tv_approved_fail.setText(data.getUnPassNumber() + "本");
+                tv_approved_success.setText(data.getApprovedNumber() + "本");
 
 
             }
@@ -245,7 +387,7 @@ public class SampleBookFragment extends BaseFragment implements View.OnClickList
             public void onItemViewClick(SampleBookManageDataBean data) {
                 super.onItemViewClick(data);
                 Intent intent = new Intent(getActivity(), SampleBookActivity.class);
-                intent.putExtra("guid", data.getGuid());
+                intent.putExtra("guid", data.getUserGuid());
                 intent.putExtra("name", data.getUsername());
                 intent.putExtra("job", data.getJob());
                 getActivity().startActivity(intent);

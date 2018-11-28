@@ -69,6 +69,7 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
     private LinearLayout ll_bottom_edit;
     private CheckBox cb_select;
     private TextView tv_delete;
+    private TextView tv_download;
     private BookShelfItemAdapter bookShelfItemAdapter;
     private int page = 1;
     private Handler mHandler;
@@ -100,7 +101,10 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
         mHandler = new Handler();
         tv_delete = (TextView) findViewById(R.id.tv_delete);
         tv_delete.setOnClickListener(this);
+        tv_download = (TextView) findViewById(R.id.tv_download);
+        tv_download.setOnClickListener(this);
         initView();
+        initBottom();
         // 编辑界面隐藏
         ll_bookshelf_edit.setVisibility(View.VISIBLE);
         ll_bottom_edit.setVisibility(View.GONE);
@@ -134,6 +138,47 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
         String values = getArguments().getString("111");
 //        recycler_bookshelf.getNoMoreView().setText(values);
         recycler_bookshelf.getNoMoreView().setText(R.string.no_more_data);
+    }
+
+    /***
+     * 设置底部编辑栏
+     */
+    private void initBottom() {
+        switch (type) {
+            case 0:
+                // 免费样书
+                tv_download.setVisibility(View.GONE);
+                tv_delete.setText(R.string.str_delete);
+                break;
+            case 1:
+                // 我的赠书
+                tv_download.setVisibility(View.GONE);
+                tv_delete.setText(R.string.str_delete);
+                break;
+            case 2:
+                // 已购图书
+                tv_download.setVisibility(View.VISIBLE);
+                tv_delete.setText(R.string.str_delete);
+                break;
+            case 3:
+                // 我的收藏
+                tv_download.setVisibility(View.GONE);
+                tv_delete.setText(R.string.delete_collect);
+                break;
+            case 4:
+                // 业务员 我的图书
+                tv_download.setVisibility(View.GONE);
+                tv_delete.setText(R.string.str_delete);
+                toastShow("业务员我的图书");
+                break;
+            case 5:
+                tv_download.setVisibility(View.GONE);
+                tv_delete.setText(R.string.delete_collect);
+                // 业务员 我的收藏
+                break;
+            default:
+                break;
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MainThread)
@@ -348,6 +393,7 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
                 break;
             case 4:
                 // 业务员 我的图书
+                // TODO 业务员下载的图书
                 toastShow("业务员我的图书");
                 break;
             case 5:
@@ -457,6 +503,10 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
                 cb_select.setChecked(isAllCheck);
                 setEditAllCheck();
                 break;
+            case R.id.tv_download:
+                // TODO 需要校验是否已经下载过此书
+                toastShow("下载");
+                break;
             default:
                 break;
         }
@@ -483,6 +533,7 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
                         @Override
                         public void run() {
                             recycler_bookshelf.showSwipeRefresh();
+                            page = 1;
                             getData(true);
                         }
                     });
@@ -526,6 +577,7 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
                         @Override
                         public void run() {
                             recycler_bookshelf.showSwipeRefresh();
+                            page = 1;
                             getData(true);
                         }
                     });
@@ -580,6 +632,7 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
                         @Override
                         public void run() {
                             recycler_bookshelf.showSwipeRefresh();
+                            page = 1;
                             getData(true);
                         }
                     });

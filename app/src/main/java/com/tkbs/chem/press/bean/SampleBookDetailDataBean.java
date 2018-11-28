@@ -5,31 +5,27 @@ package com.tkbs.chem.press.bean;
  */
 public class SampleBookDetailDataBean {
 
+
     /**
-     * guid : E82DCBEE738947D889FE743A3331D618
-     * state : 0
-     * operateDate : 1527842713000
-     * title : 150种生物柴油配方与制作
-     * price : 36
-     * cover :
-     * remark
+     * guid : 79C59A84F44F408D9A5F06B722A82371
+     * documentGuid : DC58653EAFEC49BCBCA5380277B1E6D9
+     * state : 1
+     * createDate : 1543369404000
+     * title : 现代分子光化学（1）原理篇12
+     * price : 100
+     * cover : null
+     * remark : null
      */
 
     private String guid;
+    private String documentGuid;
     private int state;
-    private long operateDate;
+    private long createDate;
     private String title;
-    private int price;
+    private double price;
     private String cover;
     private String remark;
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
+    private int degree;
 
     public String getGuid() {
         return guid;
@@ -37,6 +33,14 @@ public class SampleBookDetailDataBean {
 
     public void setGuid(String guid) {
         this.guid = guid;
+    }
+
+    public String getDocumentGuid() {
+        return documentGuid;
+    }
+
+    public void setDocumentGuid(String documentGuid) {
+        this.documentGuid = documentGuid;
     }
 
     public int getState() {
@@ -47,12 +51,12 @@ public class SampleBookDetailDataBean {
         this.state = state;
     }
 
-    public long getOperateDate() {
-        return operateDate;
+    public long getCreateDate() {
+        return createDate;
     }
 
-    public void setOperateDate(long operateDate) {
-        this.operateDate = operateDate;
+    public void setCreateDate(long createDate) {
+        this.createDate = createDate;
     }
 
     public String getTitle() {
@@ -63,11 +67,11 @@ public class SampleBookDetailDataBean {
         this.title = title;
     }
 
-    public int getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
@@ -77,5 +81,21 @@ public class SampleBookDetailDataBean {
 
     public void setCover(String cover) {
         this.cover = cover;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public int getDegree() {
+        return degree;
+    }
+
+    public void setDegree(int degree) {
+        this.degree = degree;
     }
 }

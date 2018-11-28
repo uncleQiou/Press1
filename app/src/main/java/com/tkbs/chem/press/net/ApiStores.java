@@ -10,6 +10,7 @@ import com.tkbs.chem.press.bean.GiveBookListBean;
 import com.tkbs.chem.press.bean.HttpResponse;
 import com.tkbs.chem.press.bean.OrderInfo;
 import com.tkbs.chem.press.bean.OrderInfoBean;
+import com.tkbs.chem.press.bean.RechargeResult;
 import com.tkbs.chem.press.bean.SampleBookDetailDataBean;
 import com.tkbs.chem.press.bean.SampleBookItemDataBean;
 import com.tkbs.chem.press.bean.SampleBookManageDataBean;
@@ -21,15 +22,12 @@ import com.tkbs.chem.press.bean.UserInfoManageDataBean;
 import com.tkbs.chem.press.bean.UserManageDataBean;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 import okhttp3.RequestBody;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
-import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
-import retrofit2.http.QueryMap;
 import rx.Observable;
 
 public interface ApiStores {
@@ -107,24 +105,53 @@ public interface ApiStores {
     Observable<HttpResponse<ArrayList<ThreeClassifyDataBena>>> MyCustomData();
 
     /**
+     * 样书管理列表  废弃
+     */
+//    @POST("salesman/info")
+//    Observable<HttpResponse<ArrayList<SampleBookManageDataBean>>> SampleBookManageList();
+
+    /**
      * 样书管理列表
      */
-    @POST("salesman/info")
-    Observable<HttpResponse<ArrayList<SampleBookManageDataBean>>> SampleBookManageList();
+    @POST("sampleBook/querySampleBookOne/{pageNum}/10")
+    Observable<HttpResponse<ArrayList<SampleBookManageDataBean>>> SampleBookManageList(@Path("pageNum") int page);
+
+//    /**
+//     * 样书管理详情 废弃
+//     */
+//    @POST("salesman/sampleInfo/{guid}")
+//    Observable<HttpResponse<ArrayList<SampleBookDetailDataBean>>> SampleBookDetail(@Path("guid") String guid);
 
     /**
      * 样书管理详情
      */
-    @POST("salesman/sampleInfo/{guid}")
+    @POST("sampleBook/querySampleBookTwo/{guid}")
     Observable<HttpResponse<ArrayList<SampleBookDetailDataBean>>> SampleBookDetail(@Path("guid") String guid);
+
+//    /**
+//     * 用户管理列表  废弃
+//     *
+//     * @return
+//     */
+//    @POST("salesmanUser/userList")
+//    Observable<HttpResponse<ArrayList<UserManageDataBean>>> UserManageDataList();
 
     /**
      * 用户管理列表
      *
      * @return
      */
-    @POST("salesmanUser/userList")
-    Observable<HttpResponse<ArrayList<UserManageDataBean>>> UserManageDataList();
+    @POST("mmMember/queryMemberList/{pageNum}/10")
+    Observable<HttpResponse<ArrayList<UserManageDataBean>>> UserManageDataList(@Path("pageNum") int page);
+
+//    /**
+//     * 用户管理——用户信息 废弃
+//     *
+//     * @param guid
+//     * @return
+//     */
+//    @POST("salesmanUser/userInfo/{guid}")
+//    Observable<HttpResponse<UserInfoManageDataBean>> UserDetail(@Path("guid") String guid);
 
     /**
      * 用户管理——用户信息
@@ -132,8 +159,17 @@ public interface ApiStores {
      * @param guid
      * @return
      */
-    @POST("salesmanUser/userInfo/{guid}")
-    Observable<HttpResponse<UserInfoManageDataBean>> UserDetail(@Path("guid") String guid);
+    @POST("mmMember/queryPersonInfo/{userGuid}")
+    Observable<HttpResponse<UserInfoManageDataBean>> UserDetail(@Path("userGuid") String guid);
+
+//    /**
+//     * 用户管理——赠书清单 废弃
+//     *
+//     * @param guid
+//     * @return
+//     */
+//    @POST("salesmanUser/givebookList/{guid}")
+//    Observable<HttpResponse<ArrayList<GiveBookListBean>>> GiveBookList(@Path("guid") String guid);
 
     /**
      * 用户管理——赠书清单
@@ -141,8 +177,17 @@ public interface ApiStores {
      * @param guid
      * @return
      */
-    @POST("salesmanUser/givebookList/{guid}")
-    Observable<HttpResponse<ArrayList<GiveBookListBean>>> GiveBookList(@Path("guid") String guid);
+    @POST("giveBook/queryGiveBookBySaleMan/{memberGuid}")
+    Observable<HttpResponse<ArrayList<GiveBookListBean>>> GiveBookList(@Path("memberGuid") String guid);
+
+//    /**
+//     * 用户管理——样书清单 废弃
+//     *
+//     * @param guid
+//     * @return
+//     */
+//    @POST("salesmanUser/samplebookList/{guid}")
+//    Observable<HttpResponse<ArrayList<GiveBookListBean>>> SampleBookList(@Path("guid") String guid);
 
     /**
      * 用户管理——样书清单
@@ -150,8 +195,17 @@ public interface ApiStores {
      * @param guid
      * @return
      */
-    @POST("salesmanUser/samplebookList/{guid}")
-    Observable<HttpResponse<ArrayList<GiveBookListBean>>> SampleBookList(@Path("guid") String guid);
+    @POST("sampleBook/querySampleBookBySaleMan/{memberGuid}")
+    Observable<HttpResponse<ArrayList<GiveBookListBean>>> SampleBookList(@Path("memberGuid") String guid);
+
+//    /**
+//     * 样书审核  废弃
+//     *
+//     * @param body
+//     * @return
+//     */
+//    @POST("salesman/updateInfo")
+//    Observable<HttpResponse<Object>> ApprovalDataSubmit(@Body RequestBody body);
 
     /**
      * 样书审核
@@ -159,7 +213,7 @@ public interface ApiStores {
      * @param body
      * @return
      */
-    @POST("salesman/updateInfo")
+    @POST("sampleBook/approveSampleBook")
     Observable<HttpResponse<Object>> ApprovalDataSubmit(@Body RequestBody body);
 
     /**
@@ -269,6 +323,25 @@ public interface ApiStores {
      */
     @POST("order/queryOrderInfo")
     Observable<HttpResponse<OrderInfoBean>> checkOrderInfo(@Query("documentGuid") String documentGuid);
+
+    /**
+     * 微信 支付
+     *
+     * @param documentGuid
+     * @return
+     */
+    @POST("pay/payReadyWx")
+    Observable<HttpResponse<RechargeResult.WeChat>> payReadyWeChat(@Query("documentGuid") String documentGuid);
+
+    /**
+     * 黑名单 0 正常 1 黑名单
+     *
+     * @param memberGuid ,state
+     * @return
+     */
+    @POST("mmMember/updateMemberOfBlackList/{memberGuid}/{state}")
+    Observable<HttpResponse<RechargeResult.WeChat>> blackList(@Path("memberGuid") String memberGuid, @Path("state") int state);
+
 
     /*************************************************************************************************************/
 

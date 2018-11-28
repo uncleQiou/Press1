@@ -1,7 +1,6 @@
 package com.tkbs.chem.press.net;
 
 
-import com.orhanobut.logger.Logger;
 import com.tkbs.chem.press.base.BaseApplication;
 import com.tkbs.chem.press.util.AAHelper;
 import com.tkbs.chem.press.util.Config;

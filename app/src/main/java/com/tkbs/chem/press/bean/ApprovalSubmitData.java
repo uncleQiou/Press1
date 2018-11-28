@@ -9,10 +9,9 @@ package com.tkbs.chem.press.bean;
 public class ApprovalSubmitData {
 
     private String content;
-    private String resGuid;
-    private String userGuid;
+    private String guid;
     // 几个月
-    private int  timeLimit;
+    private int  limitTime;
     // 0 通过
     private int isPass ;
 
@@ -32,27 +31,19 @@ public class ApprovalSubmitData {
         this.content = content;
     }
 
-    public String getResGuid() {
-        return resGuid;
+    public String getGuid() {
+        return guid;
     }
 
-    public void setResGuid(String resGuid) {
-        this.resGuid = resGuid;
+    public void setGuid(String guid) {
+        this.guid = guid;
     }
 
-    public String getUserGuid() {
-        return userGuid;
+    public int getLimitTime() {
+        return limitTime;
     }
 
-    public void setUserGuid(String userGuid) {
-        this.userGuid = userGuid;
-    }
-
-    public int getTimeLimit() {
-        return timeLimit;
-    }
-
-    public void setTimeLimit(int timeLimit) {
-        this.timeLimit = timeLimit;
+    public void setLimitTime(int limitTime) {
+        this.limitTime = limitTime;
     }
 }
