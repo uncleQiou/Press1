@@ -70,7 +70,8 @@ public class UserManageActivity extends BaseActivity implements View.OnClickList
         date = getIntent().getLongExtra("date", 0);
         state = getIntent().getIntExtra("state", 0);
         tvTeacherName.setText(name);
-        tvTeacherSubject.setText("状态：" + state);
+        String stateStr = 0 == state ? getString(R.string.user_state_0) : getString(R.string.user_state_1);
+        tvTeacherSubject.setText("状态：" + stateStr);
         indicators = new String[]{getResources().getString(R.string.personal_information),
                 getResources().getString(R.string.sample_book_list),
                 getResources().getString(R.string.buy_book_list)};

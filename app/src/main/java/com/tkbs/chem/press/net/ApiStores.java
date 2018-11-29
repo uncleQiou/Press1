@@ -342,6 +342,15 @@ public interface ApiStores {
     @POST("mmMember/updateMemberOfBlackList/{memberGuid}/{state}")
     Observable<HttpResponse<RechargeResult.WeChat>> blackList(@Path("memberGuid") String memberGuid, @Path("state") int state);
 
+    /**
+     * 黑名单 0 正常 1 黑名单
+     *
+     * @param guids ,timeLimit
+     * @return
+     */
+    @POST("sampleBook/batchApproveSampleBook")
+    Observable<HttpResponse<Object>> oneKeyApprove(@Query("guids") ArrayList<String> guids, @Query("timeLimit") int timeLimit);
+
 
     /*************************************************************************************************************/
 

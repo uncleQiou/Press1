@@ -173,52 +173,6 @@ public class ThreeClassificActivity extends BaseActivity implements View.OnClick
 
     }
 
-    public void getData(final boolean isRefresh) {
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (isRefresh) {
-                    page = 1;
-                    myAdapter.clear();
-//                    myAdapter.addAll(getTestData());
-                    recycler.dismissSwipeRefresh();
-                    recycler.getRecyclerView().scrollToPosition(0);
-                    recycler.showNoMore();
-                } else {
-//                    myAdapter.addAll(getTestData());
-                    if (page >= 3) {
-                        recycler.showNoMore();
-                    }
-                }
-            }
-        }, 1000);
-    }
-
-    private ThreeClassificData[] getTestData() {
-        return new ThreeClassificData[]{
-                new ThreeClassificData("《本草纲目》"),
-                new ThreeClassificData("圣经"),
-                new ThreeClassificData("论语"),
-                new ThreeClassificData("物种起源"),
-                new ThreeClassificData("全球通史"),
-                new ThreeClassificData("君主论"),
-                new ThreeClassificData("孙子兵法"),
-                new ThreeClassificData("三国演义"),
-                new ThreeClassificData("西游记"),
-                new ThreeClassificData("红楼梦"),
-                new ThreeClassificData("曾国藩家书"),
-                new ThreeClassificData("汤姆叔叔的小屋"),
-                new ThreeClassificData("红与黑"),
-                new ThreeClassificData("悲惨世界"),
-                new ThreeClassificData("百年孤独"),
-                new ThreeClassificData("胡雪岩全传"),
-                new ThreeClassificData("《飘》"),
-                new ThreeClassificData("《钢铁是怎样炼成的》"),
-                new ThreeClassificData("《呐喊》"),
-
-        };
-    }
-
     @OnClick({R.id.back, R.id.img_sort_edit, R.id.img_serache, R.id.img_classification,
             R.id.ll_sort_time, R.id.tv_sort_hot, R.id.tv_sort_book_name})
     @Override
@@ -242,16 +196,16 @@ public class ThreeClassificActivity extends BaseActivity implements View.OnClick
                     myAdapter.addAll(bookDatas);
                     recycler.setLayoutManager(new GridLayoutManager(this, 3));
                     recycler.setAdapter(myAdapter);
-                    recycler.showNoMore();
+                    recycler.getNoMoreView().setText("没有更多数据了");
                 } else {
                     disType = 1;
                     imgSortEdit.setImageResource(R.mipmap.customized_btn_list_switching);
-                    myAdapter = new MyAdapter(this);
+//                    myAdapter = new MyAdapter(this);
                     myAdapter.clear();
                     myAdapter.addAll(bookDatas);
                     recycler.setLayoutManager(new GridLayoutManager(this, 1));
                     recycler.setAdapter(myAdapter);
-                    recycler.showNoMore();
+                    recycler.getNoMoreView().setText("没有更多数据了");
                 }
                 break;
             case R.id.ll_sort_time:

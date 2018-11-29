@@ -185,9 +185,104 @@
         </LinearLayout>
     </LinearLayout>
 
-    <cn.lemon.view.RefreshRecyclerView
-        android:id="@+id/recycler"
-        android:layout_marginTop="@dimen/margin_1dp"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <cn.lemon.view.RefreshRecyclerView
+            android:id="@+id/recycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_1dp"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:visibility="gone"
+            android:id="@+id/ll_bottom_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/miaobian_normal"
+            android:gravity="center_vertical"
+            android:padding="@dimen/margin_10dp">
+
+            <LinearLayout
+                android:id="@+id/ll_check_all"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/margin_2dp">
+
+                <CheckBox
+                    android:id="@+id/cb_select"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:button="@drawable/selector_btn_blue"
+                    android:checked="false"
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:padding="@dimen/margin_10dp"
+                    android:textColor="@color/text_main_3"
+                    android:textSize="@dimen/text_12sp" />
+
+                <TextView
+                    style="@style/book_shelf_sort"
+                    android:layout_marginLeft="@dimen/margin_1dp"
+                    android:padding="@dimen/margin_5dp"
+                    android:text="@string/str_check_all" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_time_limit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingBottom="@dimen/margin_10dp"
+                android:paddingTop="@dimen/margin_10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/valid_date"
+                    android:textColor="@color/text_main_6"
+                    android:textSize="@dimen/text_13sp" />
+
+                <TextView
+                    android:id="@+id/tv_time_limit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_10dp"
+                    android:background="@drawable/miaobian_normal"
+                    android:paddingBottom="@dimen/margin_5dp"
+                    android:paddingLeft="@dimen/margin_10dp"
+                    android:paddingRight="@dimen/margin_10dp"
+                    android:paddingTop="@dimen/margin_5dp"
+                    android:text=""
+                    android:textColor="@color/text_main_6"
+                    android:textSize="@dimen/text_13sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/miaobian_normal"
+                    android:drawableRight="@mipmap/book_manage_arrow_down"
+                    android:padding="@dimen/margin_5dp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_approval"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/rounded_rectangle_blue"
+                android:paddingBottom="@dimen/margin_5dp"
+                android:paddingLeft="@dimen/margin_10dp"
+                android:paddingRight="@dimen/margin_10dp"
+                android:paddingTop="@dimen/margin_5dp"
+                android:text="@string/approval"
+                android:textColor="@color/hg_app_main_color"
+                android:textSize="@dimen/text_15sp" />
+        </LinearLayout>
+    </LinearLayout>
 </LinearLayout>

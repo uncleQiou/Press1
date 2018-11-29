@@ -26,6 +26,15 @@ public class SampleBookDetailDataBean {
     private String cover;
     private String remark;
     private int degree;
+    private boolean isChecked;
+
+    public boolean isChecked() {
+        return isChecked;
+    }
+
+    public void setChecked(boolean checked) {
+        isChecked = checked;
+    }
 
     public String getGuid() {
         return guid;

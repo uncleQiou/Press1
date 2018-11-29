@@ -785,6 +785,7 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
                 tv_buy_time.setVisibility(View.GONE);
                 cb_select_item.setVisibility(editFlg ? View.VISIBLE : View.GONE);
                 cb_select_item.setChecked(data.isChecked());
+                // TODo  data？
                 tv_book_page.setText("页数：100 页");
                 tv_book_endtime.setText("截止时间：永久");
                 Glide.with(context).load(data.getCover())

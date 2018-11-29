@@ -1,28 +1,32 @@
 package com.tkbs.chem.press.activity;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
-import com.orhanobut.logger.Logger;
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.base.BaseActivity;
 import com.tkbs.chem.press.base.BaseApplication;
 import com.tkbs.chem.press.bean.ApprovalSubmitData;
-import com.tkbs.chem.press.bean.BookCityResDocument;
 import com.tkbs.chem.press.bean.HttpResponse;
+import com.tkbs.chem.press.bean.OrderInfoBean;
 import com.tkbs.chem.press.bean.SampleBookDetailDataBean;
-import com.tkbs.chem.press.bean.SampleBookManageDataBean;
+import com.tkbs.chem.press.bean.SampleBookItemDataBean;
 import com.tkbs.chem.press.net.ApiCallback;
+import com.tkbs.chem.press.util.Config;
 import com.tkbs.chem.press.util.TimeUtils;
 import com.tkbs.chem.press.view.DialogApprovalBook;
 
@@ -87,18 +91,36 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
     LinearLayout llSortState;
     @BindView(R.id.recycler)
     RefreshRecyclerView recycler;
+    @BindView(R.id.cb_select)
+    CheckBox cbSelect;
+    @BindView(R.id.tv_time_limit)
+    TextView tvTimeLimit;
+    @BindView(R.id.ll_time_limit)
+    LinearLayout llTimeLimit;
+    @BindView(R.id.ll_bottom_edit)
+    LinearLayout llBottomEdit;
+    @BindView(R.id.tv_approval)
+    TextView tvApproval;
+    @BindView(R.id.ll_check_all)
+    LinearLayout llCheckAll;
     private int page = 1;
     private Handler mHandler;
     private String guid;
     private String name;
     private String job;
+    private boolean isOneKeyApproval = false;
+    private boolean isAllCheck = false;
 
     private ArrayList<SampleBookDetailDataBean> bookList;
+    private AlertDialog alertDialog;
     private MyAdapter myAdapter;
     private List<String> books = Arrays.asList("你瞅啥", "瞅你咋地", "心灵不在它生活的地方，但在它所爱的地方", "人要正直，因为在其中有雄辩和德行的秘诀，有道德的影响力",
             "我们活着不能与草木同腐，不能醉生梦死，枉度人生，要有所做为。", "人要独立生活，学习有用的技艺",
             "对于不屈不挠的人来说，没有失败这回事", "我想正是伸手摘星的精神，让我们很多人长时间地工作奋战。不论到哪，让作品充分表现这个精神，并且驱使我们放弃佳作，只求杰作",
             "爱情埋在心灵深处，并不是住在双唇之间");
+    final String[] items = new String[]{"1个月", "2个月", "3个月", "4个月",
+            "5个月", "6个月", "7个月", "8个月", "9个月", "10个月", "11个月", "12个月"};
+    private int timeLimit;
     // 升序
     private boolean isAscendingOrder = true;
 
@@ -146,6 +168,22 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
             }
         });
         recycler.getNoMoreView().setText("没有更多数据了");
+        // 设置默认值
+        tvTimeLimit.setText(items[2]);
+        timeLimit = 3;
+        alertDialog = new AlertDialog.Builder(this)
+                //添加列表
+                .setItems(items, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        alertDialog.dismiss();
+//                        toastShow(items[i]);
+                        tvTimeLimit.setText(items[i]);
+                        timeLimit = i + 1;
+
+                    }
+                })
+                .create();
     }
 
     @Override
@@ -172,6 +210,7 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
                         myAdapter.addAll(bookList);
                         recycler.dismissSwipeRefresh();
                         recycler.getRecyclerView().scrollToPosition(0);
+                        recycler.showNoMore();
 
                     } else {
                         bookList.addAll(model.getData());
@@ -180,6 +219,12 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
                     if (model.getData().size() < 10) {
                         recycler.showNoMore();
                     }
+                    isOneKeyApproval = false;
+                    llBottomEdit.setVisibility(isOneKeyApproval ? View.VISIBLE : View.GONE);
+                    cbSelect.setChecked(false);
+                    tvTimeLimit.setText(items[0]);
+                    timeLimit = 1;
+                    isAllCheck = false;
                 } else {
                     recycler.dismissSwipeRefresh();
                     toastShow(model.getErrorDescription());
@@ -215,7 +260,7 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
             @Override
             public void onSuccess(HttpResponse<Object> model) {
                 if (model.isStatus()) {
-                    toastShow("保存成功");
+//                    toastShow("保存成功");
                     recycler.post(new Runnable() {
                         @Override
                         public void run() {
@@ -244,7 +289,8 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
     }
 
     @OnClick({R.id.img_back, R.id.one_key_approve, R.id.ll_sort_time,
-            R.id.ll_sort_hot, R.id.ll_sort_book_name, R.id.ll_sort_state})
+            R.id.ll_sort_hot, R.id.ll_sort_book_name, R.id.ll_sort_state,
+            R.id.tv_approval, R.id.ll_check_all, R.id.ll_time_limit})
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -269,6 +315,7 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
                 myAdapter.addAll(bookList);
                 recycler.dismissSwipeRefresh();
                 recycler.getRecyclerView().scrollToPosition(0);
+                recycler.showNoMore();
                 break;
             case R.id.ll_sort_hot:
                 //热度排序
@@ -281,6 +328,7 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
                 myAdapter.addAll(bookList);
                 recycler.dismissSwipeRefresh();
                 recycler.getRecyclerView().scrollToPosition(0);
+                recycler.showNoMore();
                 break;
             case R.id.ll_sort_book_name:
                 //书名排序
@@ -293,6 +341,7 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
                 myAdapter.addAll(bookList);
                 recycler.dismissSwipeRefresh();
                 recycler.getRecyclerView().scrollToPosition(0);
+                recycler.showNoMore();
                 break;
             case R.id.ll_sort_state:
                 //状态排序
@@ -305,13 +354,86 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
                 myAdapter.addAll(bookList);
                 recycler.dismissSwipeRefresh();
                 recycler.getRecyclerView().scrollToPosition(0);
+                recycler.showNoMore();
                 break;
             case R.id.one_key_approve:
-                startActivity(new Intent(SampleBookActivity.this, OneKeyManageBookActivity.class));
+//                startActivity(new Intent(SampleBookActivity.this, OneKeyManageBookActivity.class));
+                // 是否显示一键审核
+                isOneKeyApproval = !isOneKeyApproval;
+                llBottomEdit.setVisibility(isOneKeyApproval ? View.VISIBLE : View.GONE);
+                myAdapter.notifyDataSetChanged();
+                break;
+            case R.id.tv_approval:
+                toastShow("一键审批");
+                oneKeyApprove();
+                break;
+            case R.id.ll_check_all:
+                // 全选 取消全选
+                isAllCheck = !isAllCheck;
+                cbSelect.setChecked(isAllCheck);
+                setEditAllCheck();
+                break;
+            case R.id.ll_time_limit:
+                alertDialog.show();
                 break;
             default:
                 break;
         }
+    }
+
+    /**
+     * 一键审核
+     */
+    private void oneKeyApprove() {
+        showProgressDialog();
+        ArrayList<String> guids = new ArrayList<>();
+        List<SampleBookDetailDataBean> bookList = myAdapter.getData();
+        for (SampleBookDetailDataBean data : bookList) {
+            if (data.isChecked()) {
+                guids.add(data.getGuid());
+            }
+        }
+        addSubscription(apiStores.oneKeyApprove(guids, timeLimit), new ApiCallback<HttpResponse<OrderInfoBean>>() {
+            @Override
+            public void onSuccess(HttpResponse<OrderInfoBean> model) {
+                if (model.isStatus()) {
+                    //  添加书籍记录
+                    recycler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            recycler.showSwipeRefresh();
+                            getSampleDetail(true);
+                        }
+                    });
+                } else {
+                    toastShow(model.getErrorDescription());
+                }
+
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                toastShow(msg);
+                dismissProgressDialog();
+            }
+
+            @Override
+            public void onFinish() {
+                dismissProgressDialog();
+
+            }
+        });
+    }
+
+    /**
+     * 全选 or 取消全选
+     */
+    private void setEditAllCheck() {
+        List<SampleBookDetailDataBean> bookList = myAdapter.getData();
+        for (SampleBookDetailDataBean data : bookList) {
+            data.setChecked(isAllCheck);
+        }
+        myAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -360,13 +482,10 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
             public int compare(SampleBookDetailDataBean o1, SampleBookDetailDataBean o2) {
 
                 try {
-
                     if (o1.getDegree() > o2.getDegree()) {
-                        return -1;
-                    } else if (o1.getDegree() < o2.getDegree()) {
                         return 1;
-                    } else {
-                        return 0;
+                    } else  {
+                        return -1;
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -453,6 +572,7 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
             private TextView btn_state;
             private ImageView img_cover;
             private ImageView img_state;
+            private CheckBox cb_select_item;
 
             public MyHolder(ViewGroup parent) {
                 super(parent, R.layout.item_mange_book);
@@ -461,6 +581,7 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
             @Override
             public void onInitializeView() {
                 super.onInitializeView();
+                cb_select_item = findViewById(R.id.cb_select_item);
                 tv_book_name = findViewById(R.id.tv_book_name);
                 tv_book_price = findViewById(R.id.tv_book_price);
                 tv_apply_time = findViewById(R.id.tv_apply_time);
@@ -475,6 +596,8 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
                 tv_book_name.setText(data.getTitle());
                 tv_book_price.setText("价格：" + data.getPrice() + "￥");
                 tv_apply_time.setText("申请时间：" + TimeUtils.getTime(data.getCreateDate()));
+                cb_select_item.setVisibility(isOneKeyApproval ? View.VISIBLE : View.GONE);
+                cb_select_item.setChecked(data.isChecked());
                 /**
                  * 0、已审核
                  * 1、未审核
@@ -483,6 +606,9 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
                 if (0 == data.getState()) {
                     img_state.setImageResource(R.mipmap.book_guanli_label_approved);
                     btn_state.setVisibility(View.GONE);
+                    cb_select_item.setChecked(false);
+                    cb_select_item.setVisibility(View.GONE);
+                    data.setChecked(false);
 
                 } else if (1 == data.getState()) {
                     img_state.setImageResource(R.mipmap.book_guanli_label_unapproved);
@@ -493,6 +619,9 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
                     img_state.setImageResource(R.mipmap.book_guanli_label_unthrough);
                     btn_state.setVisibility(View.VISIBLE);
                     btn_state.setText(R.string.reason);
+                    cb_select_item.setChecked(false);
+                    cb_select_item.setVisibility(View.GONE);
+                    data.setChecked(false);
                 }
 
                 Glide.with(context).load(data.getCover())
@@ -536,13 +665,21 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
             @Override
             public void onItemViewClick(SampleBookDetailDataBean data) {
                 super.onItemViewClick(data);
-
+                if (isOneKeyApproval) {
+                    if (data.isChecked()) {
+                        cb_select_item.setChecked(false);
+                        data.setChecked(false);
+                    } else {
+                        cb_select_item.setChecked(true);
+                        data.setChecked(true);
+                    }
+                } else {
+                    Intent intent = new Intent(context, BookDetailActivity.class);
+                    intent.putExtra("guid", data.getGuid());
+                    context.startActivity(intent);
+                }
             }
-
-
         }
-
-
     }
 
 

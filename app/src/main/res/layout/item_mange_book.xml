@@ -6,6 +6,21 @@
     android:background="@color/white"
     android:orientation="horizontal">
 
+    <CheckBox
+        android:id="@+id/cb_select_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:button="@drawable/selector_btn_blue"
+        android:checked="false"
+        android:clickable="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:padding="@dimen/margin_5dp"
+        android:layout_marginLeft="@dimen/margin_5dp"
+        android:textColor="@color/text_main_3"
+        android:textSize="@dimen/text_12sp" />
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -72,10 +87,10 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_10dp"
             android:background="@drawable/rounded_rectangle_white"
+            android:paddingBottom="@dimen/margin_5dp"
             android:paddingLeft="@dimen/margin_10dp"
             android:paddingRight="@dimen/margin_10dp"
             android:paddingTop="@dimen/margin_5dp"
-            android:paddingBottom="@dimen/margin_5dp"
             android:text="@string/approval"
             android:textColor="@color/text_main_3"
             android:textSize="@dimen/text_13sp" />
