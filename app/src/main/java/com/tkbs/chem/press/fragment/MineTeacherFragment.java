@@ -109,7 +109,7 @@ public class MineTeacherFragment extends BaseFragment implements View.OnClickLis
 
                 break;
             case R.id.img_set:
-                getActivity().startActivity(new Intent(getActivity(), SettingActivity.class));
+                getActivity().startActivityForResult(new Intent(getActivity(), SettingActivity.class), Config.ACCOUNT_SWITCHING);
                 break;
             default:
                 break;

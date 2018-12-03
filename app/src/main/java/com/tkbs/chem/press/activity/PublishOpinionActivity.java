@@ -9,9 +9,14 @@ import android.widget.TextView;
 
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.base.BaseActivity;
+import com.tkbs.chem.press.bean.HttpResponse;
+import com.tkbs.chem.press.bean.OrderInfoBean;
+import com.tkbs.chem.press.net.ApiCallback;
+import com.tkbs.chem.press.util.MessageEvent;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import de.greenrobot.event.EventBus;
 
 public class PublishOpinionActivity extends BaseActivity implements View.OnClickListener {
 
@@ -56,9 +61,49 @@ public class PublishOpinionActivity extends BaseActivity implements View.OnClick
                 break;
             case R.id.tv_submit:
                 toastShow(edOpinion.getText().toString().trim());
+                String content = edOpinion.getText().toString().trim();
+                if (content.length() > 0) {
+                    addCommentOpinion(content);
+                } else {
+                    toastShow(R.string.please_input_content);
+                }
                 break;
             default:
                 break;
         }
     }
+
+    /***
+     * 添加回复意见
+     */
+    private void addCommentOpinion(String content) {
+        showProgressDialog();
+
+        addSubscription(apiStores.addOpinion(0, content), new ApiCallback<HttpResponse<OrderInfoBean>>() {
+            @Override
+            public void onSuccess(HttpResponse<OrderInfoBean> model) {
+                if (model.isStatus()) {
+                    //  关闭页面 刷新界面
+                    EventBus.getDefault().post(new MessageEvent("RefreshOpinion"));
+                    finish();
+                } else {
+                    toastShow(model.getErrorDescription());
+                }
+
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                toastShow(msg);
+                dismissProgressDialog();
+            }
+
+            @Override
+            public void onFinish() {
+                dismissProgressDialog();
+
+            }
+        });
+    }
+
 }

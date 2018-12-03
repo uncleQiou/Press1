@@ -17,7 +17,15 @@ import android.widget.TextView;
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.adapter.OpinionReplyItemAdapter;
 import com.tkbs.chem.press.base.BaseFragment;
+import com.tkbs.chem.press.bean.HttpResponse;
+import com.tkbs.chem.press.bean.OpinionManageBean;
+import com.tkbs.chem.press.bean.OrderInfoBean;
+import com.tkbs.chem.press.bean.SampleBookDetailDataBean;
+import com.tkbs.chem.press.bean.SampleBookItemDataBean;
+import com.tkbs.chem.press.net.ApiCallback;
+import com.tkbs.chem.press.util.UiUtils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -42,6 +50,7 @@ public class OpinionManageFragment extends BaseFragment implements View.OnClickL
             "对于不屈不挠的人来说，没有失败这回事", "我想正是伸手摘星的精神，让我们很多人长时间地工作奋战。不论到哪，让作品充分表现这个精神，并且驱使我们放弃佳作，只求杰作",
             "爱情埋在心灵深处，并不是住在双唇之间");
     private OpinionManageAdapter myAdapter;
+    private int parentId;
 
     @Override
     protected View getPreviewLayout(LayoutInflater inflater, ViewGroup container) {
@@ -67,14 +76,14 @@ public class OpinionManageFragment extends BaseFragment implements View.OnClickL
             @Override
             public void onAction() {
                 page = 1;
-                getData(true);
+                getSOpinionManagesData(true);
             }
         });
         recycler.setLoadMoreAction(new Action() {
             @Override
             public void onAction() {
                 page++;
-                getData(false);
+                getSOpinionManagesData(false);
 
             }
         });
@@ -83,10 +92,56 @@ public class OpinionManageFragment extends BaseFragment implements View.OnClickL
             @Override
             public void run() {
                 recycler.showSwipeRefresh();
-                getData(true);
+                getSOpinionManagesData(true);
             }
         });
         recycler.getNoMoreView().setText("没有更多数据了");
+    }
+
+    /**
+     * 获取意见列表
+     *
+     * @param isRefresh
+     */
+    private void getSOpinionManagesData(final boolean isRefresh) {
+        showProgressDialog();
+        addSubscription(apiStores.saleManOpinionManage(page), new ApiCallback<HttpResponse<ArrayList<OpinionManageBean>>>() {
+            @Override
+            public void onSuccess(HttpResponse<ArrayList<OpinionManageBean>> model) {
+                if (model.isStatus()) {
+                    if (isRefresh) {
+                        page = 1;
+                        myAdapter.clear();
+                        myAdapter.addAll(model.getData());
+                        recycler.dismissSwipeRefresh();
+                        recycler.getRecyclerView().scrollToPosition(0);
+
+                    } else {
+                        myAdapter.addAll(model.getData());
+                    }
+                    if (model.getData().size() < 10) {
+                        recycler.showNoMore();
+                    }
+                } else {
+                    recycler.dismissSwipeRefresh();
+                    toastShow(model.getErrorDescription());
+                }
+
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                toastShow(msg);
+            }
+
+            @Override
+            public void onFinish() {
+                recycler.dismissSwipeRefresh();
+                dismissProgressDialog();
+
+            }
+        });
+
     }
 
     public void getData(final boolean isRefresh) {
@@ -96,12 +151,12 @@ public class OpinionManageFragment extends BaseFragment implements View.OnClickL
                 if (isRefresh) {
                     page = 1;
                     myAdapter.clear();
-                    myAdapter.addAll(getTestData());
+//                    myAdapter.addAll(getTestData());
                     recycler.dismissSwipeRefresh();
                     recycler.getRecyclerView().scrollToPosition(0);
                     recycler.showNoMore();
                 } else {
-                    myAdapter.addAll(getTestData());
+//                    myAdapter.addAll(getTestData());
                     if (page >= 3) {
                         recycler.showNoMore();
                     }
@@ -128,14 +183,59 @@ public class OpinionManageFragment extends BaseFragment implements View.OnClickL
         switch (view.getId()) {
             case R.id.tv_send:
                 ll_reply_layot.setVisibility(View.GONE);
-                toastShow(ed_reply.getText().toString().trim());
+                UiUtils.hiddenKeyboard(getActivity());
+                String content = ed_reply.getText().toString().trim();
+                if (content.length() > 0) {
+                    addCommentOpinion(content);
+                } else {
+                    toastShow(R.string.please_input_content);
+                }
                 break;
             default:
                 break;
         }
     }
 
-    class OpinionManageAdapter extends RecyclerAdapter<MyOpinionDataItemData> {
+    /***
+     * 添加回复意见
+     */
+    private void addCommentOpinion(String content) {
+        showProgressDialog();
+
+        addSubscription(apiStores.addOpinion(parentId, content), new ApiCallback<HttpResponse<OrderInfoBean>>() {
+            @Override
+            public void onSuccess(HttpResponse<OrderInfoBean> model) {
+                if (model.isStatus()) {
+                    //  添加书籍记录
+                    ed_reply.setText("");
+                    recycler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            recycler.showSwipeRefresh();
+                            getSOpinionManagesData(true);
+                        }
+                    });
+                } else {
+                    toastShow(model.getErrorDescription());
+                }
+
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                toastShow(msg);
+                dismissProgressDialog();
+            }
+
+            @Override
+            public void onFinish() {
+                dismissProgressDialog();
+
+            }
+        });
+    }
+
+    class OpinionManageAdapter extends RecyclerAdapter<OpinionManageBean> {
         private Context context;
         /**
          * 实现单选，保存当前选中的position
@@ -148,12 +248,12 @@ public class OpinionManageFragment extends BaseFragment implements View.OnClickL
         }
 
         @Override
-        public BaseViewHolder<MyOpinionDataItemData> onCreateBaseViewHolder(ViewGroup parent, int viewType) {
+        public BaseViewHolder<OpinionManageBean> onCreateBaseViewHolder(ViewGroup parent, int viewType) {
             return new MyOpinionHolder(parent);
         }
 
 
-        class MyOpinionHolder extends BaseViewHolder<MyOpinionDataItemData> {
+        class MyOpinionHolder extends BaseViewHolder<OpinionManageBean> {
 
             private TextView tv_opinion_title;
             private TextView tv_opinion_content;
@@ -174,27 +274,29 @@ public class OpinionManageFragment extends BaseFragment implements View.OnClickL
             }
 
             @Override
-            public void setData(final MyOpinionDataItemData data) {
+            public void setData(final OpinionManageBean data) {
                 super.setData(data);
-                tv_opinion_content.setText(data.getName());
-                tv_opinion_title.setText("2018年10月15日19:04:53");
+                tv_opinion_content.setText(data.getContent());
+                tv_opinion_title.setText(data.getCreateDate());
+                tv_reply.setText("回复" + data.getCreateUser());
                 tv_reply.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         ll_reply_layot.setVisibility(View.VISIBLE);
-                        ed_reply.setHint("回复" + data.getName());
+                        parentId = data.getOpinionId();
+                        ed_reply.setHint("回复" + data.getCreateUser());
                     }
                 });
 
                 reply_recycler.setLayoutManager(new LinearLayoutManager(context));
-                OpinionReplyItemAdapter replyItemAdapter = new OpinionReplyItemAdapter(context, books);
+                OpinionReplyItemAdapter replyItemAdapter = new OpinionReplyItemAdapter(context, data.getOpinionDtoList());
                 reply_recycler.setAdapter(replyItemAdapter);
                 reply_recycler.setNestedScrollingEnabled(false);
                 reply_recycler.setFocusable(false);
             }
 
             @Override
-            public void onItemViewClick(MyOpinionDataItemData data) {
+            public void onItemViewClick(OpinionManageBean data) {
                 super.onItemViewClick(data);
 
             }

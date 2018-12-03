@@ -240,7 +240,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     edit.commit();
                     //  refresh MainActivity
                     EventBus.getDefault().post(new MessageEvent("Refresh"));
-                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+//                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                    setResult(RESULT_OK);
                     finish();
                 } else {
                     toastShow(model.getErrorDescription());

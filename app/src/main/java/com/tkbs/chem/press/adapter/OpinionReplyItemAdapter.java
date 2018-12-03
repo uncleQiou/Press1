@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.tkbs.chem.press.R;
+import com.tkbs.chem.press.bean.OpinionManageBean;
 
 import java.util.List;
 
@@ -18,14 +19,14 @@ import java.util.List;
 public class OpinionReplyItemAdapter extends RecyclerView.Adapter<OpinionReplyItemAdapter.ViewHolder> {
 
     private Context context;
-    private List<String> list;
+    private List<OpinionManageBean> list;
 
-    public OpinionReplyItemAdapter(Context context, List<String> list) {
+    public OpinionReplyItemAdapter(Context context, List<OpinionManageBean> list) {
         this.context = context;
         this.list = list;
     }
 
-    public void setList(List<String> list) {
+    public void setList(List<OpinionManageBean> list) {
         this.list = list;
         notifyDataSetChanged();
     }
@@ -40,13 +41,14 @@ public class OpinionReplyItemAdapter extends RecyclerView.Adapter<OpinionReplyIt
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.tv_reply_content.setText(list.get(position));
-        if (position % 2 == 0) {
+        holder.tv_reply_content.setText(list.get(position).getContent());
+        //  private Integer type;//1、平台回复 2、我的回复
+        if (list.get(position).getType() == 1) {
             holder.tv_reply_from.setTextColor(ContextCompat.getColor(context, R.color.apply_violet));
             holder.tv_reply_from.setText(R.string.reply_from_platform);
         } else {
             holder.tv_reply_from.setTextColor(ContextCompat.getColor(context, R.color.hg_app_main_color));
-            holder.tv_reply_from.setText(R.string.reply_from_me);
+            holder.tv_reply_from.setText(list.get(position).getCreateUser());
         }
 
     }

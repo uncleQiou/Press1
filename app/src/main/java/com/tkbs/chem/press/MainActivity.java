@@ -24,6 +24,7 @@ import com.tkbs.chem.press.fragment.BookCityFragment;
 import com.tkbs.chem.press.fragment.BookShelfFragment;
 import com.tkbs.chem.press.fragment.DiscoverFragment;
 import com.tkbs.chem.press.fragment.MineTeacherFragment;
+import com.tkbs.chem.press.fragment.MinfSaleManFragment;
 import com.tkbs.chem.press.fragment.SalesmanManageFragment;
 import com.tkbs.chem.press.myinterface.HomeInterface;
 import com.tkbs.chem.press.net.ApiCallback;
@@ -65,8 +66,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @BindView(R.id.rbtn_tab_discover)
     RadioButton rbtnTabDiscover;
 
-    private Fragment[] mFragments;
-    private int mIndex = 1;
+    protected Fragment[] mFragments;
+    protected int mIndex = 1;
     // 书城
     private BookCityFragment bookCityFragment;
     // 书架
@@ -75,6 +76,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private DiscoverFragment discoverFragment;
     // 我的(教师)
     private MineTeacherFragment mineTeacherFragment;
+    // 我的(业务员)
+    private MinfSaleManFragment minfSaleManFragment;
     // 管理
     private SalesmanManageFragment salesmanManageFragment;
     // 用户身份
@@ -82,8 +85,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        EventBus.getDefault().register(this);
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -118,10 +121,19 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @Subscribe(threadMode = ThreadMode.MainThread)
     public void RefreshUi(MessageEvent messageEvent) {
         if ("Refresh".endsWith(messageEvent.getMessage())) {
-            getWebPath();
-            user_type = preference.getInt(Config.MEMBER_TYPE, 3);
             initdata();
+//            goBookCity();
         }
+    }
+
+    /**
+     * 回到书城首页
+     */
+    public void goBookCity() {
+        rbtnTabBookcity.setChecked(true);
+        setIndexSelected(1);
+        rlTitlebarNomal.setVisibility(View.GONE);
+        llTitleSerach.setVisibility(View.VISIBLE);
     }
 
     private void initTabs() {
@@ -140,6 +152,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 titleHome.setText(R.string.my_bookshelf);
             }
         });
+        minfSaleManFragment = new MinfSaleManFragment();
         salesmanManageFragment = new SalesmanManageFragment();
 //        myStudyFragment = new MyStudyFragment();
         // 根据 用户信息 添加到数组
@@ -149,7 +162,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
         if (2 == user_type) {
             // 业务员
-            mFragments = new Fragment[]{bookShelfFragment, bookCityFragment, salesmanManageFragment, mineTeacherFragment};
+            mFragments = new Fragment[]{bookShelfFragment, bookCityFragment, salesmanManageFragment, minfSaleManFragment};
         } else {
             // 教师
             mFragments = new Fragment[]{bookShelfFragment, bookCityFragment, discoverFragment, mineTeacherFragment};
@@ -167,7 +180,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         setIndexSelected(1);
     }
 
-    private void setIndexSelected(int index) {
+    public void setIndexSelected(int index) {
         if (mIndex == index) {
             return;
         }
@@ -280,6 +293,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     Intent intent = new Intent(MainActivity.this, SearchActivity.class);
                     intent.putExtra("Classy", result);
                     startActivity(intent);
+                    break;
+                case Config.ACCOUNT_SWITCHING:
+                    goBookCity();
                     break;
                 default:
                     break;

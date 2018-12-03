@@ -135,5 +135,8 @@
     <string name="delete_collect">移除收藏</string>
     <string name="user_state_0">正常用户</string>
     <string name="user_state_1">黑名单用户</string>
+    <string name="please_input_content">请输入内容</string>
+    <string name="apply_samplebook_count">申请样书统计</string>
+    <string name="give_book_count">赠书统计</string>
 
 </resources>

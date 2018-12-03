@@ -8,11 +8,11 @@ public class Config {
     /**
      * Xjl
      */
-    public static String API_SERVER = "http://192.168.113.146:8281/app/";
+//    public static String API_SERVER = "http://192.168.113.146:8281/app/";
     /**
      * Zmy
      */
-//    public static String API_SERVER = "http://192.168.113.147:8281/app/";
+    public static String API_SERVER = "http://192.168.113.147:8281/app/";
     /**
      * 251
      */
@@ -59,5 +59,9 @@ public class Config {
      * 支付宝 20 微信  10
      */
     public static final int ZFB_PAY_TYPE = 20;
+    /***
+     * 账户切换
+     */
+    public static final int ACCOUNT_SWITCHING = 1990;
 
 }

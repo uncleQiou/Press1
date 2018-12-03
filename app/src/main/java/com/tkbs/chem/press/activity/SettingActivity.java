@@ -7,8 +7,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.orhanobut.logger.Logger;
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.base.BaseActivity;
+import com.tkbs.chem.press.util.Config;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -35,6 +37,8 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     LinearLayout llContact;
     @BindView(R.id.tv_exit)
     TextView tvExit;
+    // 用户身份
+    private int user_type = 4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +55,10 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         tvPhoneNumber.setText("15501016151");
         tvVersion.setText("当前版本：V1.01");
         tvContact.setText("010-19980232");
+        user_type = preference.getInt(Config.MEMBER_TYPE, 3);
+        if (2 == user_type) {
+            llPhone.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -67,7 +75,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 break;
             case R.id.ll_phone:
                 toastShow(R.string.edit_phone_number);
-                startActivity(new Intent(SettingActivity.this,ModifyPhoneNumberActivity.class));
+                startActivity(new Intent(SettingActivity.this, ModifyPhoneNumberActivity.class));
                 break;
             case R.id.ll_version:
                 toastShow(R.string.version_update);
@@ -77,10 +85,25 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 break;
             case R.id.tv_exit:
                 toastShow(R.string.exit_logon);
-                startActivity(new Intent(SettingActivity.this,LoginActivity.class));
+                startActivityForResult(new Intent(SettingActivity.this, LoginActivity.class), Config.ACCOUNT_SWITCHING);
                 break;
             default:
                 break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case Config.ACCOUNT_SWITCHING:
+                    setResult(RESULT_OK);
+                    finish();
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

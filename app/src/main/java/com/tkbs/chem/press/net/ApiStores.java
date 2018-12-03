@@ -8,6 +8,7 @@ import com.tkbs.chem.press.bean.BookCityResDocument;
 import com.tkbs.chem.press.bean.BookDetailBean;
 import com.tkbs.chem.press.bean.GiveBookListBean;
 import com.tkbs.chem.press.bean.HttpResponse;
+import com.tkbs.chem.press.bean.OpinionManageBean;
 import com.tkbs.chem.press.bean.OrderInfo;
 import com.tkbs.chem.press.bean.OrderInfoBean;
 import com.tkbs.chem.press.bean.RechargeResult;
@@ -350,6 +351,37 @@ public interface ApiStores {
      */
     @POST("sampleBook/batchApproveSampleBook")
     Observable<HttpResponse<Object>> oneKeyApprove(@Query("guids") ArrayList<String> guids, @Query("timeLimit") int timeLimit);
+
+    /**
+     * private Integer type
+     * 1、平台回复 2、我的回复
+     * 业务员意见管理列表
+     *
+     * @param pageNum
+     * @return
+     */
+    @POST("opinion/queryOpinionByPager/{pageNum}/10")
+    Observable<HttpResponse<ArrayList<OpinionManageBean>>> saleManOpinionManage(@Path("pageNum") int pageNum);
+
+    /**
+     * private Integer type
+     * 1、平台回复 2、我的回复
+     * 教师意见管理列表
+     *
+     * @param pageNum
+     * @return
+     */
+    @POST("opinion/queryMyOpinionByPager/{pageNum}/10")
+    Observable<HttpResponse<ArrayList<OpinionManageBean>>> teaOpinionManage(@Path("pageNum") int pageNum);
+
+    /**
+     * 发表回复意见
+     *
+     * @param parentId
+     * @return
+     */
+    @POST("opinion/addOpinion")
+    Observable<HttpResponse<Object>> addOpinion(@Query("parentId") int parentId, @Query("content") String content);
 
 
     /*************************************************************************************************************/
