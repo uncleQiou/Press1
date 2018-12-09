@@ -20,15 +20,14 @@
 
             <com.github.mikephil.charting.charts.LineChart
                 android:id="@+id/lineChart"
+                android:visibility="gone"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:layout_centerInParent="true" />
+                android:layout_height="300dp"/>
 
             <com.github.mikephil.charting.charts.BarChart
                 android:id="@+id/barChart"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:layout_centerInParent="true" />
+                android:layout_height="300dp" />
         </LinearLayout>
     </ScrollView>
 

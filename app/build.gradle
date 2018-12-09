@@ -115,7 +115,8 @@ dependencies {
     // 图表
     compile 'com.github.PhilJay:MPAndroidChart:v3.0.3'
     // 支付宝
-    compile (name: 'alipaySdk-15.5.7-20181023110917', ext: 'aar')
+    compile(name: 'alipaySdk-15.5.7-20181023110917', ext: 'aar')
     //微信支付
     compile 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:1.1.6'
+    compile files('libs/BASE64.jar')
 }

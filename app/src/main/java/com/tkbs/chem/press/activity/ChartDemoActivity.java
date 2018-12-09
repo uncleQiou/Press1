@@ -8,6 +8,7 @@ import android.widget.TextView;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
@@ -91,23 +92,31 @@ public class ChartDemoActivity extends BaseActivity {
         barChart.setDrawBarShadow(false);
         barChart.setHighlightFullBarEnabled(false);
         //显示边框
-        barChart.setDrawBorders(true);
+        barChart.setDrawBorders(false);
         //设置动画效果
         barChart.animateY(1000, Easing.EasingOption.Linear);
         barChart.animateX(1000, Easing.EasingOption.Linear);
-
+        // 不显示 右下角描述
+        Description description = new Description();
+        description.setEnabled(false);
+        barChart.setDescription(description);
         /***XY轴的设置***/
         //X轴设置显示位置在底部
         xAxis = barChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setAxisMinimum(0f);
+//        xAxis.setAxisMinimum(0f);
         xAxis.setGranularity(1f);
+
 
         leftAxis = barChart.getAxisLeft();
         rightAxis = barChart.getAxisRight();
+        // 不显示 X轴Y轴线条
+        xAxis.setDrawAxisLine(false);
+        leftAxis.setDrawAxisLine(false);
+        rightAxis.setDrawAxisLine(false);
         //保证Y轴从0开始，不然会上移一点
-        leftAxis.setAxisMinimum(0f);
-        rightAxis.setAxisMinimum(0f);
+//        leftAxis.setAxisMinimum(0f);
+//        rightAxis.setAxisMinimum(0f);
 
         /***折线图例 标签 设置***/
         legend = barChart.getLegend();
@@ -174,13 +183,14 @@ public class ChartDemoActivity extends BaseActivity {
 //        BarData data = new BarData(dataSets);
 
         BarData data = new BarData(barDataSet);
+        //单条柱状图宽度
+        data.setBarWidth(0.5f);
         barChart.setData(data);
     }
 
     @Override
     protected void initTitle() {
         title.setText("图表测试");
-
     }
 
 

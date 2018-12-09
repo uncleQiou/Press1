@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="40dp"
+    android:minHeight="40dip">
+
+    <RelativeLayout
+        android:id="@+id/ly_headicon"
+        android:layout_width="38dp"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/id_treenode_headicon"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp" />
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/id_treenode_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="5dp"
+        android:layout_toRightOf="@id/ly_headicon"
+        android:src="@mipmap/tree_ec" />
+
+    <TextView
+        android:id="@+id/id_treenode_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10dp"
+        android:layout_toRightOf="@id/id_treenode_icon"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:textSize="15sp" />
+
+</RelativeLayout>

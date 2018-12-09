@@ -25,10 +25,15 @@ import com.tkbs.chem.press.bean.UserManageDataBean;
 import java.util.ArrayList;
 
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import retrofit2.http.Streaming;
+import retrofit2.http.Url;
 import rx.Observable;
 
 public interface ApiStores {
@@ -384,6 +389,21 @@ public interface ApiStores {
     Observable<HttpResponse<Object>> addOpinion(@Query("parentId") int parentId, @Query("content") String content);
 
 
+    /**
+     * 下载文件
+     * Streaming 大文件要加 否则oom
+     */
+    @Streaming
+    @GET
+    Call<ResponseBody> downloadFileWithUrl(@Url String fileUrl);
+
+    /**
+     * 获取书籍目录
+     * @param documentGuid
+     * @return
+     */
+    @POST("read/getDirPath")
+    Observable<HttpResponse<String>> getBookDir(@Query("documentGuid") String documentGuid);
     /*************************************************************************************************************/
 
 }

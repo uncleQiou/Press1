@@ -103,9 +103,12 @@
         <activity android:name=".activity.ChartDemoActivity" />
         <!-- 购买页面 -->
         <activity android:name=".activity.PayActivity" />
-        <!--支付完成-->
+        <!-- 支付完成 -->
         <activity android:name=".activity.PayCompleted" />
-
+        <!-- tkbs 书籍在线阅读 -->
+        <activity android:name=".activity.TkbsReaderActivity" />
+        <activity android:name=".activity.TKBSCatalogAvtivity" />
+        <activity android:name=".activity.WebTestActivity"></activity>
     </application>
 
 </manifest>

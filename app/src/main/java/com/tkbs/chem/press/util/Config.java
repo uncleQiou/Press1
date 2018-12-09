@@ -8,16 +8,20 @@ public class Config {
     /**
      * Xjl
      */
-//    public static String API_SERVER = "http://192.168.113.146:8281/app/";
+    public static String API_SERVER = "http://192.168.113.146:8281/app/";
     /**
      * Zmy
      */
-    public static String API_SERVER = "http://192.168.113.147:8281/app/";
+//    public static String API_SERVER = "http://192.168.113.147:8281/app/";
     /**
      * 251
      */
 //    public static String API_SERVER = "http://192.168.1.251:8281/app/";
 
+    /**
+     *  TKBS url
+     */
+//    public static String API_SERVER_BOOK = "http://221.122.68.70:8097/";
 
     /**
      * String
@@ -63,5 +67,6 @@ public class Config {
      * 账户切换
      */
     public static final int ACCOUNT_SWITCHING = 1990;
+
 
 }

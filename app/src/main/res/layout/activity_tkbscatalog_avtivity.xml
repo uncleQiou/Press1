@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/bg_main_white">
+
+
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:scaleType="centerInside"
+            android:src="@mipmap/icon_back" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="35dp"
+            android:layout_toRightOf="@id/iv_back"
+            android:gravity="center"
+            android:text="@string/catalog_book"
+            android:textColor="@color/text_main_6"
+            android:textSize="18sp" />
+
+
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/directory_listview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />
+
+    <!--<com.src.android.xianzhiyanxue.view.CircularProgress
+        android:id="@+id/rl_circularProgress"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        app:borderWidth="6dp" />-->
+</LinearLayout>

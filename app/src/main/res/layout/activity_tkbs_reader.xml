@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:qiou="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <WebView
+            android:id="@+id/tkbs_read_web"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/img_back"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/gray_normal"
+                android:drawableLeft="@mipmap/icon_back"
+                android:gravity="center"
+                android:paddingBottom="5dp"
+                android:paddingLeft="10dip"
+                android:paddingTop="5dp"
+                android:textSize="30sp" />
+
+            <TextView
+                android:id="@+id/img_toc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:background="@color/gray_normal"
+                android:drawableLeft="@mipmap/ic_popup_toc"
+                android:gravity="center"
+                android:paddingBottom="5dp"
+                android:paddingLeft="10dip"
+                android:paddingTop="5dp"
+                android:textSize="30sp" />
+        </RelativeLayout>
+
+
+    </FrameLayout>
+
+
+    <ImageView
+        android:id="@+id/img_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:src="@mipmap/refresh"
+        android:visibility="gone" />
+
+</RelativeLayout>
