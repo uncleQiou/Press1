@@ -51,13 +51,10 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
     @BindView(R.id.book_detail_web)
     WebView bookDetailWeb;
     private String guid;
-    private String filePath;
-    /**
-     * 文件下载目标路径
-     */
-    private String CIP_FILE_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "CIP" + File.separator;
 
     private String bookUrl = Config.API_SERVER + "hello/book_detail.html";
+    private String param3 = "";
+    private boolean isReadAll;
 
     @Override
     protected int getLayoutId() {
@@ -68,6 +65,8 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
     @Override
     protected void initdata() {
         guid = getIntent().getStringExtra("guid");
+        // TODO 测试
+//        guid = "34DBCCE472A14205A2431AF22538644D";
         EventBus.getDefault().register(this);
         createDir();
         initWeb();
@@ -76,7 +75,6 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
     @Subscribe(threadMode = ThreadMode.MainThread)
     public void RefreshUi(MessageEvent messageEvent) {
         if ("PaySuccess".endsWith(messageEvent.getMessage())) {
-
             Logger.e("支付成功 刷新页面");
             refreshUI();
         }
@@ -177,57 +175,7 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
 
     }
 
-    /**
-     * 下载
-     *
-     * @param filePathStr
-     */
-    private void downLoadBook(String filePathStr) {
-        filePathStr = "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1544000312107&di=9ad128d9e6117a8f0ced7c8e78ff1336&imgtype=0&src=http%3A%2F%2Fpic1.win4000.com%2Fwallpaper%2F6%2F589a7fca946fe.jpg%3Fdown";
-        Logger.e(filePathStr);
-//        filePath = CIP_FILE_PATH + File.separator + guid + ".tkbs";
-        filePath = CIP_FILE_PATH + File.separator + guid + ".jpg";
-        if (isExist()) {
-            // 已经下载 直接阅读
-            toastShow("已经下载 直接阅读");
-            return;
-        }
-        Call<ResponseBody> call = apiStores.downloadFileWithUrl(filePathStr);
-        showProgressDialog("下载中...");
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    Log.d("TAG", "server contacted and has file");
 
-                    boolean writtenToDisk = writeResponseBodyToDisk(response.body());
-                    if (writtenToDisk) {
-                        Intent intent = new Intent();
-                        File file = new File(filePath);
-                        //设置标记
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        //动作，查看
-                        intent.setAction(Intent.ACTION_VIEW);
-                        //设置类型
-                        intent.setDataAndType(Uri.fromFile(file), UiUtils.getMIMEType(file));
-                        BookDetailActivity.this.startActivity(intent);
-                    }
-                    Log.d("TAG", "file download was a success? " + writtenToDisk);
-                } else {
-                    Log.d("TAG", "server contact failed");
-                }
-                dismissProgressDialog();
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.e("TAG", "error");
-                dismissProgressDialog();
-            }
-        });
-
-
-    }
 
     /**
      * 在SD卡上创建指定名称的目录
@@ -235,74 +183,39 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
      * @param
      */
     private File createDir() {
-        File file = new File(CIP_FILE_PATH);
+        File file = new File(Config.CIP_FILE_PATH);
         file.mkdir();
         return file;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        // 根据上面发送过去的请求码来区别
+        switch (requestCode) {
+            case 886:
+                param3 = data.getStringExtra("PARAM3");
+                Intent intent = new Intent(BookDetailActivity.this, TkbsReaderActivity.class);
+                intent.putExtra("BookId", guid);
+                String resPath = Config.CIP_FILE_PATH + guid + ".tkbs";
+                intent.putExtra("isLoacRead", isExist(resPath));
+                intent.putExtra("PARAM3", param3);
+                intent.putExtra("isReadAll", isReadAll);
+                startActivity(intent);
+            default:
+                break;
+        }
     }
 
     /**
      * 判断指定名称的文件在SD卡上是否存在
      */
-    public boolean isExist() {
-        File file = new File(filePath);
+    public boolean isExist(String path) {
+        File file = new File(path);
         return file.exists();
     }
 
-    /**
-     * 将下载的文件保存至手机
-     *
-     * @param body
-     * @return
-     */
-    private boolean writeResponseBodyToDisk(ResponseBody body) {
-        try {
-            // todo change the file location/name according to your needs
-            File futureStudioIconFile = new File(filePath);
 
-            InputStream inputStream = null;
-            OutputStream outputStream = null;
-
-            try {
-                byte[] fileReader = new byte[4096];
-
-                long fileSize = body.contentLength();
-                long fileSizeDownloaded = 0;
-
-                inputStream = body.byteStream();
-                outputStream = new FileOutputStream(futureStudioIconFile);
-
-                while (true) {
-                    int read = inputStream.read(fileReader);
-
-                    if (read == -1) {
-                        break;
-                    }
-
-                    outputStream.write(fileReader, 0, read);
-
-                    fileSizeDownloaded += read;
-
-                    Log.d("TAG", "file download: " + fileSizeDownloaded + " of " + fileSize);
-                }
-
-                outputStream.flush();
-
-                return true;
-            } catch (IOException e) {
-                return false;
-            } finally {
-                if (inputStream != null) {
-                    inputStream.close();
-                }
-
-                if (outputStream != null) {
-                    outputStream.close();
-                }
-            }
-        } catch (IOException e) {
-            return false;
-        }
-    }
 
     private String getExternalCacheDirPath() {
         File d = getExternalCacheDir();
@@ -359,11 +272,6 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
             return user;
         }
 
-        @JavascriptInterface
-        public void viewDirectory() {
-            toastShow("查看目录");
-        }
-
 
         @JavascriptInterface
         public void getBookDetail(String guidStr) {
@@ -384,10 +292,23 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
             finish();
         }
 
+//        @JavascriptInterface
+//        public void downLoadRes(String path) {
+//            downLoadBook(path);
+//        }
+
+        @JavascriptInterface
+        public void isReadAll(boolean flg) {
+            isReadAll = flg;
+        }
+
         @JavascriptInterface
         public void readBook() {
             Intent intent = new Intent(BookDetailActivity.this, TkbsReaderActivity.class);
             intent.putExtra("BookId", guid);
+            String resPath = Config.CIP_FILE_PATH + guid + ".tkbs";
+            intent.putExtra("isLoacRead", isExist(resPath));
+            intent.putExtra("isReadAll", isReadAll);
             startActivity(intent);
         }
     }

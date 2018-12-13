@@ -1,5 +1,9 @@
 package com.tkbs.chem.press.util;
 
+import android.os.Environment;
+
+import java.io.File;
+
 /**
  * Created by Administrator on 2017/8/28.
  */
@@ -68,5 +72,18 @@ public class Config {
      */
     public static final int ACCOUNT_SWITCHING = 1990;
 
+    /**
+     * 文件下载目标路径
+     */
+    public static final String CIP_FILE_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "CIP" + File.separator;
 
+    //// KEY为自定义秘钥
+    public static final String  SMS_CUSTOM_KEY = "smsCustomKey";
+
+    // 试读页数
+    public static final Integer DEFAULT_READ_PAGE = 17;
+
+    // 资源加密密钥
+    public static String SUBJECT_ENCRYPT_KEY = "1234567890";
+    public static String FILE_KEY = "12345678";
 }

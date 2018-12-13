@@ -19,6 +19,7 @@ import com.shizhefei.view.indicator.transition.OnTransitionTextListener;
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.activity.ChartDemoActivity;
 import com.tkbs.chem.press.activity.NewsActivity;
+import com.tkbs.chem.press.activity.SalesmanPersonalCenterActivity;
 import com.tkbs.chem.press.activity.SettingActivity;
 import com.tkbs.chem.press.base.BaseFragment;
 import com.tkbs.chem.press.util.Config;
@@ -114,9 +115,10 @@ public class MinfSaleManFragment extends BaseFragment implements View.OnClickLis
                 getActivity().startActivityForResult(new Intent(getActivity(), SettingActivity.class), Config.ACCOUNT_SWITCHING);
                 break;
             case R.id.ll_edit:
-                // TODO 个人信息页面 H5 页面
-                toastShow("编辑个人信息");
-                getActivity().startActivity(new Intent(getActivity(), ChartDemoActivity.class));
+                //  个人信息页面 H5 页面
+//                toastShow("编辑个人信息");
+//                getActivity().startActivity(new Intent(getActivity(), ChartDemoActivity.class));
+                getActivity().startActivity(new Intent(getActivity(), SalesmanPersonalCenterActivity.class));
                 break;
             default:
                 break;

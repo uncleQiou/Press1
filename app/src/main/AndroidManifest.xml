@@ -107,8 +107,16 @@
         <activity android:name=".activity.PayCompleted" />
         <!-- tkbs 书籍在线阅读 -->
         <activity android:name=".activity.TkbsReaderActivity" />
+        <!-- 目录 -->
         <activity android:name=".activity.TKBSCatalogAvtivity" />
-        <activity android:name=".activity.WebTestActivity"></activity>
+        <!-- web测试 -->
+        <activity android:name=".activity.WebTestActivity" />
+        <!-- 教师个人信息 -->
+        <activity android:name=".activity.TeaPersonalCenterActivity" />
+        <!--修改密码web页面-->
+        <activity android:name=".activity.ChangePasswordWebActivity" />
+        <!--业务员个人信息-->
+        <activity android:name=".activity.SalesmanPersonalCenterActivity" />
     </application>
 
 </manifest>

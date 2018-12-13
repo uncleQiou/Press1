@@ -7,7 +7,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.orhanobut.logger.Logger;
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.base.BaseActivity;
 import com.tkbs.chem.press.util.Config;
@@ -37,6 +36,8 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     LinearLayout llContact;
     @BindView(R.id.tv_exit)
     TextView tvExit;
+    @BindView(R.id.ll_change_password)
+    LinearLayout llChangePassword;
     // 用户身份
     private int user_type = 4;
 
@@ -66,7 +67,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         title.setText(R.string.setting);
     }
 
-    @OnClick({R.id.back, R.id.ll_phone, R.id.ll_version, R.id.ll_contact, R.id.tv_exit})
+    @OnClick({R.id.back, R.id.ll_phone, R.id.ll_version, R.id.ll_contact, R.id.tv_exit, R.id.ll_change_password})
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -86,6 +87,9 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             case R.id.tv_exit:
                 toastShow(R.string.exit_logon);
                 startActivityForResult(new Intent(SettingActivity.this, LoginActivity.class), Config.ACCOUNT_SWITCHING);
+                break;
+            case R.id.ll_change_password:
+                startActivity(new Intent(SettingActivity.this, ChangePasswordWebActivity.class));
                 break;
             default:
                 break;

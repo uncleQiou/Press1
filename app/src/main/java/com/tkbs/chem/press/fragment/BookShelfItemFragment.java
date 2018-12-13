@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.v7.widget.GridLayoutManager;
 import android.view.LayoutInflater;
@@ -32,6 +33,7 @@ import com.tkbs.chem.press.net.ApiCallback;
 import com.tkbs.chem.press.util.Config;
 import com.tkbs.chem.press.util.MessageEvent;
 
+import java.io.File;
 import java.text.Collator;
 import java.text.RuleBasedCollator;
 import java.text.SimpleDateFormat;
@@ -394,7 +396,21 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
             case 4:
                 // 业务员 我的图书
                 // TODO 业务员下载的图书
+                // 便利cip文件夹下所有tkbs文件
+                File cipDir = new File(Config.CIP_FILE_PATH);
+                if (cipDir.isDirectory()) {
+                    for (File file : cipDir.listFiles()) {
+                        String path = file.getAbsolutePath();
+                        if (path.endsWith(".jpg") || path.endsWith(".jpeg") || path.endsWith(".png")) {
+                            //list.add(path);
+                            Logger.e(path);
+                            String bID = path.substring(path.indexOf("CIP/") + 4, path.indexOf("."));
+                            Logger.e(bID);
+                        }
+                    }
+                }
                 toastShow("业务员我的图书");
+                recycler_bookshelf.dismissSwipeRefresh();
                 break;
             case 5:
                 // 业务员 我的收藏

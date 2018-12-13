@@ -11,6 +11,31 @@
     <include layout="@layout/title_bar_normal" />
 
     <LinearLayout
+        android:id="@+id/ll_change_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_1dp"
+        android:background="@color/white"
+        android:gravity="center_vertical"
+        android:padding="@dimen/margin_15dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/change_password"
+            android:textColor="@color/text_main_3"
+            android:textSize="@dimen/text_15sp" />
+
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/margin_10dp"
+            android:src="@mipmap/icon_arrow_right" />
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/ll_phone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

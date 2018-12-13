@@ -11,7 +11,13 @@ import android.view.inputmethod.InputMethodManager;
 
 import com.tkbs.chem.press.base.BaseApplication;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Date;
+import java.util.Map;
 
 
 /**
@@ -238,4 +244,113 @@ public class UiUtils {
             {".zip", "application/zip"},
             {"", "*/*"}
     };
+
+    public static byte[] readTkbs(String guid, Integer pageNum) {
+        try {
+            InputStream encodeStream = null;
+            //资源GUID
+//            String documentGuid = "34DBCCE472A14205A2431AF22538644D";
+            String documentGuid = guid;
+            //页码
+            Integer readNum = pageNum;
+//            Integer readNum = 5;
+            File file = new File(Config.CIP_FILE_PATH + File.separator + "resource");
+            if (!file.exists()) {
+                file.mkdir();
+            }
+            //查询资源对象
+            String basePath = Config.CIP_FILE_PATH + documentGuid + ".tkbs";
+            String indexTemp = Config.CIP_FILE_PATH + "resource" +
+                    File.separator + documentGuid + "_temp.xml";
+            String indexFile = Config.CIP_FILE_PATH + "resource" +
+                    File.separator + documentGuid + "_index.xml";
+            File tkbsIndex = new File(indexTemp);
+            if (!tkbsIndex.exists()) {
+                ReadTkbsFile.decodeIndex(basePath, indexTemp, Config.FILE_KEY);
+                // 加密文件
+                DESUtil.encryptFile(indexTemp, Config.CIP_FILE_PATH + "resource", documentGuid + "_index.xml",
+                        Config.SUBJECT_ENCRYPT_KEY, null);
+                delete_file(new File(indexTemp));
+            }
+            // 解密文件返回文件流:
+            InputStream inputStream = DESUtil.decryptFile(indexFile, Config.SUBJECT_ENCRYPT_KEY, false);
+            // 解析索引文件获得文件的起始位置和文件长度 根据PageNum来查找
+            //查询阅读历史
+            Integer count = readNum;
+            // xpath表达式进行查询
+            Map<String, String> index = ParseTkbsFileIndex.textPath(inputStream, count);
+
+            // 得到要显示文件的坐标
+            // 103152
+            int htmlPos = Integer.parseInt(index.get("htmlPos"));
+            // 539
+            // int htmlLen = Integer.parseInt(index.get("htmlLen"));
+            // 544
+            int htmlEncodeLen = Integer.parseInt(index.get("htmlEncodeLen"));
+
+            // 从开始指定的位置读取: 并且解密html文件:
+            FileInputStream inputStream2 = null;
+            byte[] data = new byte[htmlEncodeLen];
+
+            inputStream2 = new FileInputStream(basePath);
+            // 指定开始位置:
+            inputStream2.skip(htmlPos);
+            inputStream2.read(data, 0, htmlEncodeLen);
+            inputStream2.close();
+            // 解密文件生成新的文件:
+            InputStream inputStr = new ByteArrayInputStream(data);
+
+            encodeStream = DESUtil.doDecryptTkbsFile(inputStr, Config.FILE_KEY);
+            // 将数据流写入到浏览器页面：
+            byte[] btHtm = ReadTkbsFile.readStream(encodeStream);
+            return btHtm;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * 递归文件删除
+     *
+     * @param file
+     */
+    public static void delete_file(File file) {
+        if (!file.exists()) {
+            return;
+        }
+        // 如果是文件直接删掉
+        if (!file.isDirectory()) {
+            boolean result = file.delete();
+            if (!result) {
+                // 系统进行资源强制回收
+                System.gc();
+                file.delete();
+            }
+        } else {// 如果是文件夹则先删除子文件
+            File[] files = file.listFiles();
+            // 没有子文件
+            if (files == null || files.length == 0) {
+                boolean result = file.delete();
+                if (!result) {
+                    // 系统进行资源强制回收
+                    System.gc();
+                    file.delete();
+                }
+            } else {
+                for (File f : files) {
+                    // 删除子文件
+                    delete_file(f);
+                }
+                boolean result = file.delete();
+                if (!result) {
+                    // 系统进行资源强制回收
+                    System.gc();
+                    file.delete();
+                }
+            }
+        }
+    }
+
+
 }

@@ -9,16 +9,19 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.orhanobut.logger.Logger;
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.activity.ChartDemoActivity;
 import com.tkbs.chem.press.activity.MyApplyActivity;
 import com.tkbs.chem.press.activity.MyCustomizedActivity;
 import com.tkbs.chem.press.activity.MyOpinionActivity;
 import com.tkbs.chem.press.activity.SettingActivity;
+import com.tkbs.chem.press.activity.TeaPersonalCenterActivity;
 import com.tkbs.chem.press.base.BaseFragment;
 import com.tkbs.chem.press.myinterface.HomeInterface;
 import com.tkbs.chem.press.util.Config;
 import com.tkbs.chem.press.util.MessageEvent;
+import com.tkbs.chem.press.util.UiUtils;
 
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
@@ -89,7 +92,8 @@ public class MineTeacherFragment extends BaseFragment implements View.OnClickLis
         switch (view.getId()) {
             case R.id.ll_personal_information:
                 toastShow(R.string.personal_information);
-                getActivity().startActivity(new Intent(getActivity(), ChartDemoActivity.class));
+//                getActivity().startActivity(new Intent(getActivity(), ChartDemoActivity.class));
+                getActivity().startActivity(new Intent(getActivity(), TeaPersonalCenterActivity.class));
                 break;
             case R.id.ll_my_apply:
                 toastShow(R.string.my_apply);

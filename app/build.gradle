@@ -119,4 +119,6 @@ dependencies {
     //微信支付
     compile 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:1.1.6'
     compile files('libs/BASE64.jar')
+    compile files('libs/dom4j-1.6.1.jar')
+    compile files('libs/jaxen-1.1.6.jar')
 }

@@ -127,6 +127,7 @@
     <string name="pay_way">支付方式</string>
     <string name="transaction_amount">交易金额</string>
     <string name="str_download">下载</string>
+    <string name="download_done">下载成功</string>
     <string name="sure_pay_amount">确认支付：</string>
     <string name="pay_success">支付成功</string>
     <string name="pay_fail">支付失败</string>
@@ -139,5 +140,6 @@
     <string name="apply_samplebook_count">申请样书统计</string>
     <string name="give_book_count">赠书统计</string>
     <string name="catalog_book">目录</string>
+    <string name="change_password">修改密码</string>
 
 </resources>

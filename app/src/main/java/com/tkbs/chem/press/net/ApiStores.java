@@ -399,11 +399,21 @@ public interface ApiStores {
 
     /**
      * 获取书籍目录
+     *
      * @param documentGuid
      * @return
      */
     @POST("read/getDirPath")
     Observable<HttpResponse<String>> getBookDir(@Query("documentGuid") String documentGuid);
+
+    /**
+     * 获取下载路径
+     *
+     * @param documentGuid
+     * @return
+     */
+    @POST("read//queryTkbsFilePath/{documentGuid}")
+    Observable<HttpResponse<String>> getResDownLoadPath(@Path("documentGuid") String documentGuid);
     /*************************************************************************************************************/
 
 }
