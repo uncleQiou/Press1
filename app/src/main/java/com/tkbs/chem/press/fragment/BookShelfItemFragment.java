@@ -111,6 +111,7 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
         ll_bookshelf_edit.setVisibility(View.VISIBLE);
         ll_bottom_edit.setVisibility(View.GONE);
 
+        recycler_bookshelf = (RefreshRecyclerView) findViewById(R.id.recycler_bookshelf);
         recycler_bookshelf.setSwipeRefreshColors(0xFF437845, 0xFFE44F98, 0xFF2FAC21);
         recycler_bookshelf.setLayoutManager(new GridLayoutManager(getActivity(), 1));
         recycler_bookshelf.setAdapter(bookShelfItemAdapter);

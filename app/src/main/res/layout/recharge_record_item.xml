@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/margin_1dp"
+    android:background="@color/bg_main_white"
+    android:padding="@dimen/margin_10dp">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/recharge_icon_price" />
+
+    <TextView
+        android:id="@+id/tv_recharge_num"
+        android:layout_width="@dimen/margin_60dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_5dp"
+        android:text="￥10000"
+        android:textColor="@color/text_main_3"
+        android:textSize="@dimen/text_14sp" />
+
+    <TextView
+        android:id="@+id/tv_recharge_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_5dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="充值面值：800点"
+        android:textColor="@color/text_main_3"
+        android:textSize="@dimen/text_14sp" />
+
+    <TextView
+        android:id="@+id/tv_recharge_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_5dp"
+        android:text="2018-12-13"
+        android:textColor="@color/text_main_3"
+        android:textSize="@dimen/text_14sp" />
+</LinearLayout>

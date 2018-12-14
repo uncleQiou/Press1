@@ -282,7 +282,8 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
 
         @JavascriptInterface
         public void goBuyBook() {
-            Intent intent = new Intent(BookDetailActivity.this, PayActivity.class);
+            Intent intent = new Intent(BookDetailActivity.this, RechargeActivity.class);
+//            Intent intent = new Intent(BookDetailActivity.this, PayActivity.class);
             intent.putExtra("guid", guid);
             startActivity(intent);
         }

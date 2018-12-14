@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_bag"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    tools:context="com.tkbs.chem.press.activity.RechargeRecordActivity">
+
+    <include layout="@layout/title_bar_normal" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_1dp"
+        android:background="@color/white"
+        android:padding="@dimen/margin_5dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_10dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_dis_month"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="十二月"
+                android:textColor="@color/text_main_3"
+                android:textSize="@dimen/text_16sp" />
+
+            <TextView
+                android:id="@+id/tv_pay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_3dp"
+                android:text="支出 ￥600.00"
+                android:textColor="@color/text_main_6"
+                android:textSize="@dimen/text_14sp" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/img_calendar"
+            android:layout_width="@dimen/margin_25dp"
+            android:layout_height="@dimen/margin_25dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="@dimen/margin_10dp"
+            android:src="@mipmap/recharge_icon_calendar" />
+    </LinearLayout>
+
+    <cn.lemon.view.RefreshRecyclerView
+        android:id="@+id/recycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_1dp" />
+</LinearLayout>

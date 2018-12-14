@@ -96,7 +96,7 @@ public class MineTeacherFragment extends BaseFragment implements View.OnClickLis
                 getActivity().startActivity(new Intent(getActivity(), TeaPersonalCenterActivity.class));
                 break;
             case R.id.ll_my_apply:
-                toastShow(R.string.my_apply);
+//                toastShow(R.string.my_apply);
                 getActivity().startActivity(new Intent(getActivity(), MyApplyActivity.class));
                 break;
             case R.id.ll_my_opinion:

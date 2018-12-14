@@ -8,6 +8,7 @@ import com.tkbs.chem.press.bean.BookCityResDocument;
 import com.tkbs.chem.press.bean.BookDetailBean;
 import com.tkbs.chem.press.bean.GiveBookListBean;
 import com.tkbs.chem.press.bean.HttpResponse;
+import com.tkbs.chem.press.bean.MyApplyDataBean;
 import com.tkbs.chem.press.bean.OpinionManageBean;
 import com.tkbs.chem.press.bean.OrderInfo;
 import com.tkbs.chem.press.bean.OrderInfoBean;
@@ -414,6 +415,17 @@ public interface ApiStores {
      */
     @POST("read//queryTkbsFilePath/{documentGuid}")
     Observable<HttpResponse<String>> getResDownLoadPath(@Path("documentGuid") String documentGuid);
+
+    /**
+     * 我的申请
+     *
+     * @param pageNum
+     * @return
+     */
+    @POST("sampleBook/querySampleBookApplication/{pageNum}/10")
+    Observable<HttpResponse<ArrayList<MyApplyDataBean>>> getMyApplyData(@Path("pageNum") int pageNum);
+
+
     /*************************************************************************************************************/
 
 }

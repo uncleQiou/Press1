@@ -115,4 +115,5 @@
     <color name="search_hot_3">#FF8E16</color>
     <color name="search_hot_4">#B1B6BC</color>
     <color name="apply_violet">#A1A2F2</color>
+    <color name="text_red">#DD6161</color>
 </resources>

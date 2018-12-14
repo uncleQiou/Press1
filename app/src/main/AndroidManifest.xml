@@ -113,10 +113,16 @@
         <activity android:name=".activity.WebTestActivity" />
         <!-- 教师个人信息 -->
         <activity android:name=".activity.TeaPersonalCenterActivity" />
-        <!--修改密码web页面-->
+        <!-- 修改密码web页面 -->
         <activity android:name=".activity.ChangePasswordWebActivity" />
-        <!--业务员个人信息-->
+        <!-- 业务员个人信息 -->
         <activity android:name=".activity.SalesmanPersonalCenterActivity" />
+        <!-- 充值页面 -->
+        <activity android:name=".activity.RechargeActivity" />
+        <!-- 充值记录 -->
+        <activity android:name=".activity.RechargeRecordActivity" />
+        <!--消费记录-->
+        <activity android:name=".activity.PayRecordActivity" />
     </application>
 
 </manifest>

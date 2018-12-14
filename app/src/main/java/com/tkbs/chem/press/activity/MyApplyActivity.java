@@ -14,6 +14,12 @@ import com.bumptech.glide.Glide;
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.base.BaseActivity;
 import com.tkbs.chem.press.base.BaseApplication;
+import com.tkbs.chem.press.bean.HttpResponse;
+import com.tkbs.chem.press.bean.MyApplyDataBean;
+import com.tkbs.chem.press.bean.OpinionManageBean;
+import com.tkbs.chem.press.net.ApiCallback;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -57,14 +63,14 @@ public class MyApplyActivity extends BaseActivity implements View.OnClickListene
             @Override
             public void onAction() {
                 page = 1;
-                getData(true);
+                getMyApplyData(true);
             }
         });
         recycler.setLoadMoreAction(new Action() {
             @Override
             public void onAction() {
                 page++;
-                getData(false);
+                getMyApplyData(false);
 
             }
         });
@@ -73,10 +79,51 @@ public class MyApplyActivity extends BaseActivity implements View.OnClickListene
             @Override
             public void run() {
                 recycler.showSwipeRefresh();
-                getData(true);
+                getMyApplyData(true);
             }
         });
         recycler.getNoMoreView().setText("没有更多数据了");
+    }
+
+    private void getMyApplyData(final boolean isRefresh) {
+        showProgressDialog();
+        addSubscription(apiStores.getMyApplyData(page), new ApiCallback<HttpResponse<ArrayList<MyApplyDataBean>>>() {
+            @Override
+            public void onSuccess(HttpResponse<ArrayList<MyApplyDataBean>> model) {
+                if (model.isStatus()) {
+                    if (isRefresh) {
+                        page = 1;
+                        myApplyAdapter.clear();
+                        myApplyAdapter.addAll(model.getData());
+                        recycler.dismissSwipeRefresh();
+                        recycler.getRecyclerView().scrollToPosition(0);
+
+                    } else {
+                        myApplyAdapter.addAll(model.getData());
+                    }
+                    if (model.getData().size() < 10) {
+                        recycler.showNoMore();
+                    }
+                } else {
+                    recycler.dismissSwipeRefresh();
+                    toastShow(model.getErrorDescription());
+                }
+
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                toastShow(msg);
+            }
+
+            @Override
+            public void onFinish() {
+                recycler.dismissSwipeRefresh();
+                dismissProgressDialog();
+
+            }
+        });
+
     }
 
     public void getData(final boolean isRefresh) {
@@ -86,12 +133,12 @@ public class MyApplyActivity extends BaseActivity implements View.OnClickListene
                 if (isRefresh) {
                     page = 1;
                     myApplyAdapter.clear();
-                    myApplyAdapter.addAll(getTestData());
+//                    myApplyAdapter.addAll(getTestData());
                     recycler.dismissSwipeRefresh();
                     recycler.getRecyclerView().scrollToPosition(0);
                     recycler.showNoMore();
                 } else {
-                    myApplyAdapter.addAll(getTestData());
+//                    myApplyAdapter.addAll(getTestData());
                     if (page >= 3) {
                         recycler.showNoMore();
                     }
@@ -130,7 +177,7 @@ public class MyApplyActivity extends BaseActivity implements View.OnClickListene
         }
     }
 
-    class MyApplyAdapter extends RecyclerAdapter<MyApplyItemData> {
+    class MyApplyAdapter extends RecyclerAdapter<MyApplyDataBean> {
         private Context context;
         /**
          * 实现单选，保存当前选中的position
@@ -143,12 +190,12 @@ public class MyApplyActivity extends BaseActivity implements View.OnClickListene
         }
 
         @Override
-        public BaseViewHolder<MyApplyItemData> onCreateBaseViewHolder(ViewGroup parent, int viewType) {
+        public BaseViewHolder<MyApplyDataBean> onCreateBaseViewHolder(ViewGroup parent, int viewType) {
             return new MyApplyHolder(parent);
         }
 
 
-        class MyApplyHolder extends BaseViewHolder<MyApplyItemData> {
+        class MyApplyHolder extends BaseViewHolder<MyApplyDataBean> {
 
             private TextView tv_apply_state;
             private TextView tv_apply_date;
@@ -169,21 +216,30 @@ public class MyApplyActivity extends BaseActivity implements View.OnClickListene
             }
 
             @Override
-            public void setData(MyApplyItemData data) {
+            public void setData(MyApplyDataBean data) {
                 super.setData(data);
-                tv_apply_name.setText(data.getName());
-                tv_apply_date.setText("2018年10月15日19:04:53");
-//                tv_apply_state.setText(R.string.apply_watting);
-//                tv_apply_state.setBackgroundResource(R.drawable.btn_apply_state);
-                tv_apply_state.setText(R.string.apply_done);
-                tv_apply_state.setBackgroundResource(R.drawable.btn_apply_state1);
-                img_apply_point.setImageResource(R.drawable.apply_round_2);
+                tv_apply_name.setText(data.getDocumentName());
+                tv_apply_date.setText(data.getCreateDate());
+                //0表示已审批  1表示未审批2表示未通过
+                if (data.getState() == 0) {
+                    tv_apply_state.setText(R.string.apply_done);
+                    tv_apply_state.setBackgroundResource(R.drawable.btn_apply_state1);
+                    img_apply_point.setImageResource(R.drawable.apply_round_2);
+                } else if (data.getState() == 1) {
+                    tv_apply_state.setText(R.string.apply_watting);
+                    tv_apply_state.setBackgroundResource(R.drawable.btn_apply_state);
+                    img_apply_point.setImageResource(R.drawable.apply_round_1);
+                } else {
+                    img_apply_point.setImageResource(R.drawable.apply_round_3);
+                    tv_apply_state.setText(R.string.apply_unpass);
+                    tv_apply_state.setBackgroundResource(R.drawable.btn_apply_state2);
+                }
 
 
             }
 
             @Override
-            public void onItemViewClick(MyApplyItemData data) {
+            public void onItemViewClick(MyApplyDataBean data) {
                 super.onItemViewClick(data);
 
             }
