@@ -154,5 +154,24 @@
     <string name="pay_record_all">全部</string>
     <string name="delete_order">删除订单</string>
     <string name="go_pay">去支付</string>
+    <string name="teacher_str">教师</string>
+    <string name="year_str">年</string>
+    <string name="month_str">月</string>
+    <string name="day_str">日</string>
+    <string name="book_number">册\n数</string>
+    <string name="people_number">人\n数</string>
+    <string name="apply_limit">申\n请\n上\n限</string>
+    <string name="givebiik_tj_pbar_des">赠书上限%1$d本,还剩%2$d次机会</string>
+    <string name="my_account">我的账户</string>
+    <string name="please_pay">请支付</string>
+    <string name="book_token_value">价格： %1$d 点</string>
+    <string name="book_token_balance">余额： %1$d 点</string>
+    <string name="go_recharge_str">去充值>></string>
+    <string name="sure_pay">确定支付： %1$d 点</string>
+    <string name="token_balance_noenough">余额不足</string>
+    <string name="price_rmb">售价:%1$s 元</string>
+    <string name="recharge_token">充值面值：%1$d 点</string>
+    <string name="recharge_total">支出：￥%1$d 元</string>
+
 
 </resources>

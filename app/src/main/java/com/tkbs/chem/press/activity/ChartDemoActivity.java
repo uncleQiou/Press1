@@ -8,6 +8,7 @@ import android.widget.TextView;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.LimitLine;
@@ -19,6 +20,7 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.base.BaseActivity;
 import com.tkbs.chem.press.bean.BarChartBean;
@@ -42,6 +44,7 @@ public class ChartDemoActivity extends BaseActivity {
     LineChart lineChart;
     @BindView(R.id.barChart)
     BarChart barChart;
+    private  List<BarChartBean.StFinDateBean.VtDateValueBean> dateValueList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,10 +63,10 @@ public class ChartDemoActivity extends BaseActivity {
 
         BarChartBean barChartBean = LocalJsonAnalyzeUtil.JsonToObject(this,
                 "bar_chart.json", BarChartBean.class);
-        List<BarChartBean.StFinDateBean.VtDateValueBean> dateValueList = barChartBean.getStFinDate().getVtDateValue();
+        dateValueList = barChartBean.getStFinDate().getVtDateValue();
         Collections.reverse(dateValueList);//将集合 逆序排列，转换成需要的顺序
 
-        showBarChart(dateValueList, "净资产收益率（%）", getResources().getColor(R.color.blue));
+        showBarChart(dateValueList, "", getResources().getColor(R.color.chart_line_value));
 
 
     }
@@ -106,17 +109,31 @@ public class ChartDemoActivity extends BaseActivity {
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
 //        xAxis.setAxisMinimum(0f);
         xAxis.setGranularity(1f);
-
-
+        //X轴自定义值
+        xAxis.setValueFormatter(new IAxisValueFormatter() {
+            @Override
+            public String getFormattedValue(float value, AxisBase axis) {
+                return dateValueList.get((int) value).getSYearMonth();
+            }
+        });
         leftAxis = barChart.getAxisLeft();
         rightAxis = barChart.getAxisRight();
         // 不显示 X轴Y轴线条
         xAxis.setDrawAxisLine(false);
         leftAxis.setDrawAxisLine(false);
         rightAxis.setDrawAxisLine(false);
+        leftAxis.setEnabled(false);
+        barChart.setDrawGridBackground(false);
+        //不显示X轴网格线
+        xAxis.setDrawGridLines(false);
+        //右侧Y轴网格线设置为虚线
+        rightAxis.enableGridDashedLine(10f, 10f, 0f);
+        rightAxis.setDrawGridLines(false);
+
+        rightAxis.setEnabled(false);
         //保证Y轴从0开始，不然会上移一点
-//        leftAxis.setAxisMinimum(0f);
-//        rightAxis.setAxisMinimum(0f);
+         leftAxis.setAxisMinimum(0f);
+         rightAxis.setAxisMinimum(0f);
 
         /***折线图例 标签 设置***/
         legend = barChart.getLegend();
@@ -160,7 +177,8 @@ public class ChartDemoActivity extends BaseActivity {
         barDataSet.setFormLineWidth(1f);
         barDataSet.setFormSize(15.f);
         //不显示柱状图顶部值
-        barDataSet.setDrawValues(false);
+        barDataSet.setDrawValues(true);
+        barDataSet.setValueTextSize(10);
     }
 
     public void showBarChart(List<BarChartBean.StFinDateBean.VtDateValueBean> dateValueList, String name, int color) {

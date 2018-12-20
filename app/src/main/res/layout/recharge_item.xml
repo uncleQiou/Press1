@@ -22,7 +22,8 @@
 
     <TextView
         android:id="@+id/tv_rmb_num"
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/margin_75dp"
+        android:gravity="center"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_3dp"
         android:text="售价：0.99"

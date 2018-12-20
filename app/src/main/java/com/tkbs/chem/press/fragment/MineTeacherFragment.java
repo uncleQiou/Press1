@@ -9,19 +9,17 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.orhanobut.logger.Logger;
 import com.tkbs.chem.press.R;
-import com.tkbs.chem.press.activity.ChartDemoActivity;
+import com.tkbs.chem.press.activity.MyAccountActivity;
 import com.tkbs.chem.press.activity.MyApplyActivity;
-import com.tkbs.chem.press.activity.MyCustomizedActivity;
 import com.tkbs.chem.press.activity.MyOpinionActivity;
+import com.tkbs.chem.press.activity.PersonalTailorActivity;
 import com.tkbs.chem.press.activity.SettingActivity;
 import com.tkbs.chem.press.activity.TeaPersonalCenterActivity;
 import com.tkbs.chem.press.base.BaseFragment;
 import com.tkbs.chem.press.myinterface.HomeInterface;
 import com.tkbs.chem.press.util.Config;
 import com.tkbs.chem.press.util.MessageEvent;
-import com.tkbs.chem.press.util.UiUtils;
 
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
@@ -35,6 +33,7 @@ public class MineTeacherFragment extends BaseFragment implements View.OnClickLis
     private LinearLayout ll_my_apply;
     private LinearLayout ll_my_opinion;
     private LinearLayout ll_personal_customization;
+    private LinearLayout ll_my_account;
     private LinearLayout ll_my_bookshelf;
     private TextView tv_my_name;
     private TextView tv_phone;
@@ -65,6 +64,8 @@ public class MineTeacherFragment extends BaseFragment implements View.OnClickLis
         tv_phone = (TextView) findViewById(R.id.tv_phone);
         img_set = (ImageView) findViewById(R.id.img_set);
         img_set.setOnClickListener(this);
+        ll_my_account = (LinearLayout) findViewById(R.id.ll_my_account);
+        ll_my_account.setOnClickListener(this);
         setUserData();
     }
 
@@ -99,13 +100,16 @@ public class MineTeacherFragment extends BaseFragment implements View.OnClickLis
 //                toastShow(R.string.my_apply);
                 getActivity().startActivity(new Intent(getActivity(), MyApplyActivity.class));
                 break;
+            case R.id.ll_my_account:
+                getActivity().startActivity(new Intent(getActivity(), MyAccountActivity.class));
+                break;
             case R.id.ll_my_opinion:
-                toastShow(R.string.my_opinion);
                 getActivity().startActivity(new Intent(getActivity(), MyOpinionActivity.class));
                 break;
             case R.id.ll_personal_customization:
                 toastShow(R.string.personal_custom);
-                getActivity().startActivity(new Intent(getActivity(), MyCustomizedActivity.class));
+                getActivity().startActivity(new Intent(getActivity(), PersonalTailorActivity.class));
+//                getActivity().startActivity(new Intent(getActivity(), MyCustomizedActivity.class));
                 break;
             case R.id.ll_my_bookshelf:
                 toastShow(R.string.my_bookshelf);

@@ -1,6 +1,7 @@
 package com.tkbs.chem.press.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.GridLayoutManager;
@@ -12,8 +13,16 @@ import android.widget.TextView;
 
 import com.shizhefei.fragment.LazyFragment;
 import com.tkbs.chem.press.R;
+import com.tkbs.chem.press.activity.BookDetailActivity;
 import com.tkbs.chem.press.base.BaseFragment;
+import com.tkbs.chem.press.bean.HttpResponse;
+import com.tkbs.chem.press.bean.MessageBean;
+import com.tkbs.chem.press.bean.MyApplyDataBean;
+import com.tkbs.chem.press.net.ApiCallback;
 import com.tkbs.chem.press.util.MessageEvent;
+import com.tkbs.chem.press.util.TimeUtils;
+
+import java.util.ArrayList;
 
 import cn.lemon.view.RefreshRecyclerView;
 import cn.lemon.view.adapter.Action;
@@ -53,14 +62,14 @@ public class DiscoverFragment extends BaseFragment {
             @Override
             public void onAction() {
                 page = 1;
-                getData(true);
+                getMessageData(true);
             }
         });
         recycler_discover.setLoadMoreAction(new Action() {
             @Override
             public void onAction() {
                 page++;
-                getData(false);
+                getMessageData(false);
 
             }
         });
@@ -69,7 +78,7 @@ public class DiscoverFragment extends BaseFragment {
             @Override
             public void run() {
                 recycler_discover.showSwipeRefresh();
-                getData(true);
+                getMessageData(true);
             }
         });
         recycler_discover.getNoMoreView().setText(R.string.no_more_data);
@@ -83,6 +92,47 @@ public class DiscoverFragment extends BaseFragment {
         }
     }
 
+    private void getMessageData(final boolean isRefresh) {
+        showProgressDialog();
+        addSubscription(apiStores.getMessageData(page), new ApiCallback<HttpResponse<ArrayList<MessageBean>>>() {
+            @Override
+            public void onSuccess(HttpResponse<ArrayList<MessageBean>> model) {
+                if (model.isStatus()) {
+                    if (isRefresh) {
+                        page = 1;
+                        discoverAdapter.clear();
+                        discoverAdapter.addAll(model.getData());
+                        recycler_discover.dismissSwipeRefresh();
+                        recycler_discover.getRecyclerView().scrollToPosition(0);
+
+                    } else {
+                        discoverAdapter.addAll(model.getData());
+                    }
+                    if (model.getData().size() < 10) {
+                        recycler_discover.showNoMore();
+                    }
+                } else {
+                    recycler_discover.dismissSwipeRefresh();
+                    toastShow(model.getErrorDescription());
+                }
+
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                toastShow(msg);
+            }
+
+            @Override
+            public void onFinish() {
+                recycler_discover.dismissSwipeRefresh();
+                dismissProgressDialog();
+
+            }
+        });
+
+    }
+
     public void getData(final boolean isRefresh) {
         mHandler.postDelayed(new Runnable() {
             @Override
@@ -90,12 +140,12 @@ public class DiscoverFragment extends BaseFragment {
                 if (isRefresh) {
                     page = 1;
                     discoverAdapter.clear();
-                    discoverAdapter.addAll(getTestData());
+//                    discoverAdapter.addAll(getTestData());
                     recycler_discover.dismissSwipeRefresh();
                     recycler_discover.getRecyclerView().scrollToPosition(0);
                     recycler_discover.showNoMore();
                 } else {
-                    discoverAdapter.addAll(getTestData());
+//                    discoverAdapter.addAll(getTestData());
                     if (page >= 3) {
                         recycler_discover.showNoMore();
                     }
@@ -117,7 +167,7 @@ public class DiscoverFragment extends BaseFragment {
         };
     }
 
-    class DiscoverAdapter extends RecyclerAdapter<DiscoverItemData> {
+    class DiscoverAdapter extends RecyclerAdapter<MessageBean> {
         private Context context;
         /**
          * 实现单选，保存当前选中的position
@@ -130,12 +180,12 @@ public class DiscoverFragment extends BaseFragment {
         }
 
         @Override
-        public BaseViewHolder<DiscoverItemData> onCreateBaseViewHolder(ViewGroup parent, int viewType) {
+        public BaseViewHolder<MessageBean> onCreateBaseViewHolder(ViewGroup parent, int viewType) {
             return new DiscoverItemHolder(parent);
         }
 
 
-        class DiscoverItemHolder extends BaseViewHolder<DiscoverItemData> {
+        class DiscoverItemHolder extends BaseViewHolder<MessageBean> {
 
             private TextView tv_message_date;
             private TextView tv_message_content;
@@ -154,16 +204,31 @@ public class DiscoverFragment extends BaseFragment {
             }
 
             @Override
-            public void setData(DiscoverItemData data) {
+            public void setData(MessageBean data) {
                 super.setData(data);
-                tv_message_date.setText("2018-10-12 19:43:19");
-                tv_message_content.setText(data.getName());
+                tv_message_date.setText(TimeUtils.getTime(data.getCreateDate()));
+                tv_message_content.setText(data.getContent());
 
             }
 
             @Override
-            public void onItemViewClick(DiscoverItemData data) {
+            public void onItemViewClick(MessageBean data) {
                 super.onItemViewClick(data);
+                //1、手动发布 2、自动发布 3、审批通过 4、审批未通过 5、赠书 6、注册 7、申请样书
+                //1不跳 2-5都是详情页 6用户管理-用户详情页 7样书管理-当前用户的审批页
+                int messageType = data.getMessageType();
+                if (messageType > 1 && messageType < 6) {
+                    // 跳转图书详情
+                    Intent intent = new Intent(getActivity(), BookDetailActivity.class);
+                    intent.putExtra("guid", data.getRelationGuid());
+                    context.startActivity(intent);
+                } else if (messageType == 6) {
+                    //6用户管理-用户详情页
+                } else if (messageType == 7) {
+                    //7样书管理-当前用户的审批页
+                } else {
+                    // 不跳转
+                }
 
             }
 

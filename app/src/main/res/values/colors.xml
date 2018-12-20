@@ -116,4 +116,6 @@
     <color name="search_hot_4">#B1B6BC</color>
     <color name="apply_violet">#A1A2F2</color>
     <color name="text_red">#DD6161</color>
+    <color name="chart_line_value">#A1A2F2</color>
+    <color name="hg_pb_select_color">#0AC3C8</color>
 </resources>

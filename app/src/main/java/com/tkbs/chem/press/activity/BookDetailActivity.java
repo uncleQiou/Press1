@@ -3,8 +3,8 @@ package com.tkbs.chem.press.activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Environment;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.webkit.ValueCallback;
@@ -17,26 +17,21 @@ import android.widget.TextView;
 import com.orhanobut.logger.Logger;
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.base.BaseActivity;
+import com.tkbs.chem.press.bean.CreateOrderDataBean;
+import com.tkbs.chem.press.bean.HttpResponse;
+import com.tkbs.chem.press.net.ApiCallback;
 import com.tkbs.chem.press.util.Config;
 import com.tkbs.chem.press.util.MessageEvent;
-import com.tkbs.chem.press.util.UiUtils;
+import com.tkbs.chem.press.view.BookBuyPopupWindow;
 import com.tkbs.chem.press.view.ReWebChomeClient;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import de.greenrobot.event.ThreadMode;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 
 public class BookDetailActivity extends BaseActivity implements View.OnClickListener, ReWebChomeClient.OpenFileChooserCallBack {
@@ -52,6 +47,8 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
     WebView bookDetailWeb;
     private String guid;
 
+    private BookBuyPopupWindow menuWindow;
+
     private String bookUrl = Config.API_SERVER + "hello/book_detail.html";
     private String param3 = "";
     private boolean isReadAll;
@@ -65,8 +62,8 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
     @Override
     protected void initdata() {
         guid = getIntent().getStringExtra("guid");
-        // TODO 测试
 //        guid = "34DBCCE472A14205A2431AF22538644D";
+        Logger.e("bookGuid == " + guid);
         EventBus.getDefault().register(this);
         createDir();
         initWeb();
@@ -78,6 +75,57 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
             Logger.e("支付成功 刷新页面");
             refreshUI();
         }
+    }
+
+    /**
+     * 获取充值配置
+     */
+    private void createOrder() {
+        showProgressDialog();
+        addSubscription(apiStores.createOrder(guid), new ApiCallback<HttpResponse<CreateOrderDataBean>>() {
+            @Override
+            public void onSuccess(HttpResponse<CreateOrderDataBean> model) {
+
+                menuWindow = new BookBuyPopupWindow(BookDetailActivity.this, itemsOnClick,
+                        model.getData().getVirtualPrice(), model.getData().getAccountBalance());
+                menuWindow.showAtLocation(findViewById(R.id.title),
+                        Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                toastShow(msg);
+            }
+
+            @Override
+            public void onFinish() {
+                dismissProgressDialog();
+            }
+        });
+    }
+
+    /**
+     * 支付
+     */
+    private void ConfirmPayment() {
+        showProgressDialog();
+        addSubscription(apiStores.ConfirmPayment(guid), new ApiCallback<HttpResponse<Object>>() {
+            @Override
+            public void onSuccess(HttpResponse<Object> model) {
+                // 通知html5页面进行刷新 购买完成 reflushData
+                bookDetailWeb.loadUrl("javascript:reflushData()");
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                toastShow(msg);
+            }
+
+            @Override
+            public void onFinish() {
+                dismissProgressDialog();
+            }
+        });
     }
 
     /**
@@ -150,6 +198,31 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
         bookDetailWeb.loadUrl(bookUrl);
     }
 
+    /***
+     * 为弹出窗口实现监听类
+     */
+    private View.OnClickListener itemsOnClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            menuWindow.dismiss();
+            switch (v.getId()) {
+                // 去充值
+                case R.id.tv_go_recharge:
+                    Intent intent = new Intent(BookDetailActivity.this, RechargeActivity.class);
+                    //Intent intent = new Intent(BookDetailActivity.this, PayActivity.class);
+                    intent.putExtra("guid", guid);
+                    startActivity(intent);
+                    break;
+                // 支付
+                case R.id.tv_pay:
+                    //  调用扣点接口
+                    ConfirmPayment();
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void initTitle() {
@@ -174,7 +247,6 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
     public void openFileChooserCallBack(ValueCallback<Uri> uploadMsg, String acceptType) {
 
     }
-
 
 
     /**
@@ -214,7 +286,6 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
         File file = new File(path);
         return file.exists();
     }
-
 
 
     private String getExternalCacheDirPath() {
@@ -282,10 +353,9 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
 
         @JavascriptInterface
         public void goBuyBook() {
-            Intent intent = new Intent(BookDetailActivity.this, RechargeActivity.class);
-//            Intent intent = new Intent(BookDetailActivity.this, PayActivity.class);
-            intent.putExtra("guid", guid);
-            startActivity(intent);
+            //   获取订单信息
+            createOrder();
+
         }
 
         @JavascriptInterface

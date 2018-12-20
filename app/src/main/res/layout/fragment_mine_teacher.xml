@@ -96,6 +96,39 @@
                 android:background="@color/cc_bk_dark" />
 
             <LinearLayout
+                android:id="@+id/ll_my_account"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/margin_50dp"
+                android:gravity="center_vertical"
+                android:padding="@dimen/margin_5dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_10dp"
+                    android:src="@mipmap/recharge_icon_account" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/my_account"
+                    android:textColor="@color/text_main_3"
+                    android:textSize="@dimen/text_15sp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_10dp"
+                    android:src="@mipmap/icon_arrow_right" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/cc_bk_dark" />
+
+            <LinearLayout
                 android:id="@+id/ll_my_apply"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/margin_50dp"

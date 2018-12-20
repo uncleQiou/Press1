@@ -121,8 +121,12 @@
         <activity android:name=".activity.RechargeActivity" />
         <!-- 充值记录 -->
         <activity android:name=".activity.RechargeRecordActivity" />
-        <!--消费记录-->
+        <!-- 消费记录 -->
         <activity android:name=".activity.PayRecordActivity" />
+        <!-- 个人定制 -->
+        <activity android:name=".activity.PersonalTailorActivity" />
+        <!--我的账户-->
+        <activity android:name=".activity.MyAccountActivity"/>
     </application>
 
 </manifest>

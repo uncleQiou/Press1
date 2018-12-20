@@ -3,6 +3,7 @@ package com.tkbs.chem.press.activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.GridLayoutManager;
@@ -18,6 +19,9 @@ import android.widget.TextView;
 import com.orhanobut.logger.Logger;
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.base.BaseActivity;
+import com.tkbs.chem.press.bean.HttpResponse;
+import com.tkbs.chem.press.bean.RechargeRecordDataBean;
+import com.tkbs.chem.press.net.ApiCallback;
 
 import java.util.Calendar;
 
@@ -38,13 +42,22 @@ public class RechargeRecordActivity extends BaseActivity implements View.OnClick
     TextView tvRight;
     @BindView(R.id.recycler)
     RefreshRecyclerView recycler;
+    @BindView(R.id.tv_dis_month)
+    TextView tvDisMonth;
+    @BindView(R.id.tv_pay)
+    TextView tvPay;
+    @BindView(R.id.img_calendar)
+    ImageView imgCalendar;
     private Handler mHandler;
     private int page = 1;
     private MyRecordAdapter myAdapter;
+    private String searchYYMM;
 
     private int mYear;
     private int mMonth;
     private int mDay;
+
+    private String strDisMonth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +72,17 @@ public class RechargeRecordActivity extends BaseActivity implements View.OnClick
     @Override
     protected void initdata() {
         mHandler = new Handler();
+        // 当前 年月
+        Calendar c = Calendar.getInstance();
+        // 获取当前年份
+        mYear = c.get(Calendar.YEAR);
+        // 获取当前月份
+        mMonth = c.get(Calendar.MONTH) + 1;
+        searchYYMM = mYear + "-" + mMonth;
+        strDisMonth = mYear + "年" + mMonth + "月";
+        tvDisMonth.setText(strDisMonth);
+        String total = getResources().getString(R.string.recharge_total, 0);
+        tvPay.setText(total);
         myAdapter = new MyRecordAdapter(this);
         recycler.setSwipeRefreshColors(0xFF437845, 0xFFE44F98, 0xFF2FAC21);
         recycler.setLayoutManager(new GridLayoutManager(this, 1));
@@ -95,25 +119,48 @@ public class RechargeRecordActivity extends BaseActivity implements View.OnClick
         tvRight.setText(R.string.recharge_str);
     }
 
+
     private void getData(final boolean isRefresh) {
-        mHandler.postDelayed(new Runnable() {
+        showProgressDialog();
+        addSubscription(apiStores.getRechargeRecord(page, searchYYMM, 1), new ApiCallback<HttpResponse<RechargeRecordDataBean>>() {
             @Override
-            public void run() {
-                if (isRefresh) {
-                    page = 1;
-                    myAdapter.clear();
-                    myAdapter.addAll(getTestData());
-                    recycler.dismissSwipeRefresh();
-                    recycler.getRecyclerView().scrollToPosition(0);
-                    recycler.showNoMore();
-                } else {
-                    myAdapter.addAll(getTestData());
-                    if (page >= 1) {
+            public void onSuccess(HttpResponse<RechargeRecordDataBean> model) {
+                if (model.isStatus()) {
+                    tvDisMonth.setText(strDisMonth);
+                    String total = getResources().getString(R.string.recharge_total, model.getData().getTotalPrice());
+                    tvPay.setText(total);
+                    if (isRefresh) {
+                        page = 1;
+                        myAdapter.clear();
+                        myAdapter.addAll(model.getData().getList());
+                        recycler.dismissSwipeRefresh();
+                        recycler.getRecyclerView().scrollToPosition(0);
+
+                    } else {
+                        myAdapter.addAll(model.getData().getList());
+                    }
+                    if (model.getData().getList().size() < 10) {
                         recycler.showNoMore();
                     }
+                } else {
+                    recycler.dismissSwipeRefresh();
+                    toastShow(model.getErrorDescription());
                 }
+
             }
-        }, 1000);
+
+            @Override
+            public void onFailure(String msg) {
+                toastShow(msg);
+            }
+
+            @Override
+            public void onFinish() {
+                recycler.dismissSwipeRefresh();
+                dismissProgressDialog();
+
+            }
+        });
     }
 
     private MyRecordData[] getTestData() {
@@ -129,7 +176,7 @@ public class RechargeRecordActivity extends BaseActivity implements View.OnClick
         };
     }
 
-    @OnClick({R.id.back, R.id.img_calendar})
+    @OnClick({R.id.back, R.id.img_calendar, R.id.tv_right})
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -138,6 +185,10 @@ public class RechargeRecordActivity extends BaseActivity implements View.OnClick
                 break;
             case R.id.img_calendar:
                 showDatePickerDialog();
+                break;
+            case R.id.tv_right:
+                Intent intent = new Intent(RechargeRecordActivity.this, RechargeActivity.class);
+                startActivity(intent);
                 break;
             default:
                 break;
@@ -150,7 +201,9 @@ public class RechargeRecordActivity extends BaseActivity implements View.OnClick
     private void showDatePickerDialog() {
         final Calendar calendar = Calendar.getInstance();
         int yy = calendar.get(Calendar.YEAR);
+        mYear = yy;
         int mm = calendar.get(Calendar.MONTH);
+        mMonth = mm + 1;
         int dd = calendar.get(Calendar.DAY_OF_MONTH);
 
         DatePickerDialog dlg = new DatePickerDialog(new ContextThemeWrapper(this,
@@ -181,6 +234,9 @@ public class RechargeRecordActivity extends BaseActivity implements View.OnClick
             public void onDateChanged(DatePicker view, int year, int month, int day) {
                 super.onDateChanged(view, year, month, day);
                 setTitle(year + "年" + (month + 1) + "月");
+                mYear = year;
+                mMonth = month + 1;
+
             }
         };
         dlg.setTitle(yy + "年" + (mm + 1) + "月");
@@ -188,10 +244,13 @@ public class RechargeRecordActivity extends BaseActivity implements View.OnClick
         dlg.setButton(DialogInterface.BUTTON_POSITIVE, "完成", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                searchYYMM = mYear + "-" + mMonth;
+                strDisMonth = mYear + "年" + mMonth + "月";
                 recycler.post(new Runnable() {
                     @Override
                     public void run() {
                         recycler.showSwipeRefresh();
+                        page = 1;
                         getData(true);
                     }
                 });
@@ -207,7 +266,7 @@ public class RechargeRecordActivity extends BaseActivity implements View.OnClick
 
     }
 
-    class MyRecordAdapter extends RecyclerAdapter<MyRecordData> {
+    class MyRecordAdapter extends RecyclerAdapter<RechargeRecordDataBean.ListBean> {
         private Context context;
         /**
          * 实现单选，保存当前选中的position
@@ -220,12 +279,12 @@ public class RechargeRecordActivity extends BaseActivity implements View.OnClick
         }
 
         @Override
-        public BaseViewHolder<MyRecordData> onCreateBaseViewHolder(ViewGroup parent, int viewType) {
+        public BaseViewHolder<RechargeRecordDataBean.ListBean> onCreateBaseViewHolder(ViewGroup parent, int viewType) {
             return new MyRecordHolder(parent);
         }
 
 
-        class MyRecordHolder extends BaseViewHolder<MyRecordData> {
+        class MyRecordHolder extends BaseViewHolder<RechargeRecordDataBean.ListBean> {
 
             private TextView tv_recharge_num;
             private TextView tv_recharge_value;
@@ -244,16 +303,18 @@ public class RechargeRecordActivity extends BaseActivity implements View.OnClick
             }
 
             @Override
-            public void setData(final MyRecordData data) {
+            public void setData(final RechargeRecordDataBean.ListBean data) {
                 super.setData(data);
-                tv_recharge_num.setText(data.getName());
-                tv_recharge_date.setText("2018-10-15");
-//                tv_recharge_value
+                tv_recharge_num.setText("￥" + data.getPay_price());
+                tv_recharge_date.setText(data.getPay_date());
+                String recharge_num = String.format(getResources().getString(R.string.recharge_token),
+                        data.getFill_value());
+                tv_recharge_value.setText(recharge_num);
 
             }
 
             @Override
-            public void onItemViewClick(MyRecordData data) {
+            public void onItemViewClick(RechargeRecordDataBean.ListBean data) {
                 super.onItemViewClick(data);
 
             }

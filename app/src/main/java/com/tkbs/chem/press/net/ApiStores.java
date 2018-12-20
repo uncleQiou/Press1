@@ -6,12 +6,18 @@ import com.tkbs.chem.press.bean.BookCityDataBean;
 import com.tkbs.chem.press.bean.BookCityResCatagory;
 import com.tkbs.chem.press.bean.BookCityResDocument;
 import com.tkbs.chem.press.bean.BookDetailBean;
+import com.tkbs.chem.press.bean.ConsumptionRecordsDataBean;
+import com.tkbs.chem.press.bean.CreateOrderDataBean;
 import com.tkbs.chem.press.bean.GiveBookListBean;
 import com.tkbs.chem.press.bean.HttpResponse;
+import com.tkbs.chem.press.bean.MessageBean;
+import com.tkbs.chem.press.bean.MessageUserBean;
 import com.tkbs.chem.press.bean.MyApplyDataBean;
 import com.tkbs.chem.press.bean.OpinionManageBean;
 import com.tkbs.chem.press.bean.OrderInfo;
 import com.tkbs.chem.press.bean.OrderInfoBean;
+import com.tkbs.chem.press.bean.RechargeConfigDataBean;
+import com.tkbs.chem.press.bean.RechargeRecordDataBean;
 import com.tkbs.chem.press.bean.RechargeResult;
 import com.tkbs.chem.press.bean.SampleBookDetailDataBean;
 import com.tkbs.chem.press.bean.SampleBookItemDataBean;
@@ -424,6 +430,67 @@ public interface ApiStores {
      */
     @POST("sampleBook/querySampleBookApplication/{pageNum}/10")
     Observable<HttpResponse<ArrayList<MyApplyDataBean>>> getMyApplyData(@Path("pageNum") int pageNum);
+
+    /**
+     * 消息
+     *
+     * @param pageNum
+     * @return
+     */
+    @POST("message/queryMessage/{pageNum}/10")
+    Observable<HttpResponse<ArrayList<MessageBean>>> getMessageData(@Path("pageNum") int pageNum);
+
+    /**
+     * 消息用户详情
+     *
+     * @param userGuid
+     * @return
+     */
+    @POST("mmMember/queryMessageMember/{userGuid}")
+    Observable<HttpResponse<MessageUserBean>> getMessageUserData(@Path("userGuid") String userGuid);
+
+    /**
+     * 支付配置
+     */
+    @POST("pay/queryRechargeConfig")
+    Observable<HttpResponse<RechargeConfigDataBean>> getRechargeConfig();
+
+    /**
+     * 生成订单
+     *
+     * @param documentGuid
+     * @return
+     */
+    @POST("order/createOrder/{documentGuid}")
+    Observable<HttpResponse<CreateOrderDataBean>> createOrder(@Path("documentGuid") String documentGuid);
+
+    /**
+     * 确实支付
+     *
+     * @param documentGuid
+     * @return
+     */
+    @POST("alipayConfirmPayment/{documentGuid}")
+    Observable<HttpResponse<Object>> ConfirmPayment(@Path("documentGuid") String documentGuid);
+
+    /**
+     * 充值记录
+     *
+     * @param
+     * @return
+     */
+    @POST("pay/queryRefillByDate/{pageNum}/10")
+    Observable<HttpResponse<RechargeRecordDataBean>> getRechargeRecord(@Path("pageNum") int page,
+                                                                       @Query("createDate") String createDate,
+                                                                       @Query("dateType") int dateType);
+
+    /**
+     * 消费记录
+     * 状态( 1、已完成、2、未完成 如果其他则表示全部)
+     */
+    @POST("order/{pageNum}/10")
+    Observable<HttpResponse<ArrayList<ConsumptionRecordsDataBean>>> getConsumptionRecords(@Path("pageNum") int page,
+                                                                                          @Query("state") int state);
 
 
     /*************************************************************************************************************/

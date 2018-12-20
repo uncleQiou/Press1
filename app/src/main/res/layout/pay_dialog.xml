@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/pop_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/bg_main_white"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_pay_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="@dimen/margin_15dp"
+            android:text="@string/please_pay"
+            android:textColor="@color/text_main_6"
+            android:textSize="@dimen/text_18sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/margin_1dp"
+            android:background="@color/app_bag" />
+
+        <TextView
+            android:id="@+id/tv_pay_token"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_10dp"
+            android:padding="@dimen/margin_10dp"
+            android:text="@string/book_token_value"
+            android:textColor="@color/text_main_6"
+            android:textSize="@dimen/text_16sp" />
+
+        <TextView
+            android:id="@+id/tv_token_balance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_10dp"
+            android:padding="@dimen/margin_10dp"
+            android:text="@string/book_token_balance"
+            android:textColor="@color/text_main_6"
+            android:textSize="@dimen/text_16sp" />
+
+        <TextView
+            android:id="@+id/tv_go_recharge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_10dp"
+            android:padding="@dimen/margin_10dp"
+            android:text="@string/go_recharge_str"
+            android:textColor="@color/hg_app_main_color"
+            android:textSize="@dimen/text_16sp" />
+
+        <TextView
+            android:id="@+id/tv_pay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@color/hg_app_main_color"
+            android:gravity="center"
+            android:padding="@dimen/margin_15dp"
+            android:text="@string/sure_pay"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_18sp" />
+
+    </LinearLayout>
+
+</RelativeLayout>

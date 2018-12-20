@@ -16,9 +16,28 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.activity.BookDetailActivity;
+import com.tkbs.chem.press.activity.RechargeRecordActivity;
+import com.tkbs.chem.press.activity.TkbsReaderActivity;
 import com.tkbs.chem.press.base.BaseApplication;
 import com.tkbs.chem.press.base.BaseFragment;
+import com.tkbs.chem.press.bean.ConsumptionRecordsDataBean;
+import com.tkbs.chem.press.bean.HttpResponse;
+import com.tkbs.chem.press.bean.MessageBean;
+import com.tkbs.chem.press.bean.SampleBookDetailDataBean;
 import com.tkbs.chem.press.bean.SampleBookItemDataBean;
+import com.tkbs.chem.press.bean.ThreeClassifyDataBena;
+import com.tkbs.chem.press.net.ApiCallback;
+import com.tkbs.chem.press.util.Config;
+import com.tkbs.chem.press.util.TimeUtils;
+
+import java.text.Collator;
+import java.text.RuleBasedCollator;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.Locale;
 
 import cn.lemon.view.RefreshRecyclerView;
 import cn.lemon.view.adapter.Action;
@@ -47,7 +66,12 @@ public class PayRecordItemFragment extends BaseFragment implements View.OnClickL
     private PayRecordAdapter payRecordAdapter;
     private int page = 1;
     private Handler mHandler;
+    // 升序
+    private boolean isAscendingOrder = true;
     private int type;
+    private ArrayList<ConsumptionRecordsDataBean> dataList;
+
+    private int orderState;
 
     @Override
     protected View getPreviewLayout(LayoutInflater inflater, ViewGroup container) {
@@ -59,6 +83,7 @@ public class PayRecordItemFragment extends BaseFragment implements View.OnClickL
         super.onCreateViewLazy(savedInstanceState);
         setContentView(R.layout.pay_record_fragment);
         type = getArguments().getInt("Type");
+        orderState = getArguments().getInt("orderState");
         ll_sort_time = (LinearLayout) findViewById(R.id.ll_sort_time);
         tv_sort_time = (TextView) findViewById(R.id.tv_sort_time);
         img_sort_time = (ImageView) findViewById(R.id.img_sort_time);
@@ -100,29 +125,50 @@ public class PayRecordItemFragment extends BaseFragment implements View.OnClickL
                 getData(true);
             }
         });
-        String values = getArguments().getString("111");
         recycler_pay_record.getNoMoreView().setText(R.string.no_more_data);
     }
 
     private void getData(final boolean isRefresh) {
-        mHandler.postDelayed(new Runnable() {
+        showProgressDialog();
+        addSubscription(apiStores.getConsumptionRecords(page, orderState), new ApiCallback<HttpResponse<ArrayList<ConsumptionRecordsDataBean>>>() {
             @Override
-            public void run() {
-                if (isRefresh) {
-                    page = 1;
-                    payRecordAdapter.clear();
-                    payRecordAdapter.addAll(getTestData());
-                    recycler_pay_record.dismissSwipeRefresh();
-                    recycler_pay_record.getRecyclerView().scrollToPosition(0);
-                    recycler_pay_record.showNoMore();
-                } else {
-                    payRecordAdapter.addAll(getTestData());
-                    if (page >= 1) {
+            public void onSuccess(HttpResponse<ArrayList<ConsumptionRecordsDataBean>> model) {
+                if (model.isStatus()) {
+                    if (isRefresh) {
+                        dataList = model.getData();
+                        page = 1;
+                        payRecordAdapter.clear();
+                        payRecordAdapter.addAll(dataList);
+                        recycler_pay_record.dismissSwipeRefresh();
+                        recycler_pay_record.getRecyclerView().scrollToPosition(0);
+
+                    } else {
+                        dataList.addAll(model.getData());
+                        payRecordAdapter.addAll(model.getData());
+                    }
+                    if (model.getData().size() < 10) {
                         recycler_pay_record.showNoMore();
                     }
+                } else {
+                    recycler_pay_record.dismissSwipeRefresh();
+                    toastShow(model.getErrorDescription());
                 }
+
             }
-        }, 1000);
+
+            @Override
+            public void onFailure(String msg) {
+                toastShow(msg);
+            }
+
+            @Override
+            public void onFinish() {
+                recycler_pay_record.dismissSwipeRefresh();
+                dismissProgressDialog();
+
+            }
+        });
+
     }
 
     private PayRecordData[] getTestData() {
@@ -143,17 +189,141 @@ public class PayRecordItemFragment extends BaseFragment implements View.OnClickL
         switch (view.getId()) {
 
             case R.id.ll_sort_time:
+                if (null == dataList) {
+                    return;
+                }
+                recycler_pay_record.showSwipeRefresh();
+                img_sort_time.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down : R.mipmap.bookshelf_icon_up);
+                if (isAscendingOrder) {
+                    isAscendingOrder = false;
+                    sortByDateUp();
+                } else {
+                    isAscendingOrder = true;
+                    sortByDateDown();
+                }
+                payRecordAdapter.clear();
+                payRecordAdapter.addAll(dataList);
+                recycler_pay_record.dismissSwipeRefresh();
+                recycler_pay_record.getRecyclerView().scrollToPosition(0);
                 break;
-            case R.id.tv_sort_book_name:
+            case R.id.ll_sort_book_name:
+                if (null == dataList) {
+                    return;
+                }
+                recycler_pay_record.showSwipeRefresh();
+                sortByBookName();
+                payRecordAdapter.clear();
+                payRecordAdapter.addAll(dataList);
+                recycler_pay_record.dismissSwipeRefresh();
+                recycler_pay_record.getRecyclerView().scrollToPosition(0);
                 break;
-            case R.id.tv_sort_hot:
+            case R.id.ll_sort_hot:
+                if (null == dataList) {
+                    return;
+                }
+                recycler_pay_record.showSwipeRefresh();
+                sortBydEgreeDown();
+                payRecordAdapter.clear();
+                payRecordAdapter.addAll(dataList);
+                recycler_pay_record.dismissSwipeRefresh();
+                recycler_pay_record.getRecyclerView().scrollToPosition(0);
                 break;
             default:
                 break;
         }
     }
 
-    class PayRecordAdapter extends RecyclerAdapter<PayRecordData> {
+    /**
+     * 按时间排序 升序
+     */
+    private void sortByDateUp() {
+        Collections.sort(dataList, new Comparator<ConsumptionRecordsDataBean>() {
+            @Override
+            public int compare(ConsumptionRecordsDataBean o1, ConsumptionRecordsDataBean o2) {
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                try {
+                    if (o1.getCreate_date() > o2.getCreate_date()) {
+                        return 1;
+                    } else if (o1.getCreate_date() < o2.getCreate_date()) {
+                        return -1;
+                    } else {
+                        return 0;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return 0;
+            }
+        });
+
+    }
+
+    /**
+     * 按时间排序 降序
+     */
+    private void sortByDateDown() {
+        Collections.sort(dataList, new Comparator<ConsumptionRecordsDataBean>() {
+            @Override
+            public int compare(ConsumptionRecordsDataBean o1, ConsumptionRecordsDataBean o2) {
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                try {
+                    if (o1.getCreate_date() > o2.getCreate_date()) {
+                        return -1;
+                    } else if (o1.getCreate_date() < o2.getCreate_date()) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return 0;
+            }
+        });
+
+    }
+
+    /**
+     * 按热度 降序
+     */
+    private void sortBydEgreeDown() {
+        Collections.sort(dataList, new Comparator<ConsumptionRecordsDataBean>() {
+            @Override
+            public int compare(ConsumptionRecordsDataBean o1, ConsumptionRecordsDataBean o2) {
+
+                try {
+
+                    if (o1.getDegree() < o2.getDegree()) {
+                        return -1;
+                    } else if (o1.getDegree() > o2.getDegree()) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return 0;
+            }
+        });
+
+    }
+
+    /**
+     * 按书名排序
+     */
+    private void sortByBookName() {
+        final RuleBasedCollator collator = (RuleBasedCollator) Collator.getInstance(Locale.CHINA);
+        Collections.sort(dataList, new Comparator<ConsumptionRecordsDataBean>() {
+            @Override
+            public int compare(ConsumptionRecordsDataBean bookShelfItemData, ConsumptionRecordsDataBean t1) {
+                return collator.compare(bookShelfItemData.getTitle(), t1.getTitle()) < 0 ? -1 : 1;
+            }
+        });
+
+    }
+
+    class PayRecordAdapter extends RecyclerAdapter<ConsumptionRecordsDataBean> {
         private Context context;
 
         public PayRecordAdapter(Context context) {
@@ -162,12 +332,12 @@ public class PayRecordItemFragment extends BaseFragment implements View.OnClickL
         }
 
         @Override
-        public BaseViewHolder<PayRecordData> onCreateBaseViewHolder(ViewGroup parent, int viewType) {
+        public BaseViewHolder<ConsumptionRecordsDataBean> onCreateBaseViewHolder(ViewGroup parent, int viewType) {
             return new BookShelfItemHolder(parent);
         }
 
 
-        class BookShelfItemHolder extends BaseViewHolder<PayRecordData> {
+        class BookShelfItemHolder extends BaseViewHolder<ConsumptionRecordsDataBean> {
 
             private TextView tv_book_name;
             private TextView tv_book_value;
@@ -192,17 +362,36 @@ public class PayRecordItemFragment extends BaseFragment implements View.OnClickL
             }
 
             @Override
-            public void setData(PayRecordData data) {
+            public void setData(ConsumptionRecordsDataBean data) {
                 super.setData(data);
-                tv_book_name.setText(data.getName());
+                tv_book_name.setText(data.getTitle());
+                Glide.with(context).load(data.getCover())
+                        .apply(BaseApplication.options)
+                        .into(bookshelf_cover);
+                // 订单失败 去图书详情  10 支付中 20 支付成功 30支付失败
+                if (data.getPay_state() == 20) {
+                    tv_go_pay.setVisibility(View.GONE);
+                } else {
+                    tv_go_pay.setVisibility(View.VISIBLE);
+                }
+                tv_book_value.setText(data.getPay_price() + "点");
+                tv_order_date.setText(TimeUtils.getTime(data.getCreate_date()));
+                tv_delete_order.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        toastShow(R.string.delete_order);
+                    }
+                });
 
 
             }
 
             @Override
-            public void onItemViewClick(PayRecordData data) {
+            public void onItemViewClick(ConsumptionRecordsDataBean data) {
                 super.onItemViewClick(data);
-
+                Intent intent = new Intent(context, BookDetailActivity.class);
+                intent.putExtra("guid", data.getDocument_guid());
+                context.startActivity(intent);
             }
         }
     }

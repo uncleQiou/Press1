@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_bag"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/margin_20dp"
+        android:background="@color/app_bag"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_10dp"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:padding="@dimen/margin_10dp">
+
+            <ProgressBar
+                android:id="@+id/progressBar_id"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_5dp"
+                android:layout_marginLeft="@dimen/margin_20dp"
+                android:layout_marginRight="@dimen/margin_20dp"
+                android:layout_marginTop="@dimen/margin_5dp"
+                android:max="100"
+                android:progressDrawable="@drawable/bar_style" />
+
+            <TextView
+                android:id="@+id/tv_pb_des"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/givebiik_tj_pbar_des"
+                android:textColor="@color/text_main_3"
+                android:textSize="@dimen/text_14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:gravity="center_horizontal">
+
+            <RadioGroup
+                android:id="@+id/group_yymmdd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="@dimen/margin_10dp">
+
+                <RadioButton
+                    android:id="@+id/rbtn_tab_yy"
+                    style="@style/main_tab"
+                    android:background="@drawable/selector_yymmdd"
+                    android:checked="true"
+                    android:paddingBottom="@dimen/margin_5dp"
+                    android:paddingLeft="@dimen/margin_20dp"
+                    android:paddingRight="@dimen/margin_20dp"
+                    android:paddingTop="@dimen/margin_5dp"
+                    android:text="@string/year_str"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_16sp" />
+
+                <RadioButton
+                    android:id="@+id/rbtn_tab_mm"
+                    style="@style/main_tab"
+                    android:background="@drawable/selector_yymmdd"
+                    android:checked="false"
+                    android:paddingBottom="@dimen/margin_5dp"
+                    android:paddingLeft="@dimen/margin_20dp"
+                    android:paddingRight="@dimen/margin_20dp"
+                    android:paddingTop="@dimen/margin_5dp"
+                    android:text="@string/month_str"
+                    android:textColor="@color/text_main_3"
+                    android:textSize="@dimen/text_16sp" />
+
+
+                <RadioButton
+                    android:id="@+id/rbtn_tab_dd"
+                    style="@style/main_tab"
+                    android:background="@drawable/selector_yymmdd"
+                    android:checked="false"
+                    android:paddingBottom="@dimen/margin_5dp"
+                    android:paddingLeft="@dimen/margin_20dp"
+                    android:paddingRight="@dimen/margin_20dp"
+                    android:paddingTop="@dimen/margin_5dp"
+                    android:text="@string/day_str"
+                    android:textColor="@color/text_main_3"
+                    android:textSize="@dimen/text_16sp" />
+
+            </RadioGroup>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_smbook_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:gravity="center_vertical"
+            android:padding="@dimen/margin_10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="|"
+                android:textColor="@color/hg_app_main_color"
+                android:textSize="@dimen/text_16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_10dp"
+                android:layout_weight="1"
+                android:text="@string/sort_time"
+                android:textColor="@color/text_main_3"
+                android:textSize="@dimen/text_16sp" />
+
+            <ImageView
+                android:layout_width="@dimen/margin_15dp"
+                android:layout_height="@dimen/margin_15dp"
+                android:src="@mipmap/bookcity_icon_more" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white">
+
+
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/barChart_time"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_margin="@dimen/margin_10dp"
+                android:background="@color/app_bag" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_10dp"
+                android:background="@color/white"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <RadioGroup
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/app_bag"
+                    android:orientation="vertical"
+                    android:padding="@dimen/margin_10dp">
+
+                    <RadioButton
+                        android:id="@+id/tj_time_book"
+                        style="@style/statistic_style"
+                        android:background="@drawable/selector_yymm"
+                        android:checked="true"
+                        android:paddingBottom="@dimen/margin_15dp"
+                        android:paddingLeft="@dimen/margin_5dp"
+                        android:paddingRight="@dimen/margin_5dp"
+                        android:paddingTop="@dimen/margin_15dp"
+                        android:text="@string/book_number"
+                        android:textColor="@color/white" />
+
+                    <RadioButton
+                        android:id="@+id/tj_time_people"
+                        style="@style/statistic_style"
+                        android:background="@drawable/selector_yymm"
+                        android:checked="false"
+                        android:paddingBottom="@dimen/margin_15dp"
+                        android:paddingLeft="@dimen/margin_5dp"
+                        android:paddingRight="@dimen/margin_5dp"
+                        android:paddingTop="@dimen/margin_15dp"
+                        android:text="@string/people_number"
+                        android:textColor="@color/text_main_3" />
+
+                </RadioGroup>
+
+            </LinearLayout>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_smbook_school"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_10dp"
+            android:background="@color/white"
+            android:gravity="center_vertical"
+            android:padding="@dimen/margin_10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="|"
+                android:textColor="@color/hg_app_main_color"
+                android:textSize="@dimen/text_16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_10dp"
+                android:layout_weight="1"
+                android:text="@string/school"
+                android:textColor="@color/text_main_3"
+                android:textSize="@dimen/text_16sp" />
+
+            <ImageView
+                android:layout_width="@dimen/margin_15dp"
+                android:layout_height="@dimen/margin_15dp"
+                android:src="@mipmap/bookcity_icon_more" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white">
+
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/barChart_school"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_margin="@dimen/margin_10dp"
+                android:background="@color/app_bag" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_10dp"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <RadioGroup
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/app_bag"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:padding="@dimen/margin_10dp">
+
+                    <RadioButton
+                        android:id="@+id/tj_school_book"
+                        style="@style/statistic_style"
+                        android:background="@drawable/selector_yymm"
+                        android:checked="true"
+                        android:paddingBottom="@dimen/margin_15dp"
+                        android:paddingLeft="@dimen/margin_5dp"
+                        android:paddingRight="@dimen/margin_5dp"
+                        android:paddingTop="@dimen/margin_15dp"
+                        android:text="@string/book_number"
+                        android:textColor="@color/white" />
+
+                    <RadioButton
+                        android:id="@+id/tj_school_people"
+                        style="@style/statistic_style"
+                        android:background="@drawable/selector_yymm"
+                        android:checked="false"
+                        android:paddingBottom="@dimen/margin_20dp"
+                        android:paddingLeft="@dimen/margin_5dp"
+                        android:paddingRight="@dimen/margin_5dp"
+                        android:paddingTop="@dimen/margin_20dp"
+                        android:text="@string/people_number"
+                        android:textColor="@color/text_main_3" />
+
+                </RadioGroup>
+
+            </LinearLayout>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_smbook_teacher"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_10dp"
+            android:background="@color/white"
+            android:gravity="center_vertical"
+            android:padding="@dimen/margin_10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="|"
+                android:textColor="@color/hg_app_main_color"
+                android:textSize="@dimen/text_16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_10dp"
+                android:text="@string/teacher_str"
+                android:textColor="@color/text_main_3"
+                android:textSize="@dimen/text_16sp" />
+
+            <TextView
+                android:id="@+id/tv_tj_chool"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_10dp"
+                android:layout_weight="1"
+                android:singleLine="true"
+                android:textColor="@color/text_main_3"
+                android:textSize="@dimen/text_16sp" />
+
+            <ImageView
+                android:layout_width="@dimen/margin_15dp"
+                android:layout_height="@dimen/margin_15dp"
+                android:src="@mipmap/bookcity_icon_more" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_20dp"
+            android:background="@color/white">
+
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/barChart_teacher"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_margin="@dimen/margin_10dp"
+                android:background="@color/app_bag" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_10dp"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <RadioGroup
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/app_bag"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:padding="@dimen/margin_10dp">
+
+                    <RadioButton
+                        android:id="@+id/tj_teacher_book"
+                        style="@style/statistic_style"
+                        android:background="@drawable/selector_yymm"
+                        android:checked="true"
+                        android:paddingBottom="@dimen/margin_15dp"
+                        android:paddingLeft="@dimen/margin_5dp"
+                        android:paddingRight="@dimen/margin_5dp"
+                        android:paddingTop="@dimen/margin_15dp"
+                        android:text="@string/book_number"
+                        android:textColor="@color/white" />
+
+                    <RadioButton
+                        android:id="@+id/tj_teacher_limit"
+                        style="@style/statistic_style"
+                        android:background="@drawable/selector_yymm"
+                        android:checked="false"
+                        android:paddingBottom="@dimen/margin_15dp"
+                        android:paddingLeft="@dimen/margin_5dp"
+                        android:paddingRight="@dimen/margin_5dp"
+                        android:paddingTop="@dimen/margin_15dp"
+                        android:text="@string/apply_limit"
+                        android:textColor="@color/text_main_3" />
+
+                </RadioGroup>
+
+            </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
+</ScrollView>

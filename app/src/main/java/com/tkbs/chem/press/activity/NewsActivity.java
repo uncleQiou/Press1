@@ -1,6 +1,7 @@
 package com.tkbs.chem.press.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.GridLayoutManager;
@@ -15,6 +16,13 @@ import android.widget.TextView;
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.adapter.OpinionReplyItemAdapter;
 import com.tkbs.chem.press.base.BaseActivity;
+import com.tkbs.chem.press.bean.HttpResponse;
+import com.tkbs.chem.press.bean.MessageBean;
+import com.tkbs.chem.press.bean.MessageUserBean;
+import com.tkbs.chem.press.net.ApiCallback;
+import com.tkbs.chem.press.util.TimeUtils;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -59,14 +67,14 @@ public class NewsActivity extends BaseActivity implements View.OnClickListener {
             @Override
             public void onAction() {
                 page = 1;
-                getData(true);
+                getMessageData(true);
             }
         });
         recycler.setLoadMoreAction(new Action() {
             @Override
             public void onAction() {
                 page++;
-                getData(false);
+                getMessageData(false);
 
             }
         });
@@ -75,10 +83,93 @@ public class NewsActivity extends BaseActivity implements View.OnClickListener {
             @Override
             public void run() {
                 recycler.showSwipeRefresh();
-                getData(true);
+                getMessageData(true);
             }
         });
         recycler.getNoMoreView().setText("没有更多数据了");
+    }
+
+    private void getMessageData(final boolean isRefresh) {
+        showProgressDialog();
+        addSubscription(apiStores.getMessageData(page), new ApiCallback<HttpResponse<ArrayList<MessageBean>>>() {
+            @Override
+            public void onSuccess(HttpResponse<ArrayList<MessageBean>> model) {
+                if (model.isStatus()) {
+                    if (isRefresh) {
+                        page = 1;
+                        myAdapter.clear();
+                        myAdapter.addAll(model.getData());
+                        recycler.dismissSwipeRefresh();
+                        recycler.getRecyclerView().scrollToPosition(0);
+
+                    } else {
+                        myAdapter.addAll(model.getData());
+                    }
+                    if (model.getData().size() < 10) {
+                        recycler.showNoMore();
+                    }
+                } else {
+                    recycler.dismissSwipeRefresh();
+                    toastShow(model.getErrorDescription());
+                }
+
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                toastShow(msg);
+            }
+
+            @Override
+            public void onFinish() {
+                recycler.dismissSwipeRefresh();
+                dismissProgressDialog();
+
+            }
+        });
+
+    }
+
+    private void getUserData(final String userGuid, final int messageType) {
+        showProgressDialog();
+        addSubscription(apiStores.getMessageUserData(userGuid), new ApiCallback<HttpResponse<MessageUserBean>>() {
+            @Override
+            public void onSuccess(HttpResponse<MessageUserBean> model) {
+                if (model.isStatus()) {
+                    if (messageType == 6) {
+                        Intent intent = new Intent(NewsActivity.this, UserManageActivity.class);
+                        intent.putExtra("guid", userGuid);
+                        intent.putExtra("name", model.getData().getRealName());
+                        intent.putExtra("date", model.getData().getDate());
+                        intent.putExtra("state", model.getData().getState());
+                        NewsActivity.this.startActivity(intent);
+                    } else if (7 == messageType) {
+                        Intent intent = new Intent(NewsActivity.this, SampleBookActivity.class);
+                        intent.putExtra("guid", userGuid);
+                        intent.putExtra("name", model.getData().getRealName());
+                        intent.putExtra("job", model.getData().getJob());
+                        NewsActivity.this.startActivity(intent);
+                    }
+
+                } else {
+                    toastShow(model.getErrorDescription());
+                }
+
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                toastShow(msg);
+            }
+
+            @Override
+            public void onFinish() {
+                recycler.dismissSwipeRefresh();
+                dismissProgressDialog();
+
+            }
+        });
+
     }
 
     public void getData(final boolean isRefresh) {
@@ -88,12 +179,12 @@ public class NewsActivity extends BaseActivity implements View.OnClickListener {
                 if (isRefresh) {
                     page = 1;
                     myAdapter.clear();
-                    myAdapter.addAll(getTestData());
+//                    myAdapter.addAll(getTestData());
                     recycler.dismissSwipeRefresh();
                     recycler.getRecyclerView().scrollToPosition(0);
                     recycler.showNoMore();
                 } else {
-                    myAdapter.addAll(getTestData());
+//                    myAdapter.addAll(getTestData());
                     if (page >= 3) {
                         recycler.showNoMore();
                     }
@@ -133,7 +224,7 @@ public class NewsActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
-    class MyNewsAdapter extends RecyclerAdapter<MyNewsItemData> {
+    class MyNewsAdapter extends RecyclerAdapter<MessageBean> {
         private Context context;
         /**
          * 实现单选，保存当前选中的position
@@ -146,12 +237,12 @@ public class NewsActivity extends BaseActivity implements View.OnClickListener {
         }
 
         @Override
-        public BaseViewHolder<MyNewsItemData> onCreateBaseViewHolder(ViewGroup parent, int viewType) {
+        public BaseViewHolder<MessageBean> onCreateBaseViewHolder(ViewGroup parent, int viewType) {
             return new MyNewsHolder(parent);
         }
 
 
-        class MyNewsHolder extends BaseViewHolder<MyNewsItemData> {
+        class MyNewsHolder extends BaseViewHolder<MessageBean> {
 
             private TextView tv_news_title;
             private TextView tv_news_date;
@@ -170,21 +261,35 @@ public class NewsActivity extends BaseActivity implements View.OnClickListener {
             }
 
             @Override
-            public void setData(final MyNewsItemData data) {
+            public void setData(final MessageBean data) {
                 super.setData(data);
-                tv_news_title.setText(data.getName());
-                tv_news_date.setText("2018年10月15日19:04:53");
-                ll_details.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        toastShow(data.getName());
-                    }
-                });
+                tv_news_title.setText(data.getContent());
+                tv_news_date.setText(TimeUtils.getTime(data.getCreateDate()));
+//                ll_details.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        toastShow(data.getName());
+//                    }
+//                });
             }
 
             @Override
-            public void onItemViewClick(MyNewsItemData data) {
+            public void onItemViewClick(MessageBean data) {
                 super.onItemViewClick(data);
+                //1、手动发布 2、自动发布 3、审批通过 4、审批未通过 5、赠书 6、注册 7、申请样书
+                //1不跳 2-5都是详情页 6用户管理-用户详情页 7样书管理-当前用户的审批页
+                int messageType = data.getMessageType();
+                if (messageType > 1 && messageType < 6) {
+                    // 跳转图书详情
+                    Intent intent = new Intent(NewsActivity.this, BookDetailActivity.class);
+                    intent.putExtra("guid", data.getRelationGuid());
+                    context.startActivity(intent);
+                } else {
+                    //6用户管理-用户详情页
+                    //7样书管理-当前用户的审批页
+                    getUserData(data.getRelationGuid(), messageType);
+
+                }
 
             }
 
