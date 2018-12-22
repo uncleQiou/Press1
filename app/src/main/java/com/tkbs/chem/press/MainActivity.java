@@ -268,6 +268,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 rlTitlebarNomal.setVisibility(View.GONE);
                 titleHome.setText(R.string.home_table4);
                 llTitleSerach.setVisibility(View.GONE);
+                if (2 == user_type) {
+                    EventBus.getDefault().post(new MessageEvent("RefreshTJ"));
+                }
                 break;
             case R.id.ll_search:
                 startActivity(new Intent(MainActivity.this, SearchActivity.class));

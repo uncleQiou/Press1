@@ -39,12 +39,17 @@ import com.tkbs.chem.press.bean.StatisticsCoordinateDataBean;
 import com.tkbs.chem.press.bean.TeaLimitDataBean;
 import com.tkbs.chem.press.net.ApiCallback;
 import com.tkbs.chem.press.util.LocalJsonAnalyzeUtil;
+import com.tkbs.chem.press.util.MessageEvent;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
+
+import de.greenrobot.event.EventBus;
+import de.greenrobot.event.Subscribe;
+import de.greenrobot.event.ThreadMode;
 
 /**
  * 作者    qyl
@@ -120,6 +125,7 @@ public class GiveBookStatisticsFragment extends BaseFragment implements View.OnC
         super.onCreateViewLazy(savedInstanceState);
         setContentView(R.layout.givebook_statistics_fragment);
         tjTeaMoreData = new ArrayList<>();
+        EventBus.getDefault().register(this);
         initView();
         getData();
         // 设置数据
@@ -131,6 +137,13 @@ public class GiveBookStatisticsFragment extends BaseFragment implements View.OnC
 //        showBarChart(dateValueList, "", getResources().getColor(R.color.chart_line_value));
         // 教师
 
+    }
+
+    @Subscribe(threadMode = ThreadMode.MainThread)
+    public void RefreshUi(MessageEvent messageEvent) {
+        if ("RefreshTJ".endsWith(messageEvent.getMessage())) {
+            getData();
+        }
     }
 
     /***
