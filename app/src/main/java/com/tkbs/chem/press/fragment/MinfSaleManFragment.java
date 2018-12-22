@@ -117,8 +117,8 @@ public class MinfSaleManFragment extends BaseFragment implements View.OnClickLis
             case R.id.ll_edit:
                 //  个人信息页面 H5 页面
 //                toastShow("编辑个人信息");
-                getActivity().startActivity(new Intent(getActivity(), ChartDemoActivity.class));
-//                getActivity().startActivity(new Intent(getActivity(), SalesmanPersonalCenterActivity.class));
+//                getActivity().startActivity(new Intent(getActivity(), ChartDemoActivity.class));
+                getActivity().startActivity(new Intent(getActivity(), SalesmanPersonalCenterActivity.class));
                 break;
             default:
                 break;
@@ -150,16 +150,16 @@ public class MinfSaleManFragment extends BaseFragment implements View.OnClickLis
         @Override
         public Fragment getFragmentForPage(int position) {
             if (0 == position) {
-//                SampleBookStatisticsFragment samplebookstatisticsfragment = new SampleBookStatisticsFragment();
-                TextFragment samplebookstatisticsfragment = new TextFragment();
+                SampleBookStatisticsFragment samplebookstatisticsfragment = new SampleBookStatisticsFragment();
+//                TextFragment samplebookstatisticsfragment = new TextFragment();
                 Bundle bundle = new Bundle();
                 bundle.putString("111", "这是第==" + position);
 //                bundle.putString("guid", guid);
                 samplebookstatisticsfragment.setArguments(bundle);
                 return samplebookstatisticsfragment;
             } else if (1 == position) {
-//                GiveBookStatisticsFragment givebookstatisticsfragment = new GiveBookStatisticsFragment();
-                TextFragment givebookstatisticsfragment = new TextFragment();
+                GiveBookStatisticsFragment givebookstatisticsfragment = new GiveBookStatisticsFragment();
+//                TextFragment givebookstatisticsfragment = new TextFragment();
                 Bundle bundle = new Bundle();
                 bundle.putString("111", "这是第==" + position);
 //                bundle.putString("guid", guid);

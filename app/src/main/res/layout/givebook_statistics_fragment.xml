@@ -66,7 +66,7 @@
                     android:paddingLeft="@dimen/margin_20dp"
                     android:paddingRight="@dimen/margin_20dp"
                     android:paddingTop="@dimen/margin_5dp"
-                    android:text="@string/year_str"
+                    android:text="@string/week_str"
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_16sp" />
 
@@ -93,7 +93,7 @@
                     android:paddingLeft="@dimen/margin_20dp"
                     android:paddingRight="@dimen/margin_20dp"
                     android:paddingTop="@dimen/margin_5dp"
-                    android:text="@string/day_str"
+                    android:text="@string/year_str"
                     android:textColor="@color/text_main_3"
                     android:textSize="@dimen/text_16sp" />
 
@@ -132,62 +132,67 @@
                 android:src="@mipmap/bookcity_icon_more" />
         </LinearLayout>
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white">
 
-
-            <com.github.mikephil.charting.charts.BarChart
-                android:id="@+id/barChart_time"
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:layout_margin="@dimen/margin_10dp"
-                android:background="@color/app_bag" />
-
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/margin_10dp"
-                android:background="@color/white"
-                android:gravity="center_horizontal"
-                android:orientation="vertical">
+                android:background="@color/app_bag">
 
-                <RadioGroup
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@color/app_bag"
-                    android:orientation="vertical"
-                    android:padding="@dimen/margin_10dp">
+                    android:background="@color/white"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
 
-                    <RadioButton
-                        android:id="@+id/tj_time_book"
-                        style="@style/statistic_style"
-                        android:background="@drawable/selector_yymm"
-                        android:checked="true"
-                        android:paddingBottom="@dimen/margin_15dp"
-                        android:paddingLeft="@dimen/margin_5dp"
-                        android:paddingRight="@dimen/margin_5dp"
-                        android:paddingTop="@dimen/margin_15dp"
-                        android:text="@string/book_number"
-                        android:textColor="@color/white" />
+                    <RadioGroup
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/app_bag"
+                        android:orientation="vertical">
 
-                    <RadioButton
-                        android:id="@+id/tj_time_people"
-                        style="@style/statistic_style"
-                        android:background="@drawable/selector_yymm"
-                        android:checked="false"
-                        android:paddingBottom="@dimen/margin_15dp"
-                        android:paddingLeft="@dimen/margin_5dp"
-                        android:paddingRight="@dimen/margin_5dp"
-                        android:paddingTop="@dimen/margin_15dp"
-                        android:text="@string/people_number"
-                        android:textColor="@color/text_main_3" />
+                        <RadioButton
+                            android:id="@+id/tj_time_book"
+                            style="@style/statistic_style"
+                            android:background="@drawable/selector_yymm"
+                            android:checked="true"
+                            android:paddingBottom="@dimen/margin_15dp"
+                            android:paddingLeft="@dimen/margin_5dp"
+                            android:paddingRight="@dimen/margin_5dp"
+                            android:paddingTop="@dimen/margin_15dp"
+                            android:text="@string/book_number"
+                            android:textColor="@color/white" />
 
-                </RadioGroup>
+                        <RadioButton
+                            android:id="@+id/tj_time_people"
+                            style="@style/statistic_style"
+                            android:background="@drawable/selector_yymm"
+                            android:checked="false"
+                            android:paddingBottom="@dimen/margin_15dp"
+                            android:paddingLeft="@dimen/margin_5dp"
+                            android:paddingRight="@dimen/margin_5dp"
+                            android:paddingTop="@dimen/margin_15dp"
+                            android:text="@string/people_number"
+                            android:textColor="@color/text_main_3" />
+
+                    </RadioGroup>
+
+                </LinearLayout>
+
+                <com.github.mikephil.charting.charts.BarChart
+                    android:id="@+id/barChart_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:background="@color/app_bag" />
+
 
             </LinearLayout>
-        </RelativeLayout>
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/ll_smbook_school"
@@ -221,61 +226,67 @@
                 android:src="@mipmap/bookcity_icon_more" />
         </LinearLayout>
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white">
 
-            <com.github.mikephil.charting.charts.BarChart
-                android:id="@+id/barChart_school"
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:layout_margin="@dimen/margin_10dp"
-                android:background="@color/app_bag" />
-
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/margin_10dp"
-                android:background="@color/white"
-                android:orientation="vertical">
+                android:background="@color/app_bag">
 
-                <RadioGroup
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@color/app_bag"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    android:padding="@dimen/margin_10dp">
+                    android:background="@color/white"
+                    android:orientation="vertical">
 
-                    <RadioButton
-                        android:id="@+id/tj_school_book"
-                        style="@style/statistic_style"
-                        android:background="@drawable/selector_yymm"
-                        android:checked="true"
-                        android:paddingBottom="@dimen/margin_15dp"
-                        android:paddingLeft="@dimen/margin_5dp"
-                        android:paddingRight="@dimen/margin_5dp"
-                        android:paddingTop="@dimen/margin_15dp"
-                        android:text="@string/book_number"
-                        android:textColor="@color/white" />
+                    <RadioGroup
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/app_bag"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical">
 
-                    <RadioButton
-                        android:id="@+id/tj_school_people"
-                        style="@style/statistic_style"
-                        android:background="@drawable/selector_yymm"
-                        android:checked="false"
-                        android:paddingBottom="@dimen/margin_20dp"
-                        android:paddingLeft="@dimen/margin_5dp"
-                        android:paddingRight="@dimen/margin_5dp"
-                        android:paddingTop="@dimen/margin_20dp"
-                        android:text="@string/people_number"
-                        android:textColor="@color/text_main_3" />
+                        <RadioButton
+                            android:id="@+id/tj_school_book"
+                            style="@style/statistic_style"
+                            android:background="@drawable/selector_yymm"
+                            android:checked="true"
+                            android:paddingBottom="@dimen/margin_15dp"
+                            android:paddingLeft="@dimen/margin_5dp"
+                            android:paddingRight="@dimen/margin_5dp"
+                            android:paddingTop="@dimen/margin_15dp"
+                            android:text="@string/book_number"
+                            android:textColor="@color/white" />
 
-                </RadioGroup>
+                        <RadioButton
+                            android:id="@+id/tj_school_people"
+                            style="@style/statistic_style"
+                            android:background="@drawable/selector_yymm"
+                            android:checked="false"
+                            android:paddingBottom="@dimen/margin_20dp"
+                            android:paddingLeft="@dimen/margin_5dp"
+                            android:paddingRight="@dimen/margin_5dp"
+                            android:paddingTop="@dimen/margin_20dp"
+                            android:text="@string/people_number"
+                            android:textColor="@color/text_main_3" />
+
+                    </RadioGroup>
+
+                </LinearLayout>
+
+                <com.github.mikephil.charting.charts.BarChart
+                    android:id="@+id/barChart_school"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:background="@color/app_bag" />
+
 
             </LinearLayout>
-        </RelativeLayout>
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/ll_smbook_teacher"
@@ -318,61 +329,67 @@
                 android:src="@mipmap/bookcity_icon_more" />
         </LinearLayout>
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_20dp"
+            android:layout_marginBottom="@dimen/margin_10dp"
             android:background="@color/white">
 
-            <com.github.mikephil.charting.charts.BarChart
-                android:id="@+id/barChart_teacher"
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:layout_margin="@dimen/margin_10dp"
-                android:background="@color/app_bag" />
-
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/margin_10dp"
-                android:background="@color/white"
-                android:orientation="vertical">
+                android:background="@color/app_bag">
 
-                <RadioGroup
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@color/app_bag"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    android:padding="@dimen/margin_10dp">
+                    android:background="@color/white"
+                    android:orientation="vertical">
 
-                    <RadioButton
-                        android:id="@+id/tj_teacher_book"
-                        style="@style/statistic_style"
-                        android:background="@drawable/selector_yymm"
-                        android:checked="true"
-                        android:paddingBottom="@dimen/margin_15dp"
-                        android:paddingLeft="@dimen/margin_5dp"
-                        android:paddingRight="@dimen/margin_5dp"
-                        android:paddingTop="@dimen/margin_15dp"
-                        android:text="@string/book_number"
-                        android:textColor="@color/white" />
+                    <RadioGroup
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/app_bag"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical">
 
-                    <RadioButton
-                        android:id="@+id/tj_teacher_limit"
-                        style="@style/statistic_style"
-                        android:background="@drawable/selector_yymm"
-                        android:checked="false"
-                        android:paddingBottom="@dimen/margin_15dp"
-                        android:paddingLeft="@dimen/margin_5dp"
-                        android:paddingRight="@dimen/margin_5dp"
-                        android:paddingTop="@dimen/margin_15dp"
-                        android:text="@string/apply_limit"
-                        android:textColor="@color/text_main_3" />
+                        <RadioButton
+                            android:id="@+id/tj_teacher_book"
+                            style="@style/statistic_style"
+                            android:background="@drawable/selector_yymm"
+                            android:checked="true"
+                            android:paddingBottom="@dimen/margin_15dp"
+                            android:paddingLeft="@dimen/margin_5dp"
+                            android:paddingRight="@dimen/margin_5dp"
+                            android:paddingTop="@dimen/margin_15dp"
+                            android:text="@string/book_number"
+                            android:textColor="@color/white" />
 
-                </RadioGroup>
+                        <RadioButton
+                            android:id="@+id/tj_teacher_limit"
+                            style="@style/statistic_style"
+                            android:background="@drawable/selector_yymm"
+                            android:checked="false"
+                            android:paddingBottom="@dimen/margin_15dp"
+                            android:paddingLeft="@dimen/margin_5dp"
+                            android:paddingRight="@dimen/margin_5dp"
+                            android:paddingTop="@dimen/margin_15dp"
+                            android:text="@string/apply_limit"
+                            android:textColor="@color/text_main_3" />
+
+                    </RadioGroup>
+
+                </LinearLayout>
+
+                <com.github.mikephil.charting.charts.BarChart
+                    android:id="@+id/barChart_teacher"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:background="@color/app_bag" />
+
 
             </LinearLayout>
-        </RelativeLayout>
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>

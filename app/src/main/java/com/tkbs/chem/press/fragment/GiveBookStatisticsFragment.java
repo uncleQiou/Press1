@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.ColorRes;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
@@ -28,13 +29,21 @@ import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.base.BaseFragment;
 import com.tkbs.chem.press.bean.BarChartBean;
+import com.tkbs.chem.press.bean.HttpResponse;
+import com.tkbs.chem.press.bean.SBookAllStatisticsDataBena;
+import com.tkbs.chem.press.bean.StatisticsCoordinateDataBean;
+import com.tkbs.chem.press.bean.TeaLimitDataBean;
+import com.tkbs.chem.press.net.ApiCallback;
 import com.tkbs.chem.press.util.LocalJsonAnalyzeUtil;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -74,18 +83,32 @@ public class GiveBookStatisticsFragment extends BaseFragment implements View.OnC
     /**
      * 时间
      */
+    private int dateType = 1;
+    private int statisticsTimeType = 1;
     private RadioButton tj_time_book;
     private RadioButton tj_time_people;
+    private ArrayList<StatisticsCoordinateDataBean> tjTimeData;
     /**
      * 学校
      */
+    private int statisticsSchType = 1;
     private RadioButton tj_school_book;
     private RadioButton tj_school_people;
+    private ArrayList<StatisticsCoordinateDataBean> tjSchData;
     /**
      * 教师
      */
+    private int statisticsTeaType = 1;
     private RadioButton tj_teacher_book;
     private RadioButton tj_teacher_limit;
+    private ArrayList<StatisticsCoordinateDataBean> tjTeaData;
+    private ArrayList<StatisticsCoordinateDataBean> tjTeaMoreData;
+    private ArrayList<String> SchoolNameData;
+
+    private int pgCurrent;
+    private int pgCount;
+
+    private SBookAllStatisticsDataBena.ProgressBarData pbData;
 
     @Override
     protected View getPreviewLayout(LayoutInflater inflater, ViewGroup container) {
@@ -96,15 +119,64 @@ public class GiveBookStatisticsFragment extends BaseFragment implements View.OnC
     protected void onCreateViewLazy(Bundle savedInstanceState) {
         super.onCreateViewLazy(savedInstanceState);
         setContentView(R.layout.givebook_statistics_fragment);
+        tjTeaMoreData = new ArrayList<>();
         initView();
+        getData();
         // 设置数据
-        BarChartBean barChartBean = LocalJsonAnalyzeUtil.JsonToObject(getActivity(),
-                "bar_chart.json", BarChartBean.class);
-        dateValueList = barChartBean.getStFinDate().getVtDateValue();
-        //将集合 逆序排列，转换成需要的顺序
-        Collections.reverse(dateValueList);
-        showBarChart(dateValueList, "", getResources().getColor(R.color.chart_line_value));
-        setProgressBar();
+//        BarChartBean barChartBean = LocalJsonAnalyzeUtil.JsonToObject(getActivity(),
+//                "bar_chart.json", BarChartBean.class);
+//        dateValueList = barChartBean.getStFinDate().getVtDateValue();
+//        //将集合 逆序排列，转换成需要的顺序
+//        Collections.reverse(dateValueList);
+//        showBarChart(dateValueList, "", getResources().getColor(R.color.chart_line_value));
+        // 教师
+
+    }
+
+    /***
+     * 获取样书统计数据
+     */
+    private void getData() {
+        showProgressDialog();
+        addSubscription(apiStores.getGiveBookAllStatistics(), new ApiCallback<HttpResponse<SBookAllStatisticsDataBena>>() {
+            @Override
+            public void onSuccess(HttpResponse<SBookAllStatisticsDataBena> model) {
+                // 通知html5页面进行刷新 购买完成 reflushData
+                if (model.isStatus()) {
+                    if (null != model.getData()) {
+                        // 分别取出时间、学校、教师的数据
+                        tjTimeData = model.getData().getDateTimeData();
+                        tjSchData = model.getData().getSchoolData();
+                        tjTeaData = model.getData().getTeacherData();
+                        SchoolNameData = model.getData().getSchoolList();
+                        // 分别显示数据
+                        // 左下角角标
+                        String liftDownConner = getResources().getString(R.string.book_number_str);
+                        int barChartColor = getResources().getColor(R.color.chart_line_value);
+                        // 时间
+                        showBarChart(barChart_time, tjTimeData, liftDownConner, barChartColor);
+                        // 学校
+                        showBarChart(barChart_school, tjSchData, liftDownConner, barChartColor);
+                        // 教师
+                        tv_tj_chool.setText(SchoolNameData.get(0));
+                        showBarChart(barChart_teacher, tjTeaData, liftDownConner, barChartColor);
+                        pbData = model.getData().getData();
+                        setProgressBar();
+                    }
+                }
+
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                toastShow(msg);
+            }
+
+            @Override
+            public void onFinish() {
+                dismissProgressDialog();
+            }
+        });
     }
 
 
@@ -116,11 +188,11 @@ public class GiveBookStatisticsFragment extends BaseFragment implements View.OnC
         ll_smbook_school = (LinearLayout) findViewById(R.id.ll_smbook_school);
         ll_smbook_teacher = (LinearLayout) findViewById(R.id.ll_smbook_teacher);
         barChart_time = (BarChart) findViewById(R.id.barChart_time);
-        initBarChart(barChart_time);
+        initBarChart(barChart_time, 1);
         barChart_school = (BarChart) findViewById(R.id.barChart_school);
-        initBarChart(barChart_school);
+        initBarChart(barChart_school, 2);
         barChart_teacher = (BarChart) findViewById(R.id.barChart_teacher);
-        initBarChart(barChart_teacher);
+        initBarChart(barChart_teacher, 3);
         rbtn_tab_yy = (RadioButton) findViewById(R.id.rbtn_tab_yy);
         rbtn_tab_yy.setOnClickListener(this);
         rbtn_tab_mm = (RadioButton) findViewById(R.id.rbtn_tab_mm);
@@ -156,25 +228,30 @@ public class GiveBookStatisticsFragment extends BaseFragment implements View.OnC
      * 设置进度条数据
      */
     private void setProgressBar() {
-        String text = String.format(getResources().getString(R.string.givebiik_tj_pbar_des), 100, 82);
-        int index = text.indexOf("82");
+        pgCount = pbData.getTotal();
+        pgCurrent = pbData.getCount();
+        int surplus = pgCount - pgCurrent;
+        String text = String.format(getResources().getString(R.string.givebiik_tj_pbar_des),
+                pgCount, surplus);
+        int index = text.indexOf(String.valueOf(surplus));
         // 设置文字局部变色
         SpannableStringBuilder style = new SpannableStringBuilder(text);
-        style.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.hg_app_main_color)), index, index + 2, Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+        style.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.hg_app_main_color)),
+                index, index + String.valueOf(surplus).length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
         tv_pb_des.setText(style);
         // 设置进度条
-        progressBar_id.setMax(100);
-        progressBar_id.setProgress(18);
+        progressBar_id.setMax(pgCount);
+        progressBar_id.setProgress(pgCurrent);
     }
 
-    public void showBarChart(List<BarChartBean.StFinDateBean.VtDateValueBean> dateValueList, String name, int color) {
+    public void showBarChart(BarChart barChart, List<StatisticsCoordinateDataBean> dateValueList, String name, int color) {
         ArrayList<BarEntry> entries = new ArrayList<>();
         for (int i = 0; i < dateValueList.size(); i++) {
             /**
              * 此处还可传入Drawable对象 BarEntry(float x, float y, Drawable icon)
              * 即可设置柱状图顶部的 icon展示
              */
-            BarEntry barEntry = new BarEntry(i, (float) dateValueList.get(i).getFValue());
+            BarEntry barEntry = new BarEntry(i, (float) dateValueList.get(i).getCount());
             entries.add(barEntry);
         }
         // 每一个BarDataSet代表一类柱状图
@@ -185,10 +262,65 @@ public class GiveBookStatisticsFragment extends BaseFragment implements View.OnC
         BarData data = new BarData(barDataSet);
         //单条柱状图宽度
         data.setBarWidth(0.5f);
-        barChart_time.setData(data);
-        barChart_school.setData(data);
-        barChart_teacher.setData(data);
+        barChart.clear();
+        barChart.setData(data);
+        barChart.notifyDataSetChanged();
     }
+
+    /**
+     * @param xValues   X轴的值
+     * @param dataLists LinkedHashMap<String, List<Float>>
+     *                  key对应柱状图名字  List<Float> 对应每类柱状图的Y值
+     * @param colors
+     */
+    public void showBarChartMore(final List<String> xValues, LinkedHashMap<String, List<Float>> dataLists,
+                                 @ColorRes List<Integer> colors) {
+
+        List<IBarDataSet> dataSets = new ArrayList<>();
+        int currentPosition = 0;//用于柱状图颜色集合的index
+
+        for (LinkedHashMap.Entry<String, List<Float>> entry : dataLists.entrySet()) {
+            String name = entry.getKey();
+            List<Float> yValueList = entry.getValue();
+
+            List<BarEntry> entries = new ArrayList<>();
+
+            for (int i = 0; i < yValueList.size(); i++) {
+                entries.add(new BarEntry(i, yValueList.get(i)));
+            }
+            // 每一个BarDataSet代表一类柱状图
+            BarDataSet barDataSet = new BarDataSet(entries, name);
+            initBarDataSet(barDataSet, colors.get(currentPosition));
+            dataSets.add(barDataSet);
+
+            currentPosition++;
+        }
+
+        //X轴自定义值
+        xAxis.setValueFormatter(new IAxisValueFormatter() {
+            @Override
+            public String getFormattedValue(float value, AxisBase axis) {
+                if (xValues.size() > ((int) value)) {
+                    return xValues.get((int) value % xValues.size());
+                } else {
+                    return "";
+                }
+            }
+        });
+        //右侧Y轴自定义值
+        rightAxis.setValueFormatter(new IAxisValueFormatter() {
+            @Override
+            public String getFormattedValue(float value, AxisBase axis) {
+                return (int) (value) + "%";
+            }
+        });
+
+        BarData data = new BarData(dataSets);
+        barChart_teacher.clear();
+        barChart_teacher.setData(data);
+        barChart_teacher.notifyDataSetChanged();
+    }
+
 
     /**
      * 柱状图始化设置 一个BarDataSet 代表一列柱状图
@@ -208,7 +340,7 @@ public class GiveBookStatisticsFragment extends BaseFragment implements View.OnC
     /**
      * 初始化 柱状图
      */
-    private void initBarChart(BarChart barChart) {
+    private void initBarChart(BarChart barChart, final int index) {
         /***图表设置***/
         //背景颜色
         barChart.setBackgroundColor(getResources().getColor(R.color.app_bag));
@@ -236,7 +368,31 @@ public class GiveBookStatisticsFragment extends BaseFragment implements View.OnC
         xAxis.setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
-                return dateValueList.get((int) value).getSYearMonth();
+                if (1 == index) {
+                    if (tjTimeData.size() > ((int) value)) {
+
+                        return tjTimeData.get((int) value).getName();
+                    } else {
+                        return "";
+                    }
+                } else if (2 == index) {
+                    if (tjSchData.size() > ((int) value)) {
+
+                        return tjSchData.get((int) value).getName();
+                    } else {
+                        return "";
+                    }
+
+                } else {
+                    if (tjTeaData.size() > ((int) value)) {
+
+                        return tjTeaData.get((int) value).getName();
+                    } else {
+                        return "";
+                    }
+
+                }
+
             }
         });
         leftAxis = barChart.getAxisLeft();
@@ -279,21 +435,27 @@ public class GiveBookStatisticsFragment extends BaseFragment implements View.OnC
                 rbtn_tab_yy.setTextColor(getResources().getColor(R.color.white));
                 rbtn_tab_mm.setTextColor(getResources().getColor(R.color.text_main_3));
                 rbtn_tab_dd.setTextColor(getResources().getColor(R.color.text_main_3));
-                toastShow(rbtn_tab_yy.getText().toString());
+                //toastShow(rbtn_tab_yy.getText().toString());
+                dateType = 1;
+                getTimeData();
                 break;
 
             case R.id.rbtn_tab_mm:
                 rbtn_tab_mm.setTextColor(getResources().getColor(R.color.white));
                 rbtn_tab_yy.setTextColor(getResources().getColor(R.color.text_main_3));
                 rbtn_tab_dd.setTextColor(getResources().getColor(R.color.text_main_3));
-                toastShow(rbtn_tab_mm.getText().toString());
+                //toastShow(rbtn_tab_mm.getText().toString());
+                dateType = 2;
+                getTimeData();
                 break;
 
             case R.id.rbtn_tab_dd:
                 rbtn_tab_dd.setTextColor(getResources().getColor(R.color.white));
                 rbtn_tab_mm.setTextColor(getResources().getColor(R.color.text_main_3));
                 rbtn_tab_yy.setTextColor(getResources().getColor(R.color.text_main_3));
-                toastShow(rbtn_tab_dd.getText().toString());
+                //toastShow(rbtn_tab_dd.getText().toString());
+                dateType = 3;
+                getTimeData();
                 break;
 
             case R.id.tv_tj_chool:
@@ -303,34 +465,48 @@ public class GiveBookStatisticsFragment extends BaseFragment implements View.OnC
             case R.id.tj_time_book:
                 tj_time_book.setTextColor(getResources().getColor(R.color.white));
                 tj_time_people.setTextColor(getResources().getColor(R.color.text_main_3));
-                toastShow(tj_time_book.getText().toString());
+                //toastShow(tj_time_book.getText().toString());
+                statisticsTimeType = 1;
+                getTimeData();
                 break;
             case R.id.tj_time_people:
                 tj_time_people.setTextColor(getResources().getColor(R.color.white));
                 tj_time_book.setTextColor(getResources().getColor(R.color.text_main_3));
-                toastShow(tj_time_people.getText().toString());
+                //toastShow(tj_time_people.getText().toString());
+                statisticsTimeType = 2;
+                getTimeData();
                 break;
             // 学校
             case R.id.tj_school_book:
                 tj_school_book.setTextColor(getResources().getColor(R.color.white));
                 tj_school_people.setTextColor(getResources().getColor(R.color.text_main_3));
-                toastShow(tj_school_book.getText().toString());
+                //toastShow(tj_school_book.getText().toString());
+                statisticsSchType = 1;
+                getSchoolData();
                 break;
             case R.id.tj_school_people:
                 tj_school_people.setTextColor(getResources().getColor(R.color.white));
                 tj_school_book.setTextColor(getResources().getColor(R.color.text_main_3));
-                toastShow(tj_school_people.getText().toString());
+                //toastShow(tj_school_people.getText().toString());
+                statisticsSchType = 2;
+                getSchoolData();
                 break;
             // 教师
             case R.id.tj_teacher_book:
+//                showBarChart(dateValueList, "", getResources().getColor(R.color.chart_line_value));
                 tj_teacher_book.setTextColor(getResources().getColor(R.color.white));
                 tj_teacher_limit.setTextColor(getResources().getColor(R.color.text_main_3));
-                toastShow(tj_teacher_book.getText().toString());
+                //toastShow(tj_teacher_book.getText().toString());
+                statisticsTeaType = 1;
+                getTeaData();
                 break;
             case R.id.tj_teacher_limit:
                 tj_teacher_limit.setTextColor(getResources().getColor(R.color.white));
                 tj_teacher_book.setTextColor(getResources().getColor(R.color.text_main_3));
-                toastShow(tj_teacher_limit.getText().toString());
+                //toastShow(tj_teacher_limit.getText().toString());
+                statisticsTeaType = 2;
+                getTeaData();
+                showTeaLimit();
                 break;
 
             default:
@@ -339,18 +515,47 @@ public class GiveBookStatisticsFragment extends BaseFragment implements View.OnC
     }
 
     /**
+     * 显示申请上限
+     */
+    private void showTeaLimit() {
+        // 设置数据
+        //处理数据是 记得判断每条柱状图对应的数据集合 长度是否一致
+        LinkedHashMap<String, List<Float>> chartDataMap = new LinkedHashMap<>();
+        List<String> xValues = new ArrayList<>();
+        List<Float> yValue1 = new ArrayList<>();
+        List<Float> yValue2 = new ArrayList<>();
+        List<Integer> colors = Arrays.asList(
+                getResources().getColor(R.color.chart_line_value),
+                getResources().getColor(R.color.blue)
+        );
+
+        for (StatisticsCoordinateDataBean valueBean : tjTeaData) {
+            xValues.add(valueBean.getName());
+            yValue1.add((float) valueBean.getCount());
+        }
+        for (StatisticsCoordinateDataBean valueAvgBean : tjTeaMoreData) {
+            yValue2.add((float) valueAvgBean.getCount());
+        }
+        chartDataMap.put(getResources().getString(R.string.apply_limit_str), yValue2);
+        chartDataMap.put(getResources().getString(R.string.book_number_str), yValue1);
+
+        showBarChartMore(xValues, chartDataMap, colors);
+    }
+
+    /**
      * 显示学校选择对话框
      */
     private void showDialog() {
-        DialogItemAdapter adapter = new DialogItemAdapter(getActivity(), setDialogData());
+        DialogItemAdapter adapter = new DialogItemAdapter(getActivity(), SchoolNameData);
 
         AlertDialog alertDialog = new AlertDialog
                 .Builder(getActivity())
                 .setSingleChoiceItems(adapter, 0, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        tv_tj_chool.setText(listDialog.get(which));
+                        tv_tj_chool.setText(SchoolNameData.get(which));
                         dialog.dismiss();
+                        getTeaData();
                     }
                 }).create();
         alertDialog.show();
@@ -422,6 +627,202 @@ public class GiveBookStatisticsFragment extends BaseFragment implements View.OnC
         public class ViewHolder {
             public TextView tv_school;
         }
+    }
+
+    /***
+     * 获取赠书按时间统计数据
+     */
+    private void getTimeData() {
+        showProgressDialog();
+        addSubscription(apiStores.getGBookTimeStatistics(dateType, statisticsTimeType), new ApiCallback<HttpResponse<ArrayList<StatisticsCoordinateDataBean>>>() {
+            @Override
+            public void onSuccess(HttpResponse<ArrayList<StatisticsCoordinateDataBean>> model) {
+                // 通知html5页面进行刷新 购买完成 reflushData
+                if (model.isStatus()) {
+                    if (null != model.getData()) {
+                        // 分别取出时间、学校、教师的数据
+                        tjTimeData = model.getData();
+
+                        // 分别显示数据
+                        // 左下角角标
+                        String liftDownConner = "";
+                        if (1 == statisticsTimeType) {
+                            liftDownConner = getResources().getString(R.string.book_number_str);
+                        } else {
+                            liftDownConner = getResources().getString(R.string.people_number_str);
+                        }
+
+                        int barChartColor = getResources().getColor(R.color.chart_line_value);
+                        // 时间
+                        showBarChart(barChart_time, tjTimeData, liftDownConner, barChartColor);
+
+                    }
+                }
+
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                toastShow(msg);
+            }
+
+            @Override
+            public void onFinish() {
+                dismissProgressDialog();
+            }
+        });
+    }
+
+    /***
+     * 获取赠书按学校统计数据
+     */
+    private void getSchoolData() {
+        showProgressDialog();
+        addSubscription(apiStores.getGBookTimeStatistics(statisticsSchType), new ApiCallback<HttpResponse<ArrayList<StatisticsCoordinateDataBean>>>() {
+            @Override
+            public void onSuccess(HttpResponse<ArrayList<StatisticsCoordinateDataBean>> model) {
+                // 通知html5页面进行刷新 购买完成 reflushData
+                if (model.isStatus()) {
+                    if (null != model.getData()) {
+                        // 取出时学校的数据
+                        tjSchData = model.getData();
+                        // 分别显示数据
+                        // 左下角角标
+                        String liftDownConner = "";
+                        if (1 == statisticsSchType) {
+                            liftDownConner = getResources().getString(R.string.book_number_str);
+                        } else {
+                            liftDownConner = getResources().getString(R.string.people_number_str);
+                        }
+
+                        int barChartColor = getResources().getColor(R.color.chart_line_value);
+                        // 学校
+                        showBarChart(barChart_school, tjSchData, liftDownConner, barChartColor);
+
+                    }
+                }
+
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                toastShow(msg);
+            }
+
+            @Override
+            public void onFinish() {
+                dismissProgressDialog();
+            }
+        });
+    }
+
+    /***
+     * 获取样书按学校教师统计数据
+     */
+    private void getTeaData() {
+        if (1 == statisticsTeaType) {
+            // 单列
+            getTeaSingleData();
+        } else {
+            // 双列
+            getTeaDoubleData();
+        }
+
+    }
+
+    /**
+     * 获取教师按申请上限统计
+     */
+    private void getTeaDoubleData() {
+        showProgressDialog();
+        addSubscription(apiStores.getGBookTeaLimitStatistics(tv_tj_chool.getText().toString(), statisticsTeaType), new ApiCallback<HttpResponse<ArrayList<TeaLimitDataBean>>>() {
+            @Override
+            public void onSuccess(HttpResponse<ArrayList<TeaLimitDataBean>> model) {
+                // 通知html5页面进行刷新 购买完成 reflushData
+                if (model.isStatus()) {
+                    if (null != model.getData()) {
+                        //tjTeaMoreData  根据 statisticsTeaType 区分 是否多层显示
+                        // 分别取出时间、学校、教师的数据
+                        tjTeaData.clear();
+                        tjTeaMoreData.clear();
+                        StatisticsCoordinateDataBean teaData;
+                        StatisticsCoordinateDataBean teaLimitData;
+
+                        for (int i = 0; i < model.getData().size(); i++) {
+                            teaData = new StatisticsCoordinateDataBean();
+                            teaData.setName(model.getData().get(i).getName());
+                            teaData.setCount(model.getData().get(i).getCount());
+                            tjTeaData.add(teaData);
+
+                            teaLimitData = new StatisticsCoordinateDataBean();
+                            teaLimitData.setName(model.getData().get(i).getName());
+                            teaLimitData.setCount(model.getData().get(i).getTotal());
+                            tjTeaMoreData.add(teaLimitData);
+
+                        }
+                        showTeaLimit();
+                    }
+                }
+
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                toastShow(msg);
+            }
+
+            @Override
+            public void onFinish() {
+                dismissProgressDialog();
+            }
+        });
+
+    }
+
+    /**
+     * 获取教师按册数统计
+     */
+    private void getTeaSingleData() {
+        showProgressDialog();
+        addSubscription(apiStores.getGBookTeaStatistics(tv_tj_chool.getText().toString(), statisticsTeaType), new ApiCallback<HttpResponse<ArrayList<StatisticsCoordinateDataBean>>>() {
+            @Override
+            public void onSuccess(HttpResponse<ArrayList<StatisticsCoordinateDataBean>> model) {
+                // 通知html5页面进行刷新 购买完成 reflushData
+                if (model.isStatus()) {
+                    if (null != model.getData()) {
+                        //tjTeaMoreData  根据 statisticsTeaType 区分 是否多层显示
+                        // 分别取出时间、学校、教师的数据
+
+                        tjTeaData = model.getData();
+                        // 分别显示数据
+                        // 左下角角标
+                        String liftDownConner = "";
+                        if (1 == statisticsTeaType) {
+                            liftDownConner = getResources().getString(R.string.book_number_str);
+                        } else {
+                            liftDownConner = getResources().getString(R.string.apply_limit_str);
+                        }
+                        int barChartColor = getResources().getColor(R.color.chart_line_value);
+                        // 教师
+                        showBarChart(barChart_teacher, tjTeaData, liftDownConner, barChartColor);
+
+                    }
+                }
+
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                toastShow(msg);
+            }
+
+            @Override
+            public void onFinish() {
+                dismissProgressDialog();
+            }
+        });
+
+
     }
 
 }

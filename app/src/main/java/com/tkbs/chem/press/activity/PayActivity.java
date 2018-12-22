@@ -203,7 +203,7 @@ public class PayActivity extends BaseActivity implements View.OnClickListener, C
     private void payReadyWX() {
         // TODO 微信接口无法访问
         showProgressDialog();
-        addSubscription(apiStores.payReadyWeChat(guid), new ApiCallback<HttpResponse<RechargeResult.WeChat>>() {
+        addSubscription(apiStores.payReadyWeChat(0), new ApiCallback<HttpResponse<RechargeResult.WeChat>>() {
             @Override
             public void onSuccess(HttpResponse<RechargeResult.WeChat> model) {
                 if (model.isStatus()) {
@@ -272,7 +272,7 @@ public class PayActivity extends BaseActivity implements View.OnClickListener, C
      */
     private void payReadyAlipay() {
         showProgressDialog();
-        addSubscription(apiStores.payReadyAlipay(guid), new ApiCallback<HttpResponse<OrderInfo>>() {
+        addSubscription(apiStores.payReadyAlipay(0), new ApiCallback<HttpResponse<OrderInfo>>() {
             @Override
             public void onSuccess(HttpResponse<OrderInfo> model) {
                 if (model.isStatus()) {

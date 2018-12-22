@@ -157,10 +157,13 @@
     <string name="teacher_str">教师</string>
     <string name="year_str">年</string>
     <string name="month_str">月</string>
-    <string name="day_str">日</string>
+    <string name="week_str">周</string>
     <string name="book_number">册\n数</string>
+    <string name="book_number_str">册数</string>
     <string name="people_number">人\n数</string>
+    <string name="people_number_str">人数</string>
     <string name="apply_limit">申\n请\n上\n限</string>
+    <string name="apply_limit_str">申请上限</string>
     <string name="givebiik_tj_pbar_des">赠书上限%1$d本,还剩%2$d次机会</string>
     <string name="my_account">我的账户</string>
     <string name="please_pay">请支付</string>
@@ -172,6 +175,7 @@
     <string name="price_rmb">售价:%1$s 元</string>
     <string name="recharge_token">充值面值：%1$d 点</string>
     <string name="recharge_total">支出：￥%1$d 元</string>
+    <string name="copyright_str">Copyright©2018 \n化学工业出版社,All Rights Reserved.</string>
 
 
 </resources>

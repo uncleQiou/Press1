@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.base.BaseActivity;
+import com.tkbs.chem.press.bean.HttpResponse;
+import com.tkbs.chem.press.net.ApiCallback;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -38,13 +40,39 @@ public class MyAccountActivity extends BaseActivity implements View.OnClickListe
 
     @Override
     protected void initdata() {
-        tvMyToken.setText("898989888点");
-
+        tvMyToken.setText("0点");
+        getMyAccountBlance();
     }
 
     @Override
     protected void initTitle() {
 
+    }
+
+    /**
+     * 支付
+     */
+    private void getMyAccountBlance() {
+        showProgressDialog();
+        addSubscription(apiStores.myAccountBlance(), new ApiCallback<HttpResponse<Integer>>() {
+            @Override
+            public void onSuccess(HttpResponse<Integer> model) {
+                // 通知html5页面进行刷新 购买完成 reflushData
+                if (null != model.getData()) {
+                    tvMyToken.setText(model.getData() + "点");
+                }
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                toastShow(msg);
+            }
+
+            @Override
+            public void onFinish() {
+                dismissProgressDialog();
+            }
+        });
     }
 
     @OnClick({R.id.img_back, R.id.ll_recharge_record, R.id.ll_pay_record, R.id.tv_recharge})

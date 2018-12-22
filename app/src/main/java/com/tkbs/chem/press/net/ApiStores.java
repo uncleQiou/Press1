@@ -19,11 +19,14 @@ import com.tkbs.chem.press.bean.OrderInfoBean;
 import com.tkbs.chem.press.bean.RechargeConfigDataBean;
 import com.tkbs.chem.press.bean.RechargeRecordDataBean;
 import com.tkbs.chem.press.bean.RechargeResult;
+import com.tkbs.chem.press.bean.SBookAllStatisticsDataBena;
 import com.tkbs.chem.press.bean.SampleBookDetailDataBean;
 import com.tkbs.chem.press.bean.SampleBookItemDataBean;
 import com.tkbs.chem.press.bean.SampleBookManageDataBean;
 import com.tkbs.chem.press.bean.SearchHotKey;
 import com.tkbs.chem.press.bean.SecondClassifyDataBean;
+import com.tkbs.chem.press.bean.StatisticsCoordinateDataBean;
+import com.tkbs.chem.press.bean.TeaLimitDataBean;
 import com.tkbs.chem.press.bean.ThreeClassifyDataBena;
 import com.tkbs.chem.press.bean.UserBean;
 import com.tkbs.chem.press.bean.UserInfoManageDataBean;
@@ -322,11 +325,12 @@ public interface ApiStores {
     /**
      * 支付宝 支付
      *
-     * @param documentGUID
+     * @param price
      * @return
      */
-    @POST("pay/payReadyAlipay/{documentGUID}")
-    Observable<HttpResponse<OrderInfo>> payReadyAlipay(@Path("documentGUID") String documentGUID);
+//    @POST("pay/payReadyAlipay/{documentGUID}")
+    @POST("pay/payReadyAlipay")
+    Observable<HttpResponse<OrderInfo>> payReadyAlipay(@Query("price") int price);
 
     /***
      * 查询订单信息
@@ -340,11 +344,11 @@ public interface ApiStores {
     /**
      * 微信 支付
      *
-     * @param documentGuid
+     * @param price
      * @return
      */
     @POST("pay/payReadyWx")
-    Observable<HttpResponse<RechargeResult.WeChat>> payReadyWeChat(@Query("documentGuid") String documentGuid);
+    Observable<HttpResponse<RechargeResult.WeChat>> payReadyWeChat(@Query("price") int price);
 
     /**
      * 黑名单 0 正常 1 黑名单
@@ -492,6 +496,94 @@ public interface ApiStores {
     Observable<HttpResponse<ArrayList<ConsumptionRecordsDataBean>>> getConsumptionRecords(@Path("pageNum") int page,
                                                                                           @Query("state") int state);
 
+
+    /**
+     * 账户余额
+     */
+    @POST("mmMember/queryAccount")
+    Observable<HttpResponse<Integer>> myAccountBlance();
+
+    /**
+     * 申请样书 统计总值
+     */
+    @POST("statisticalAnalysis/querySampleBookStatistics")
+    Observable<HttpResponse<SBookAllStatisticsDataBena>> getSampleBookAllStatistics();
+
+    /**
+     * 申请样书 按时间统计
+     * dateType日期类型(1、周 2、月 3、年)
+     * statisticsType 统计类型（1、人数 2、册数）
+     */
+    @POST("statisticalAnalysis/querySampleBookStatisticsByDate/{dateType}/{statisticsType}")
+    Observable<HttpResponse<ArrayList<StatisticsCoordinateDataBean>>> getSBookTimeStatistics(@Path("dateType") int dateType,
+                                                                                             @Path("statisticsType") int statisticsType);
+
+    /**
+     * 申请样书 按学校统计
+     * <p/>
+     * statisticsType 统计类型（1、人数 2、册数）
+     */
+    @POST("statisticalAnalysis/querySampleBookStatisticsBySchool/{statisticsType}")
+    Observable<HttpResponse<ArrayList<StatisticsCoordinateDataBean>>> getSBookTimeStatistics(@Path("statisticsType") int statisticsType);
+
+    /**
+     * 申请样书 按教师统计
+     * <p/>
+     * statisticsType 统计类型（1、人数 2、册数）
+     */
+    @POST("statisticalAnalysis/querySampleBookStatisticsByTeacher/{schoolName}/{statisticsType}")
+    Observable<HttpResponse<ArrayList<StatisticsCoordinateDataBean>>> getSBookTeaStatistics(@Path("schoolName") String schoolName,
+                                                                                            @Path("statisticsType") int statisticsType);
+
+    /**
+     * 申请样书 按教师统计  申请上限
+     * <p/>
+     * statisticsType 统计类型（1、人数 2、册数）
+     */
+    @POST("statisticalAnalysis/querySampleBookStatisticsByTeacher/{schoolName}/{statisticsType}")
+    Observable<HttpResponse<ArrayList<TeaLimitDataBean>>> getSBookTeaLimitStatistics(@Path("schoolName") String schoolName,
+                                                                                     @Path("statisticsType") int statisticsType);
+
+    /**
+     * 赠书 统计总值
+     */
+    @POST("statisticalAnalysis/queryGiveBookStatistics")
+    Observable<HttpResponse<SBookAllStatisticsDataBena>> getGiveBookAllStatistics();
+
+    /**
+     * 赠书 按时间统计
+     * dateType日期类型(1、周 2、月 3、年)
+     * statisticsType 统计类型（1、人数 2、册数）
+     */
+    @POST("statisticalAnalysis/queryGiveBookStatisticsByDate/{dateType}/{statisticsType}")
+    Observable<HttpResponse<ArrayList<StatisticsCoordinateDataBean>>> getGBookTimeStatistics(@Path("dateType") int dateType,
+                                                                                             @Path("statisticsType") int statisticsType);
+
+    /**
+     * 赠书 按学校统计
+     * <p/>
+     * statisticsType 统计类型（1、人数 2、册数）
+     */
+    @POST("statisticalAnalysis/queryGiveBookStatisticsBySchool/{statisticsType}")
+    Observable<HttpResponse<ArrayList<StatisticsCoordinateDataBean>>> getGBookTimeStatistics(@Path("statisticsType") int statisticsType);
+
+    /**
+     * 赠书 按教师统计
+     * <p/>
+     * statisticsType 统计类型（1、人数 2、册数）
+     */
+    @POST("statisticalAnalysis/queryGiveBookStatisticsByTeacher/{schoolName}/{statisticsType}")
+    Observable<HttpResponse<ArrayList<StatisticsCoordinateDataBean>>> getGBookTeaStatistics(@Path("schoolName") String schoolName,
+                                                                                            @Path("statisticsType") int statisticsType);
+
+    /**
+     * 赠书 按教师统计  申请上限
+     * <p/>
+     * statisticsType 统计类型（1、人数 2、册数）
+     */
+    @POST("statisticalAnalysis/queryGiveBookStatisticsByTeacher/{schoolName}/{statisticsType}")
+    Observable<HttpResponse<ArrayList<TeaLimitDataBean>>> getGBookTeaLimitStatistics(@Path("schoolName") String schoolName,
+                                                                                     @Path("statisticsType") int statisticsType);
 
     /*************************************************************************************************************/
 

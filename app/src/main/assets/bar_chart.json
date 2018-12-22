@@ -31,44 +31,44 @@
         "sYearMonth": "2018-03"
       },
       {
-        "fValue": 14.4348,
-        "sYearMonth": "2017-12"
-      },
-      {
-        "fValue": 12.6504,
+        "fValue": 16.6504,
         "sYearMonth": "2017-09"
       },
 
       {
-        "fValue": 7.9092,
+        "fValue": 17.9092,
         "sYearMonth": "2017-06"
-      },
-
-      {
-        "fValue": 4.3995,
-        "sYearMonth": "2017-03"
       }
     ],
     "vtDateValueAvg": [
       {
-        "fValue": 0.95137,
-        "sYearMonth": "2017-03"
+        "fValue": 95.137,
+        "sYearMonth": "2018-03"
       },
       {
-        "fValue": 3.50875,
-        "sYearMonth": "2017-06"
-      },
-      {
-        "fValue": 4.62725,
-        "sYearMonth": "2017-09"
-      },
-      {
-        "fValue": 1.38761,
+        "fValue": 35.0875,
         "sYearMonth": "2017-12"
       },
       {
-        "fValue": 0.61198,
+        "fValue": 46.2725,
+        "sYearMonth": "2017-06"
+      },
+      {
+        "fValue": 13.8761,
         "sYearMonth": "2018-03"
+      },
+      {
+        "fValue": 61.198,
+        "sYearMonth": "2017-12"
+      },
+      {
+        "fValue": 66.504,
+        "sYearMonth": "2017-09"
+      },
+
+      {
+        "fValue": 79.092,
+        "sYearMonth": "2017-06"
       }
     ]
   }
