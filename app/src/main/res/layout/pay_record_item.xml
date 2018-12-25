@@ -41,7 +41,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_5dp"
-            android:text="100点"
+            android:text=""
             android:textColor="@color/text_main_6"
             android:textSize="@dimen/text_12sp" />
 
@@ -50,7 +50,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_5dp"
-            android:text="2018-01-01"
+            android:text=""
             android:textColor="@color/text_main_6"
             android:textSize="@dimen/text_12sp" />
     </LinearLayout>

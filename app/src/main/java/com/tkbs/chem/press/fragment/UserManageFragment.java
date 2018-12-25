@@ -19,11 +19,8 @@ import com.tkbs.chem.press.activity.UserManageActivity;
 import com.tkbs.chem.press.base.BaseFragment;
 import com.tkbs.chem.press.bean.HttpResponse;
 import com.tkbs.chem.press.bean.RechargeResult;
-import com.tkbs.chem.press.bean.SampleBookDetailDataBean;
-import com.tkbs.chem.press.bean.SampleBookManageDataBean;
 import com.tkbs.chem.press.bean.UserManageDataBean;
 import com.tkbs.chem.press.net.ApiCallback;
-import com.tkbs.chem.press.util.Config;
 import com.tkbs.chem.press.util.MessageEvent;
 
 import java.text.Collator;
@@ -40,7 +37,6 @@ import cn.lemon.view.adapter.RecyclerAdapter;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import de.greenrobot.event.ThreadMode;
-import retrofit2.http.Path;
 
 /**
  * Created by Administrator on 2018/10/17.
@@ -328,6 +324,7 @@ public class UserManageFragment extends BaseFragment implements View.OnClickList
                 tv_samplebook_num.setText(data.getSampleBookNumber() + "本");
                 tv_givebook_num.setText(data.getGiveBookNumber() + "本");
                 tv_black_list.setText(0 == data.getState() ? R.string.blacklist : R.string.remove_blacklist);
+                tv_give_book.setVisibility(data.isGiveBookBtnPermission() ? View.VISIBLE : View.GONE);
                 tv_give_book.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

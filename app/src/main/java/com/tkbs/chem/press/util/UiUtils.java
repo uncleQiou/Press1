@@ -2,6 +2,7 @@ package com.tkbs.chem.press.util;
 
 
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.telephony.TelephonyManager;
 import android.text.Html;
 import android.util.DisplayMetrics;
@@ -350,6 +351,32 @@ public class UiUtils {
                 }
             }
         }
+    }
+
+    /**
+     * 获取当前本地apk的版本
+     *
+     * @param mContext
+     * @return
+     */
+    public static int getVersionCode(Context mContext) {
+        int versionCode = 0;
+        try {
+            //获取软件版本号，对应AndroidManifest.xml下android:versionCode
+            versionCode = mContext.getPackageManager().
+                    getPackageInfo(mContext.getPackageName(), 0).versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return versionCode;
+    }
+
+    /**
+     * 判断指定名称的文件在SD卡上是否存在
+     */
+    public static boolean isExist(String path) {
+        File file = new File(path);
+        return file.exists();
     }
 
 

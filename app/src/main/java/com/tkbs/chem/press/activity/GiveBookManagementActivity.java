@@ -1,6 +1,5 @@
 package com.tkbs.chem.press.activity;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -19,7 +18,6 @@ import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.base.BaseActivity;
 import com.tkbs.chem.press.util.Config;
 import com.tkbs.chem.press.util.MessageEvent;
-import com.tkbs.chem.press.util.UiUtils;
 import com.tkbs.chem.press.view.ReWebChomeClient;
 
 import butterknife.BindView;

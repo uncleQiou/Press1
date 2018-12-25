@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.base.BaseActivity;
 import com.tkbs.chem.press.util.Config;
+import com.tkbs.chem.press.util.UiUtils;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -53,8 +54,10 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
 
     @Override
     protected void initdata() {
-        tvPhoneNumber.setText("15501016151");
-        tvVersion.setText("当前版本：V1.01");
+        String phone = preference.getString(Config.PHONE, "");
+        tvPhoneNumber.setText(phone);
+        String version = "当前版本：V" + UiUtils.getVersionCode(this);
+        tvVersion.setText(version);
         tvContact.setText("010-19980232");
         user_type = preference.getInt(Config.MEMBER_TYPE, 3);
         if (2 == user_type) {

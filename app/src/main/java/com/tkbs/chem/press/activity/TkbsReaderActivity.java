@@ -137,7 +137,7 @@ public class TkbsReaderActivity extends BaseActivity implements View.OnClickList
     }
 
     /**
-     * 获取目录数据
+     * 获取下载路径
      */
     private void resLoadPath() {
         showProgressDialog();
@@ -151,9 +151,10 @@ public class TkbsReaderActivity extends BaseActivity implements View.OnClickList
                     } else {
                         dismissProgressDialog();
                         downLoadBook(model.getData());
-//                        toastShow(model.getData());
                     }
 
+                } else {
+                    toastShow(model.getErrorDescription());
                 }
             }
 
@@ -178,7 +179,7 @@ public class TkbsReaderActivity extends BaseActivity implements View.OnClickList
     private void downLoadBook(String filePathStr) {
 //        filePathStr = "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1544000312107&di=9ad128d9e6117a8f0ced7c8e78ff1336&imgtype=0&src=http%3A%2F%2Fpic1.win4000.com%2Fwallpaper%2F6%2F589a7fca946fe.jpg%3Fdown";
         Logger.e(filePathStr);
-        filePath = Config.CIP_FILE_PATH + File.separator + bookId + ".tkbs";
+        filePath = Config.CIP_FILE_PATH + bookId + ".tkbs";
 //        filePath = Config.CIP_FILE_PATH + File.separator + bookId + ".jpg";
         if (isExist(filePath)) {
             // 已经下载 直接阅读
@@ -528,6 +529,7 @@ public class TkbsReaderActivity extends BaseActivity implements View.OnClickList
 
         @JavascriptInterface
         public void finshRead() {
+            // TODO 添加退出阅读时间
             finish();
         }
 

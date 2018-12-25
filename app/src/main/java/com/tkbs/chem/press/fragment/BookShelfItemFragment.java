@@ -6,7 +6,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Message;
 import android.support.v7.widget.GridLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,8 +34,13 @@ import com.tkbs.chem.press.bean.UserBean;
 import com.tkbs.chem.press.net.ApiCallback;
 import com.tkbs.chem.press.util.Config;
 import com.tkbs.chem.press.util.MessageEvent;
+import com.tkbs.chem.press.util.UiUtils;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.Collator;
 import java.text.RuleBasedCollator;
 import java.text.SimpleDateFormat;
@@ -52,6 +59,10 @@ import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import de.greenrobot.event.ThreadMode;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by Administrator on 2018/10/12.
@@ -97,6 +108,9 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
         EventBus.getDefault().register(this);
         ll_sort_edit = (LinearLayout) findViewById(R.id.ll_sort_edit);
         ll_sort_edit.setOnClickListener(this);
+        if (type == 2 || type == 4) {
+            ll_sort_edit.setVisibility(View.GONE);
+        }
         ll_bottom_edit = (LinearLayout) findViewById(R.id.ll_bottom_edit);
         ll_bottom_edit.setOnClickListener(this);
         bookShelfItemAdapter = new BookShelfItemAdapter(getActivity());
@@ -160,7 +174,7 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
                 break;
             case 2:
                 // 已购图书
-                tv_download.setVisibility(View.VISIBLE);
+                tv_download.setVisibility(View.GONE);
                 tv_delete.setText(R.string.str_delete);
                 break;
             case 3:
@@ -496,7 +510,7 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
                         deleteGiveBooks();
                         break;
                     case 2:
-                        // TODO 已购图书 没有删除接口
+                        //  已购图书 没有删除接口  隐藏按钮
 //                        getBuyedBookListData(isRefresh);
                         break;
                     case 3:
@@ -521,7 +535,7 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
                 setEditAllCheck();
                 break;
             case R.id.tv_download:
-                // TODO 需要校验是否已经下载过此书
+                //  需要校验是否已经下载过此书 取消在底部下载按钮
                 toastShow("下载");
                 break;
             default:
@@ -775,6 +789,7 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
 
             private CheckBox cb_select_item;
             private TextView tv_book_name;
+            private TextView tv_download;
             private TextView tv_book_page;
             private TextView tv_book_endtime;
             private TextView tv_buy_time;
@@ -793,18 +808,46 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
                 tv_buy_time = findViewById(R.id.tv_buy_time);
                 tv_book_endtime = findViewById(R.id.tv_book_endtime);
                 bookshelf_cover = findViewById(R.id.bookshelf_cover);
+                tv_download = findViewById(R.id.tv_download);
             }
 
             @Override
-            public void setData(SampleBookItemDataBean data) {
+            public void setData(final SampleBookItemDataBean data) {
                 super.setData(data);
                 tv_book_name.setText(data.getTitle());
                 tv_buy_time.setVisibility(View.GONE);
                 cb_select_item.setVisibility(editFlg ? View.VISIBLE : View.GONE);
                 cb_select_item.setChecked(data.isChecked());
-                // TODo  data？
-                tv_book_page.setText("页数：100 页");
-                tv_book_endtime.setText("截止时间：永久");
+                if (type == 2) {
+                    tv_download.setVisibility(View.VISIBLE);
+                    //  判断书籍是否可以下载
+                    String resPath = Config.CIP_FILE_PATH + data.getGuid() + ".tkbs";
+                    if (UiUtils.isExist(resPath)) {
+                        // 无需下载
+                        tv_download.setText(R.string.have_download);
+                        tv_download.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+
+                            }
+                        });
+                    } else {
+                        // 下载
+                        tv_download.setText(R.string.str_download);
+                        tv_download.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                // 下载
+                                resLoadPath(data.getGuid());
+                            }
+                        });
+                    }
+
+                }
+                tv_book_page.setText(String.format(context.getResources().
+                        getString(R.string.bookshelf_page), data.getPagenum()));
+                tv_book_endtime.setText(String.format(context.getResources().
+                        getString(R.string.bookshelf_limit), data.getTime_limit()));
                 Glide.with(context).load(data.getCover())
                         .apply(BaseApplication.options)
                         .into(bookshelf_cover);
@@ -851,5 +894,181 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
             this.name = name;
         }
     }
+
+    /**
+     * 获取下载路径
+     */
+    private void resLoadPath(final String bookId) {
+        showProgressDialog();
+        addSubscription(apiStores.getResDownLoadPath(bookId), new ApiCallback<HttpResponse<String>>() {
+            @Override
+            public void onSuccess(HttpResponse<String> model) {
+                if (model.isStatus()) {
+                    if ("".equals(model.getData())) {
+                        toastShow("暂无资源");
+                    } else {
+                        dismissProgressDialog();
+                        downLoadBook(model.getData(), bookId);
+//                        toastShow(model.getData());
+                    }
+
+                } else {
+                    toastShow(model.getErrorDescription());
+                }
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                toastShow(msg);
+            }
+
+            @Override
+            public void onFinish() {
+                dismissProgressDialog();
+            }
+        });
+
+    }
+
+    /**
+     * 下载
+     *
+     * @param filePathStr
+     */
+    private String filePath;
+
+    private void downLoadBook(String filePathStr, String bookId) {
+        Logger.e(filePathStr);
+        filePath = Config.CIP_FILE_PATH + bookId + ".tkbs";
+        if (UiUtils.isExist(filePath)) {
+            // 已经下载 直接阅读
+            toastShow("已经下载 直接阅读");
+            return;
+        }
+        Call<ResponseBody> call = apiStores.downloadFileWithUrl(filePathStr);
+        showProgressDialog("下载中...");
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, final Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    Log.d("TAG", "server contacted and has file");
+
+                    new Thread() {
+                        @Override
+                        public void run() {
+                            super.run();
+                            //发送通知，加入线程
+                            Message msg = handler.obtainMessage();
+                            //下载中
+                            msg.what = 10;
+                            //通知发送！
+                            handler.sendMessage(msg);
+                            boolean writtenToDisk = writeResponseBodyToDisk(response.body());
+                            if (writtenToDisk) {
+                                dismissProgressDialog();
+                            }
+//                            handler.removeMessages(msg.what);
+                            msg = handler.obtainMessage();
+                            //下载中
+                            msg.what = 100;
+                            //通知发送！
+                            handler.sendMessage(msg);
+                            Log.d("TAG", "file download was a success? " + writtenToDisk);
+                        }
+                    }.start();
+                } else {
+                    Log.d("TAG", "server contact failed");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e("TAG", "error");
+                dismissProgressDialog();
+            }
+        });
+
+
+    }
+
+    /**
+     * handler处理消息机制
+     */
+    protected Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message message) {
+            switch (message.what) {
+                case 1:
+//                    imgRefresh.setVisibility(View.VISIBLE);
+                    break;
+                case 10:
+                    showProgressDialog("loading...");
+                    break;
+                case 100:
+                    dismissProgressDialog();
+                    toastShow(R.string.download_done);
+                    handler.removeMessages(100);
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
+
+    /**
+     * 将下载的文件保存至手机
+     *
+     * @param body
+     * @return
+     */
+    private boolean writeResponseBodyToDisk(ResponseBody body) {
+        try {
+            //  change the file location/name according to your needs
+            File futureStudioIconFile = new File(filePath);
+
+            InputStream inputStream = null;
+            OutputStream outputStream = null;
+
+            try {
+                byte[] fileReader = new byte[4096];
+
+                long fileSize = body.contentLength();
+                long fileSizeDownloaded = 0;
+
+                inputStream = body.byteStream();
+                outputStream = new FileOutputStream(futureStudioIconFile);
+
+                while (true) {
+                    int read = inputStream.read(fileReader);
+
+                    if (read == -1) {
+                        break;
+                    }
+
+                    outputStream.write(fileReader, 0, read);
+
+                    fileSizeDownloaded += read;
+
+                    Log.d("TAG", "file download: " + fileSizeDownloaded + " of " + fileSize);
+                }
+
+                outputStream.flush();
+                return true;
+            } catch (IOException e) {
+                return false;
+            } finally {
+                if (inputStream != null) {
+                    inputStream.close();
+                }
+
+                if (outputStream != null) {
+                    outputStream.close();
+                }
+            }
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
 
 }

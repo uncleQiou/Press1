@@ -40,7 +40,7 @@ public class MyAccountActivity extends BaseActivity implements View.OnClickListe
 
     @Override
     protected void initdata() {
-        tvMyToken.setText("0点");
+        tvMyToken.setText("0CIP币");
         getMyAccountBlance();
     }
 
@@ -59,7 +59,7 @@ public class MyAccountActivity extends BaseActivity implements View.OnClickListe
             public void onSuccess(HttpResponse<Integer> model) {
                 // 通知html5页面进行刷新 购买完成 reflushData
                 if (null != model.getData()) {
-                    tvMyToken.setText(model.getData() + "点");
+                    tvMyToken.setText(model.getData() + "CIP币");
                 }
             }
 

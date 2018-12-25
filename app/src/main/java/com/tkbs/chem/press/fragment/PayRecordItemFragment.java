@@ -374,7 +374,7 @@ public class PayRecordItemFragment extends BaseFragment implements View.OnClickL
                 } else {
                     tv_go_pay.setVisibility(View.VISIBLE);
                 }
-                tv_book_value.setText(data.getPay_price() + "点");
+                tv_book_value.setText(data.getPay_price() + "CIP币");
                 tv_order_date.setText(TimeUtils.getTime(data.getCreate_date()));
                 tv_delete_order.setOnClickListener(new View.OnClickListener() {
                     @Override

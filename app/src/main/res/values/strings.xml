@@ -167,15 +167,18 @@
     <string name="givebiik_tj_pbar_des">赠书上限%1$d本,还剩%2$d次机会</string>
     <string name="my_account">我的账户</string>
     <string name="please_pay">请支付</string>
-    <string name="book_token_value">价格： %1$d 点</string>
-    <string name="book_token_balance">余额： %1$d 点</string>
+    <string name="book_token_value">价格： %1$d CIP币</string>
+    <string name="book_token_balance">余额： %1$d CIP币</string>
     <string name="go_recharge_str">去充值>></string>
-    <string name="sure_pay">确定支付： %1$d 点</string>
+    <string name="sure_pay">确定支付： %1$d CIP币</string>
     <string name="token_balance_noenough">余额不足</string>
     <string name="price_rmb">售价:%1$s 元</string>
-    <string name="recharge_token">充值面值：%1$d 点</string>
+    <string name="recharge_token">充值面值：%1$d CIP币</string>
     <string name="recharge_total">支出：￥%1$d 元</string>
     <string name="copyright_str">Copyright©2018 \n化学工业出版社,All Rights Reserved.</string>
+    <string name="have_download">已下载</string>
+    <string name="bookshelf_page">页数：%1$S 页</string>
+    <string name="bookshelf_limit">截止时间：%1$S</string>
 
 
 </resources>

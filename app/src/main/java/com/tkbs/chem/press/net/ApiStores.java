@@ -238,7 +238,7 @@ public interface ApiStores {
      * @param pageNum
      * @return
      */
-    @POST("sampleBook/{pageNum}/10")
+    @POST("sampleBook/queryFreeSampleBook/{pageNum}/10")
     Observable<HttpResponse<ArrayList<SampleBookItemDataBean>>> getSampleBookList(@Path("pageNum") int pageNum);
 
     /**

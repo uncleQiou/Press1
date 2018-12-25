@@ -21,9 +21,7 @@ import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import de.greenrobot.event.ThreadMode;
 
-/**
- * Created by Administrator on 2018/10/16.
- */
+
 public class SalesmanManageFragment extends BaseFragment {
     private ScrollIndicatorView manage_indicator;
     private TextView one_key_approve;

@@ -118,7 +118,7 @@ public class RechargeActivity extends BaseActivity implements View.OnClickListen
                 LinearLayout ll_recharge_item = (LinearLayout) rechargeItemView.findViewById(R.id.ll_recharge_item);
                 TextView tv_token_num = (TextView) rechargeItemView.findViewById(R.id.tv_token_num);
                 TextView tv_rmb_num = (TextView) rechargeItemView.findViewById(R.id.tv_rmb_num);
-                tv_token_num.setText(config.getFillValue() + "点");
+                tv_token_num.setText(config.getFillValue() + "CIP币");
                 String text_pay = String.format(getResources().getString(R.string.price_rmb), config.getPayPrice());
                 tv_rmb_num.setText(text_pay);
                 return rechargeItemView;

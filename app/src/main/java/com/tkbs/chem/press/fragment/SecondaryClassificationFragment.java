@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.tkbs.chem.press.R;
+import com.tkbs.chem.press.activity.BookDetailActivity;
 import com.tkbs.chem.press.activity.ThreeClassificActivity;
 import com.tkbs.chem.press.base.BaseApplication;
 import com.tkbs.chem.press.base.BaseFragment;
@@ -230,6 +231,30 @@ public class SecondaryClassificationFragment extends BaseFragment {
                     Glide.with(context).load(data.getResDocumentList().get(2).getCover())
                             .apply(BaseApplication.options)
                             .into(img_book_cover3);
+                    ll_book1.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(context, BookDetailActivity.class);
+                            intent.putExtra("guid", data.getResDocumentList().get(0).getGuid());
+                            context.startActivity(intent);
+                        }
+                    });
+                    ll_book2.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(context, BookDetailActivity.class);
+                            intent.putExtra("guid", data.getResDocumentList().get(1).getGuid());
+                            context.startActivity(intent);
+                        }
+                    });
+                    ll_book3.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(context, BookDetailActivity.class);
+                            intent.putExtra("guid", data.getResDocumentList().get(2).getGuid());
+                            context.startActivity(intent);
+                        }
+                    });
                 } else if (len == 2) {
                     ll_book1.setVisibility(View.VISIBLE);
                     ll_book2.setVisibility(View.VISIBLE);
@@ -242,6 +267,22 @@ public class SecondaryClassificationFragment extends BaseFragment {
                     Glide.with(context).load(data.getResDocumentList().get(1).getCover())
                             .apply(BaseApplication.options)
                             .into(img_book_cover2);
+                    ll_book1.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(context, BookDetailActivity.class);
+                            intent.putExtra("guid", data.getResDocumentList().get(0).getGuid());
+                            context.startActivity(intent);
+                        }
+                    });
+                    ll_book2.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(context, BookDetailActivity.class);
+                            intent.putExtra("guid", data.getResDocumentList().get(1).getGuid());
+                            context.startActivity(intent);
+                        }
+                    });
                 } else if (len == 1) {
                     ll_book1.setVisibility(View.VISIBLE);
                     ll_book2.setVisibility(View.GONE);
@@ -250,6 +291,14 @@ public class SecondaryClassificationFragment extends BaseFragment {
                     Glide.with(context).load(data.getResDocumentList().get(0).getCover())
                             .apply(BaseApplication.options)
                             .into(img_book_cover1);
+                    ll_book1.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(context, BookDetailActivity.class);
+                            intent.putExtra("guid", data.getResDocumentList().get(0).getGuid());
+                            context.startActivity(intent);
+                        }
+                    });
 
                 } else {
                     ll_book1.setVisibility(View.GONE);

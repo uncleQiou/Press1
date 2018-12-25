@@ -125,7 +125,7 @@
         android:text="@string/copyright_str"
         android:gravity="center"
         android:layout_weight="1"
-        android:textColor="@color/text_main_6"
+        android:textColor="@color/text_main_9"
         android:textSize="@dimen/text_14sp"
         android:background="@color/app_bag" />
 

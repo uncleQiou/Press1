@@ -223,9 +223,9 @@ public class DiscoverFragment extends BaseFragment {
                     intent.putExtra("guid", data.getRelationGuid());
                     context.startActivity(intent);
                 } else if (messageType == 6) {
-                    //6用户管理-用户详情页
+                    // 6用户管理-用户详情页
                 } else if (messageType == 7) {
-                    //7样书管理-当前用户的审批页
+                    // 7样书管理-当前用户的审批页
                 } else {
                     // 不跳转
                 }

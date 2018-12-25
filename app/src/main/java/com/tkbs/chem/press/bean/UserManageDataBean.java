@@ -32,6 +32,15 @@ public class UserManageDataBean {
     private int unPassNumber;
     private int sampleBookNumber;
     private int giveBookNumber;
+    private boolean giveBookBtnPermission;
+
+    public boolean isGiveBookBtnPermission() {
+        return giveBookBtnPermission;
+    }
+
+    public void setGiveBookBtnPermission(boolean giveBookBtnPermission) {
+        this.giveBookBtnPermission = giveBookBtnPermission;
+    }
 
     public String getUserGuid() {
         return userGuid;

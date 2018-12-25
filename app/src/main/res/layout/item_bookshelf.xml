@@ -32,6 +32,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="@dimen/margin_10dp"
+        android:layout_weight="1"
         android:orientation="vertical">
 
         <TextView
@@ -71,4 +72,19 @@
             android:textColor="@color/text_main_6"
             android:textSize="@dimen/text_12sp" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_download"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:visibility="gone"
+        android:background="@drawable/rounded_rectangle_blue"
+        android:paddingBottom="@dimen/margin_5dp"
+        android:paddingLeft="@dimen/margin_10dp"
+        android:paddingRight="@dimen/margin_10dp"
+        android:paddingTop="@dimen/margin_5dp"
+        android:text="@string/str_download"
+        android:textColor="@color/hg_app_main_color"
+        android:textSize="@dimen/text_15sp" />
 </LinearLayout>

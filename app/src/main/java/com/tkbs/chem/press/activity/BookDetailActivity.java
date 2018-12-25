@@ -266,14 +266,16 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
         // 根据上面发送过去的请求码来区别
         switch (requestCode) {
             case 886:
-                param3 = data.getStringExtra("PARAM3");
-                Intent intent = new Intent(BookDetailActivity.this, TkbsReaderActivity.class);
-                intent.putExtra("BookId", guid);
-                String resPath = Config.CIP_FILE_PATH + guid + ".tkbs";
-                intent.putExtra("isLoacRead", isExist(resPath));
-                intent.putExtra("PARAM3", param3);
-                intent.putExtra("isReadAll", isReadAll);
-                startActivity(intent);
+                if (data != null) {
+                    param3 = data.getStringExtra("PARAM3");
+                    Intent intent = new Intent(BookDetailActivity.this, TkbsReaderActivity.class);
+                    intent.putExtra("BookId", guid);
+                    String resPath = Config.CIP_FILE_PATH + guid + ".tkbs";
+                    intent.putExtra("isLoacRead", isExist(resPath));
+                    intent.putExtra("PARAM3", param3);
+                    intent.putExtra("isReadAll", isReadAll);
+                    startActivity(intent);
+                }
             default:
                 break;
         }

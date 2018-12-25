@@ -420,6 +420,9 @@ public class ThreeClassificActivity extends BaseActivity implements View.OnClick
             @Override
             public void onItemViewClick(ThreeClassifyDataBena data) {
                 super.onItemViewClick(data);
+                Intent intent = new Intent(context, BookDetailActivity.class);
+                intent.putExtra("guid", data.getGuid());
+                context.startActivity(intent);
 
             }
 

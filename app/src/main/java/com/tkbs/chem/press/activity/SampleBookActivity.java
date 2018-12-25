@@ -364,7 +364,7 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
                 myAdapter.notifyDataSetChanged();
                 break;
             case R.id.tv_approval:
-                toastShow("一键审批");
+                //toastShow("一键审批");
                 oneKeyApprove();
                 break;
             case R.id.ll_check_all:
@@ -440,14 +440,25 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
      * 按状态进行排序
      */
     private void sortByState() {
+        /**
+         * 0、已审核  2
+         * 1、未审核  1
+         * 2、未通过  3
+         */
         Collections.sort(bookList, new Comparator<SampleBookDetailDataBean>() {
             @Override
             public int compare(SampleBookDetailDataBean o1, SampleBookDetailDataBean o2) {
                 try {
-                    if (o1.getState() > o2.getState()) {
+                    if (o1.getState() == 1) {
                         return 1;
-                    } else if (o1.getState() < o2.getState()) {
+                    }
+                    if (o2.getState() == 1) {
+                        return 1;
+                    }
+                    if (o1.getState() > o2.getState()) {
                         return -1;
+                    } else if (o1.getState() < o2.getState()) {
+                        return 1;
                     } else {
                         return 0;
                     }
@@ -484,7 +495,7 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
                 try {
                     if (o1.getDegree() > o2.getDegree()) {
                         return 1;
-                    } else  {
+                    } else {
                         return -1;
                     }
                 } catch (Exception e) {
@@ -675,7 +686,7 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
                     }
                 } else {
                     Intent intent = new Intent(context, BookDetailActivity.class);
-                    intent.putExtra("guid", data.getGuid());
+                    intent.putExtra("guid", data.getDocumentGuid());
                     context.startActivity(intent);
                 }
             }
