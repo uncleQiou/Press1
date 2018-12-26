@@ -3,6 +3,7 @@ package com.tkbs.chem.press.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.icu.util.BuddhistCalendar;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -411,21 +412,9 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
             case 4:
                 // 业务员 我的图书
                 // TODO 业务员下载的图书
-                // 便利cip文件夹下所有tkbs文件
-                File cipDir = new File(Config.CIP_FILE_PATH);
-                if (cipDir.isDirectory()) {
-                    for (File file : cipDir.listFiles()) {
-                        String path = file.getAbsolutePath();
-                        if (path.endsWith(".jpg") || path.endsWith(".jpeg") || path.endsWith(".png")) {
-                            //list.add(path);
-                            Logger.e(path);
-                            String bID = path.substring(path.indexOf("CIP/") + 4, path.indexOf("."));
-                            Logger.e(bID);
-                        }
-                    }
-                }
-                toastShow("业务员我的图书");
-                recycler_bookshelf.dismissSwipeRefresh();
+                // 遍历cip文件夹下所有tkbs文件
+                getLocalBook();
+
                 break;
             case 5:
                 // 业务员 我的收藏
@@ -435,6 +424,45 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
                 break;
         }
 
+    }
+
+    /***
+     * 获取本地书籍
+     */
+    private void getLocalBook() {
+        // TODO  要资源接口
+        dataList = new ArrayList<>();
+        File cipDir = new File(Config.CIP_FILE_PATH);
+        if (cipDir.isDirectory()) {
+            for (File file : cipDir.listFiles()) {
+                String path = file.getAbsolutePath();
+                if (path.endsWith(".tkbs")) {
+                    String bID = path.substring(path.indexOf("CIP/") + 4, path.indexOf("."));
+                    SampleBookItemDataBean bookData = new SampleBookItemDataBean();
+                    bookData.setGuid(bID);
+                    bookData.setChecked(false);
+                    bookData.setAuthor("");
+                    bookData.setCover("");
+                    bookData.setDegree(1);
+                    bookData.setDocno("");
+                    bookData.setId(1);
+                    bookData.setPagenum("");
+                    bookData.setMetadata_xml("");
+                    bookData.setPrice(0);
+                    bookData.setPublish_time("");
+                    bookData.setTitle("");
+                    bookData.setTime_limit("永久");
+                    bookData.setShortdocno("");
+                    dataList.add(bookData);
+                }
+            }
+        }
+        bookShelfItemAdapter.clear();
+        bookShelfItemAdapter.addAll(dataList);
+        recycler_bookshelf.dismissSwipeRefresh();
+        recycler_bookshelf.getRecyclerView().scrollToPosition(0);
+        recycler_bookshelf.showNoMore();
+//        toastShow("业务员我的图书");
     }
 
 

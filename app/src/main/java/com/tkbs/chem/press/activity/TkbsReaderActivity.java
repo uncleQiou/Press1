@@ -374,6 +374,11 @@ public class TkbsReaderActivity extends BaseActivity implements View.OnClickList
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
+                if (null != param3 && param3.length() > 0) {
+                    tkbsReadWeb.loadUrl("javascript:getCataLog(" + param3 + ")");
+                } else {
+                    tkbsReadWeb.loadUrl("javascript:getCataLog(" + 1 + ")");
+                }
             }
         });
         tkbsReadWeb.setWebChromeClient(new ReWebChomeClient(this) {
@@ -401,9 +406,7 @@ public class TkbsReaderActivity extends BaseActivity implements View.OnClickList
                     + "&bookType=tkbs");
         }
 //        tkbsReadWeb.loadUrl("http://www.jiankeyan.com/Index/Index.aspx");
-        if (null != param3 && param3.length() > 0) {
-            tkbsReadWeb.loadUrl("javascript:getCataLog(" + param3 + ")");
-        }
+
 
     }
 

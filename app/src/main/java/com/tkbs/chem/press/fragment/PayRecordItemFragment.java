@@ -390,7 +390,7 @@ public class PayRecordItemFragment extends BaseFragment implements View.OnClickL
             public void onItemViewClick(ConsumptionRecordsDataBean data) {
                 super.onItemViewClick(data);
                 Intent intent = new Intent(context, BookDetailActivity.class);
-                intent.putExtra("guid", data.getDocument_guid());
+                intent.putExtra("guid", data.getGuid());
                 context.startActivity(intent);
             }
         }

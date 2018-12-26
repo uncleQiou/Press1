@@ -458,7 +458,7 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
                     if (o1.getState() > o2.getState()) {
                         return -1;
                     } else if (o1.getState() < o2.getState()) {
-                        return 1;
+                        return 11;
                     } else {
                         return 0;
                     }
