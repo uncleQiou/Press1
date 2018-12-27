@@ -269,6 +269,15 @@ public interface ApiStores {
     Observable<HttpResponse<Object>> deleteCollectionBook(@Query("guids") String[] guids);
 
     /**
+     * 书架 ——我的图书 业务员
+     *
+     * @param guids
+     * @return
+     */
+    @POST("resDocument/queryResDocumentByDocumentGuid")
+    Observable<HttpResponse<ArrayList<SampleBookItemDataBean>>> getMyBookSaleMan(@Query("guids") ArrayList<String> guids);
+
+    /**
      * 书架 ——已购图书 教师
      *
      * @param pageNum

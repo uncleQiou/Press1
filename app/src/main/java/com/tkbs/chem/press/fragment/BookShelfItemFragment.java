@@ -411,7 +411,7 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
                 break;
             case 4:
                 // 业务员 我的图书
-                // TODO 业务员下载的图书
+                //  业务员下载的图书
                 // 遍历cip文件夹下所有tkbs文件
                 getLocalBook();
 
@@ -429,40 +429,62 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
     /***
      * 获取本地书籍
      */
+    private ArrayList<String> localGuids;
+
     private void getLocalBook() {
-        // TODO  要资源接口
+        //   要资源接口
         dataList = new ArrayList<>();
+        localGuids = new ArrayList<>();
         File cipDir = new File(Config.CIP_FILE_PATH);
         if (cipDir.isDirectory()) {
             for (File file : cipDir.listFiles()) {
                 String path = file.getAbsolutePath();
                 if (path.endsWith(".tkbs")) {
                     String bID = path.substring(path.indexOf("CIP/") + 4, path.indexOf("."));
-                    SampleBookItemDataBean bookData = new SampleBookItemDataBean();
-                    bookData.setGuid(bID);
-                    bookData.setChecked(false);
-                    bookData.setAuthor("");
-                    bookData.setCover("");
-                    bookData.setDegree(1);
-                    bookData.setDocno("");
-                    bookData.setId(1);
-                    bookData.setPagenum("");
-                    bookData.setMetadata_xml("");
-                    bookData.setPrice(0);
-                    bookData.setPublish_time("");
-                    bookData.setTitle("");
-                    bookData.setTime_limit("永久");
-                    bookData.setShortdocno("");
-                    dataList.add(bookData);
+                    localGuids.add(bID);
                 }
             }
         }
-        bookShelfItemAdapter.clear();
-        bookShelfItemAdapter.addAll(dataList);
-        recycler_bookshelf.dismissSwipeRefresh();
-        recycler_bookshelf.getRecyclerView().scrollToPosition(0);
-        recycler_bookshelf.showNoMore();
+        getBookDetail(localGuids);
 //        toastShow("业务员我的图书");
+    }
+
+    /***
+     * 业务员已下载图书资源详情获取
+     */
+    private void getBookDetail(ArrayList<String> guids) {
+        showProgressDialog();
+        addSubscription(apiStores.getMyBookSaleMan(guids), new ApiCallback<HttpResponse<ArrayList<SampleBookItemDataBean>>>() {
+            @Override
+            public void onSuccess(HttpResponse<ArrayList<SampleBookItemDataBean>> model) {
+                if (model.isStatus()) {
+                    dataList = model.getData();
+                    page = 1;
+                    bookShelfItemAdapter.clear();
+                    bookShelfItemAdapter.addAll(dataList);
+                    recycler_bookshelf.dismissSwipeRefresh();
+                    recycler_bookshelf.getRecyclerView().scrollToPosition(0);
+                    recycler_bookshelf.showNoMore();
+                } else {
+                    recycler_bookshelf.dismissSwipeRefresh();
+                    toastShow(model.getErrorDescription());
+                }
+
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                toastShow(msg);
+            }
+
+            @Override
+            public void onFinish() {
+                recycler_bookshelf.dismissSwipeRefresh();
+                dismissProgressDialog();
+
+            }
+        });
+
     }
 
 

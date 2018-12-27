@@ -376,8 +376,6 @@ public class TkbsReaderActivity extends BaseActivity implements View.OnClickList
                 super.onPageFinished(view, url);
                 if (null != param3 && param3.length() > 0) {
                     tkbsReadWeb.loadUrl("javascript:getCataLog(" + param3 + ")");
-                } else {
-                    tkbsReadWeb.loadUrl("javascript:getCataLog(" + 1 + ")");
                 }
             }
         });

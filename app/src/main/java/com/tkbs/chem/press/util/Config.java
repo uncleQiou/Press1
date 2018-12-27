@@ -18,9 +18,13 @@ public class Config {
      */
     public static String API_SERVER = "http://192.168.113.147:8281/app/";
     /**
-     * 251
+     * 外网 170
      */
-//    public static String API_SERVER = "http://192.168.1.251:8281/app/";
+//    public static String API_SERVER = "http://59.110.229.170:8281/app/";
+    /**
+     * 外网 120
+     */
+//    public static String API_SERVER = "http://106.12.214.120:8281/app/";
 
     /**
      *  TKBS url
@@ -78,7 +82,7 @@ public class Config {
     public static final String CIP_FILE_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "CIP" + File.separator;
 
     //// KEY为自定义秘钥
-    public static final String  SMS_CUSTOM_KEY = "smsCustomKey";
+    public static final String SMS_CUSTOM_KEY = "smsCustomKey";
 
     // 试读页数
     public static final Integer DEFAULT_READ_PAGE = 17;

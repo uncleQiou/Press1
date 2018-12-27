@@ -3,6 +3,7 @@ package com.tkbs.chem.press.activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -209,6 +210,31 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         });
         oks.show(this);
 
+    }
+
+    //重写onkeydown方法
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        //点击的为返回键
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            exit();// 退出方法
+        }
+        return true;
+    }
+
+    private long time = 0;
+
+    //退出方法
+    private void exit() {
+        if (System.currentTimeMillis() - time > 2000) {
+            time = System.currentTimeMillis();
+            toastShow("再点击一次退出应用程序");
+        } else {
+            Intent intent = new Intent("com.tkbs.chem.press.base.BaseActivity");
+            intent.putExtra("closeAll", 1);
+            //发送广播
+            sendBroadcast(intent);
+        }
     }
 
     /**

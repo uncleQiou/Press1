@@ -216,7 +216,7 @@ public class MyOpinionActivity extends BaseActivity implements View.OnClickListe
                 finish();
                 break;
             case R.id.img_serache:
-                toastShow(R.string.my_opinion);
+//                toastShow(R.string.my_opinion);
                 startActivity(new Intent(MyOpinionActivity.this, PublishOpinionActivity.class));
                 break;
             case R.id.tv_send:
