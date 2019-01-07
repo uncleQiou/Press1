@@ -41,7 +41,8 @@
                 android:drawableLeft="@mipmap/mine_itea_phone"
                 android:text="  TEL: 1881111111"
                 android:textColor="@color/bg_main_white"
-                android:textSize="@dimen/text_15sp" />
+                android:textSize="@dimen/text_15sp"
+                android:visibility="gone" />
         </LinearLayout>
     </RelativeLayout>
 

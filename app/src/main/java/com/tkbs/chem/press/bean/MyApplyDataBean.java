@@ -15,8 +15,17 @@ public class MyApplyDataBean {
      */
 
     private String documentName;
+    private String documentGuid;
     private int state;
     private String createDate;
+
+    public String getDocumentGuid() {
+        return documentGuid;
+    }
+
+    public void setDocumentGuid(String documentGuid) {
+        this.documentGuid = documentGuid;
+    }
 
     public String getDocumentName() {
         return documentName;

@@ -109,6 +109,8 @@ public class TkbsReaderActivity extends BaseActivity implements View.OnClickList
             readHistory = preference.getInt(bookId, 0);
 //            toastShow("历史记录：" + readHistory);
         }
+        // 阅读页面 隐藏下载
+        tvDownload.setVisibility(View.GONE);
 //        imgBack.getBackground().setAlpha(100);
         imgBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -253,7 +255,7 @@ public class TkbsReaderActivity extends BaseActivity implements View.OnClickList
      */
     private boolean writeResponseBodyToDisk(ResponseBody body) {
         try {
-            // todo change the file location/name according to your needs
+            //  change the file location/name according to your needs
             File futureStudioIconFile = new File(filePath);
 
             InputStream inputStream = null;

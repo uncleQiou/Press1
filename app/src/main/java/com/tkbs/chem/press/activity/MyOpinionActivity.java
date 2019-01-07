@@ -174,12 +174,12 @@ public class MyOpinionActivity extends BaseActivity implements View.OnClickListe
                 if (isRefresh) {
                     page = 1;
                     myAdapter.clear();
-//                    myAdapter.addAll(getTestData());
+                    //myAdapter.addAll(getTestData());
                     recycler.dismissSwipeRefresh();
                     recycler.getRecyclerView().scrollToPosition(0);
                     recycler.showNoMore();
                 } else {
-//                    myAdapter.addAll(getTestData());
+                    //myAdapter.addAll(getTestData());
                     if (page >= 3) {
                         recycler.showNoMore();
                     }

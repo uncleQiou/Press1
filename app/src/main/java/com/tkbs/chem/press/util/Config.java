@@ -12,7 +12,7 @@ public class Config {
     /**
      * Xjl
      */
-//    public static String API_SERVER = "http://192.168.113.146:8281/app/";
+    //public static String API_SERVER = "http://192.168.113.146:8281/app/";
     /**
      * Zmy
      */

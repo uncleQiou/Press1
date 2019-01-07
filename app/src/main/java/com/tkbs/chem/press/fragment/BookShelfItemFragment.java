@@ -873,7 +873,7 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
                     //  判断书籍是否可以下载
                     String resPath = Config.CIP_FILE_PATH + data.getGuid() + ".tkbs";
                     if (UiUtils.isExist(resPath)) {
-                        // 无需下载
+                        // 无需下载  TODO 显示删除
                         tv_download.setText(R.string.have_download);
                         tv_download.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -896,6 +896,7 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
                 }
                 tv_book_page.setText(String.format(context.getResources().
                         getString(R.string.bookshelf_page), data.getPagenum()));
+                tv_book_endtime.setVisibility(type == 3 ? View.GONE : View.VISIBLE);
                 tv_book_endtime.setText(String.format(context.getResources().
                         getString(R.string.bookshelf_limit), data.getTime_limit()));
                 Glide.with(context).load(data.getCover())

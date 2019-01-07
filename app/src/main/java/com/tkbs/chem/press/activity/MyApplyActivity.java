@@ -1,6 +1,7 @@
 package com.tkbs.chem.press.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.GridLayoutManager;
@@ -241,6 +242,9 @@ public class MyApplyActivity extends BaseActivity implements View.OnClickListene
             @Override
             public void onItemViewClick(MyApplyDataBean data) {
                 super.onItemViewClick(data);
+                Intent intent = new Intent(context, BookDetailActivity.class);
+                intent.putExtra("guid", data.getDocumentGuid());
+                context.startActivity(intent);
 
             }
 

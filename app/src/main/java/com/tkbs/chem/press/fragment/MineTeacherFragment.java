@@ -80,10 +80,10 @@ public class MineTeacherFragment extends BaseFragment implements View.OnClickLis
      * 设置用户数据
      */
     private void setUserData() {
-        String name = preference.getString(Config.NICK_NAME, "");
-        if (name.length() == 0) {
-            name = preference.getString(Config.REAL_NAME, "");
-        }
+//        String name = preference.getString(Config.NICK_NAME, "");
+//        if (name.length() == 0) {
+//        }
+        String name = preference.getString(Config.REAL_NAME, "");
         tv_my_name.setText(name);
         tv_phone.setText(preference.getString(Config.PHONE, ""));
     }
@@ -107,12 +107,12 @@ public class MineTeacherFragment extends BaseFragment implements View.OnClickLis
                 getActivity().startActivity(new Intent(getActivity(), MyOpinionActivity.class));
                 break;
             case R.id.ll_personal_customization:
-                toastShow(R.string.personal_custom);
+//                toastShow(R.string.personal_custom);
                 getActivity().startActivity(new Intent(getActivity(), PersonalTailorActivity.class));
 //                getActivity().startActivity(new Intent(getActivity(), MyCustomizedActivity.class));
                 break;
             case R.id.ll_my_bookshelf:
-                toastShow(R.string.my_bookshelf);
+//                toastShow(R.string.my_bookshelf);
                 homeInterface.GoTOBookShelf();
 
                 break;
