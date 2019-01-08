@@ -20,6 +20,7 @@ import com.tkbs.chem.press.base.BaseFragment;
 import com.tkbs.chem.press.bean.HttpResponse;
 import com.tkbs.chem.press.bean.RechargeResult;
 import com.tkbs.chem.press.bean.UserManageDataBean;
+import com.tkbs.chem.press.bean.UserManageNewDataBean;
 import com.tkbs.chem.press.net.ApiCallback;
 import com.tkbs.chem.press.util.MessageEvent;
 
@@ -28,6 +29,7 @@ import java.text.RuleBasedCollator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Locale;
 
 import cn.lemon.view.RefreshRecyclerView;
@@ -51,11 +53,12 @@ public class UserManageFragment extends BaseFragment implements View.OnClickList
     private TextView tv_sort_state;
     private ImageView img_sort_state;
 
-    private ArrayList<UserManageDataBean> userList;
+    private List<UserManageDataBean> userList;
 
     private UserManageAdapter myAdapter;
     private int page = 1;
     private Handler mHandler;
+    private boolean isCanGiveBook;
 
     @Override
     protected View getPreviewLayout(LayoutInflater inflater, ViewGroup container) {
@@ -126,23 +129,24 @@ public class UserManageFragment extends BaseFragment implements View.OnClickList
 
     private void getUserList(final boolean isRefresh) {
         showProgressDialog();
-        addSubscription(apiStores.UserManageDataList(page), new ApiCallback<HttpResponse<ArrayList<UserManageDataBean>>>() {
+        addSubscription(apiStores.UserManageDataList(page), new ApiCallback<HttpResponse<UserManageNewDataBean>>() {
             @Override
-            public void onSuccess(HttpResponse<ArrayList<UserManageDataBean>> model) {
+            public void onSuccess(HttpResponse<UserManageNewDataBean> model) {
                 if (model.isStatus()) {
+                    isCanGiveBook = model.getData().isGiveBookBtnPermission();
                     if (isRefresh) {
                         page = 1;
-                        userList = model.getData();
+                        userList = model.getData().getList();
                         myAdapter.clear();
                         myAdapter.addAll(userList);
                         recycler.dismissSwipeRefresh();
                         recycler.getRecyclerView().scrollToPosition(0);
                         recycler.showNoMore();
                     } else {
-                        userList.addAll(model.getData());
-                        myAdapter.addAll(model.getData());
+                        userList.addAll(model.getData().getList());
+                        myAdapter.addAll(model.getData().getList());
                     }
-                    if (model.getData().size() < 10) {
+                    if (model.getData().getList().size() < 10) {
                         recycler.showNoMore();
                     }
                 } else {
@@ -324,17 +328,30 @@ public class UserManageFragment extends BaseFragment implements View.OnClickList
                 tv_samplebook_num.setText(data.getSampleBookNumber() + "本");
                 tv_givebook_num.setText(data.getGiveBookNumber() + "本");
                 tv_black_list.setText(0 == data.getState() ? R.string.blacklist : R.string.remove_blacklist);
-                tv_give_book.setVisibility(data.isGiveBookBtnPermission() ? View.VISIBLE : View.GONE);
-                tv_give_book.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        toastShow(R.string.give_book1);
-                        Intent intent = new Intent(getActivity(), GiveBookManagementActivity.class);
-                        intent.putExtra("tName", data.getUsername());
-                        intent.putExtra("tGuid", data.getUserGuid());
-                        getActivity().startActivity(intent);
-                    }
-                });
+                // 当赠书达到上限的时候 按钮 由隐藏 变为灰色无点击事件
+                if (!isCanGiveBook){
+                    tv_give_book.setBackground(getResources().getDrawable(R.drawable.rounded_rectangle_blue));
+                    tv_give_book.setTextColor(getResources().getColor(R.color.hg_app_main_color));
+                    tv_give_book.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(getActivity(), GiveBookManagementActivity.class);
+                            intent.putExtra("tName", data.getUsername());
+                            intent.putExtra("tGuid", data.getUserGuid());
+                            getActivity().startActivity(intent);
+                        }
+                    });
+                }else {
+                    tv_give_book.setBackground(getResources().getDrawable(R.drawable.rounded_rectangle_gray));
+                    tv_give_book.setTextColor(getResources().getColor(R.color.text_main_6));
+                    tv_give_book.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                        }
+                    });
+                }
+                //tv_give_book.setVisibility(data.isGiveBookBtnPermission() ? View.VISIBLE : View.GONE);
+
                 tv_black_list.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

@@ -31,6 +31,7 @@ import com.tkbs.chem.press.bean.ThreeClassifyDataBena;
 import com.tkbs.chem.press.bean.UserBean;
 import com.tkbs.chem.press.bean.UserInfoManageDataBean;
 import com.tkbs.chem.press.bean.UserManageDataBean;
+import com.tkbs.chem.press.bean.UserManageNewDataBean;
 
 import java.util.ArrayList;
 
@@ -158,7 +159,7 @@ public interface ApiStores {
      * @return
      */
     @POST("mmMember/queryMemberList/{pageNum}/10")
-    Observable<HttpResponse<ArrayList<UserManageDataBean>>> UserManageDataList(@Path("pageNum") int page);
+    Observable<HttpResponse<UserManageNewDataBean>> UserManageDataList(@Path("pageNum") int page);
 
 //    /**
 //     * 用户管理——用户信息 废弃
@@ -193,8 +194,9 @@ public interface ApiStores {
      * @param guid
      * @return
      */
-    @POST("giveBook/queryGiveBookBySaleMan/{memberGuid}")
-    Observable<HttpResponse<ArrayList<GiveBookListBean>>> GiveBookList(@Path("memberGuid") String guid);
+    @POST("giveBook/queryGiveBookBySaleMan/{pageNum}/10/{memberGuid}")
+    Observable<HttpResponse<ArrayList<GiveBookListBean>>> GiveBookList(@Path("memberGuid") String guid,
+                                                                       @Path("pageNum") int pageNum);
 
 //    /**
 //     * 用户管理——样书清单 废弃
@@ -211,8 +213,9 @@ public interface ApiStores {
      * @param guid
      * @return
      */
-    @POST("sampleBook/querySampleBookBySaleMan/{memberGuid}")
-    Observable<HttpResponse<ArrayList<GiveBookListBean>>> SampleBookList(@Path("memberGuid") String guid);
+    @POST("sampleBook/querySampleBookBySaleMan/{pageNum}/10/{memberGuid}")
+    Observable<HttpResponse<ArrayList<GiveBookListBean>>> SampleBookList(@Path("memberGuid") String guid,
+                                                                         @Path("pageNum") int pageNum);
 
 //    /**
 //     * 样书审核  废弃

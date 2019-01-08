@@ -76,8 +76,15 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
     @Override
     protected void initdata() {
-        edUsername.setText("xx000001");
-        edPassword.setText("1");
+        // 146 ywy
+        //edUsername.setText("xx000001");
+        //edPassword.setText("1");
+        // 147 ywy
+        edUsername.setText("hhd");
+        edPassword.setText("111111");
+        // 147 js
+        //edUsername.setText("he11");
+        //edPassword.setText("he1111");
         settingView();
     }
 

@@ -80,7 +80,7 @@ public class SampleBookListFragment extends BaseFragment {
 
     private void getSampleBookList(final boolean isRefresh) {
         showProgressDialog();
-        addSubscription(apiStores.SampleBookList(guid), new ApiCallback<HttpResponse<ArrayList<GiveBookListBean>>>() {
+        addSubscription(apiStores.SampleBookList(guid,page), new ApiCallback<HttpResponse<ArrayList<GiveBookListBean>>>() {
             @Override
             public void onSuccess(HttpResponse<ArrayList<GiveBookListBean>> model) {
                 if (model.isStatus()) {

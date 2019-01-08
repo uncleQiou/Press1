@@ -69,7 +69,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="@dimen/margin_10dp"
-            android:text="@string/text_bookcity_classfy"
+            android:text="   "
+            android:drawableLeft="@mipmap/nav_icon_classification"
             android:textColor="@color/text_main_3"
             android:textSize="@dimen/text_18sp" />
     </LinearLayout>

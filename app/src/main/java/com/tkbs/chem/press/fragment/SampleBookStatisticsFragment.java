@@ -196,7 +196,7 @@ public class SampleBookStatisticsFragment extends BaseFragment implements View.O
                         // 分别显示数据
                         // 左下角角标
                         String liftDownConner = "";
-                        if (1 == statisticsTimeType) {
+                        if (2 == statisticsTimeType) {
                             liftDownConner = getResources().getString(R.string.book_number_str);
                         } else {
                             liftDownConner = getResources().getString(R.string.people_number_str);
@@ -239,7 +239,7 @@ public class SampleBookStatisticsFragment extends BaseFragment implements View.O
                         // 分别显示数据
                         // 左下角角标
                         String liftDownConner = "";
-                        if (1 == statisticsSchType) {
+                        if (2 == statisticsSchType) {
                             liftDownConner = getResources().getString(R.string.book_number_str);
                         } else {
                             liftDownConner = getResources().getString(R.string.people_number_str);
@@ -585,7 +585,7 @@ public class SampleBookStatisticsFragment extends BaseFragment implements View.O
                 tj_time_book.setTextColor(getResources().getColor(R.color.white));
                 tj_time_people.setTextColor(getResources().getColor(R.color.text_main_3));
                 //toastShow(tj_time_book.getText().toString());
-                statisticsTimeType = 1;
+                statisticsTimeType = 2;
                 getTimeData();
                 break;
             case R.id.tj_time_people:
@@ -593,7 +593,7 @@ public class SampleBookStatisticsFragment extends BaseFragment implements View.O
                 tj_time_people.setTextColor(getResources().getColor(R.color.white));
                 tj_time_book.setTextColor(getResources().getColor(R.color.text_main_3));
                 //toastShow(tj_time_people.getText().toString());
-                statisticsTimeType = 2;
+                statisticsTimeType = 1;
                 getTimeData();
                 break;
             // 学校
@@ -602,7 +602,7 @@ public class SampleBookStatisticsFragment extends BaseFragment implements View.O
                 tj_school_book.setTextColor(getResources().getColor(R.color.white));
                 tj_school_people.setTextColor(getResources().getColor(R.color.text_main_3));
                 //toastShow(tj_school_book.getText().toString());
-                statisticsSchType = 1;
+                statisticsSchType = 2;
                 getSchoolData();
                 break;
             case R.id.tj_school_people:
@@ -610,7 +610,7 @@ public class SampleBookStatisticsFragment extends BaseFragment implements View.O
                 tj_school_people.setTextColor(getResources().getColor(R.color.white));
                 tj_school_book.setTextColor(getResources().getColor(R.color.text_main_3));
                 //toastShow(tj_school_people.getText().toString());
-                statisticsSchType = 2;
+                statisticsSchType = 1;
                 getSchoolData();
                 break;
             // 教师
