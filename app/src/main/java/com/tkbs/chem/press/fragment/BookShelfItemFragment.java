@@ -185,9 +185,12 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
                 break;
             case 4:
                 // 业务员 我的图书
+//                tv_download.setVisibility(View.GONE);
+//                tv_delete.setText(R.string.str_delete);
+//                toastShow("业务员我的图书");
                 tv_download.setVisibility(View.GONE);
-                tv_delete.setText(R.string.str_delete);
-                toastShow("业务员我的图书");
+                tv_delete.setText(R.string.delete_collect); tv_download.setVisibility(View.GONE);
+                tv_delete.setText(R.string.delete_collect);
                 break;
             case 5:
                 tv_download.setVisibility(View.GONE);
@@ -413,8 +416,8 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
                 // 业务员 我的图书
                 //  业务员下载的图书
                 // 遍历cip文件夹下所有tkbs文件
-                getLocalBook();
-
+                //getLocalBook();
+                getCollectionBookListData(isRefresh);
                 break;
             case 5:
                 // 业务员 我的收藏

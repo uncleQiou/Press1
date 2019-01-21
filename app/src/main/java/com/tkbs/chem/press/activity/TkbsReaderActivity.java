@@ -81,6 +81,10 @@ public class TkbsReaderActivity extends BaseActivity implements View.OnClickList
                     toastShow(R.string.download_done);
                     handler.removeMessages(100);
                     break;
+                case 1000:
+                    //阅读时长
+                    addReadTime();
+                    break;
                 default:
                     break;
             }
@@ -136,6 +140,32 @@ public class TkbsReaderActivity extends BaseActivity implements View.OnClickList
     @Override
     protected void initTitle() {
 
+    }
+    /**
+     * 添加阅读记录
+     */
+    private void addReadTime(){
+        //showProgressDialog();
+        addSubscription(apiStores.addBookReadTIme(bookId), new ApiCallback<HttpResponse<Object>>() {
+            @Override
+            public void onSuccess(HttpResponse<Object> model) {
+                if (model.isStatus()) {
+                   handler.sendEmptyMessageDelayed(1000,60000);
+                } else {
+                    toastShow(model.getErrorDescription());
+                }
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                toastShow(msg);
+            }
+
+            @Override
+            public void onFinish() {
+                dismissProgressDialog();
+            }
+        });
     }
 
     /**
@@ -354,6 +384,7 @@ public class TkbsReaderActivity extends BaseActivity implements View.OnClickList
                 showProgressDialog();
                 err_url = url;
                 imgRefresh.setVisibility(View.GONE);
+                handler.sendEmptyMessage(1000);
             }
 
             @Override
@@ -455,6 +486,7 @@ public class TkbsReaderActivity extends BaseActivity implements View.OnClickList
             tkbsReadWeb.destroy();
             tkbsReadWeb = null;
         }
+        handler.removeMessages(1000);
         super.onDestroy();
     }
 

@@ -46,6 +46,11 @@ public class BookShelfFragment extends BaseFragment {
         setContentView(R.layout.fragment_book_shelf);
         bookSelfIndicator = (ScrollIndicatorView) findViewById(R.id.book_shelf_indicator);
         bookShelfViewPager = (ViewPager) findViewById(R.id.book_shelf_viewPager);
+        if (user_type == 2){
+            bookSelfIndicator.setVisibility(View.GONE);
+        }else {
+            bookSelfIndicator.setVisibility(View.VISIBLE);
+        }
         float unSelectSize = 12;
         float selectSize = unSelectSize * 1.3f;
         int selectColor = getResources().getColor(R.color.hg_app_main_color);
@@ -77,7 +82,7 @@ public class BookShelfFragment extends BaseFragment {
         public int getCount() {
             //  根据身份 教师 4 业务员 2
             if (2 == user_type) {
-                return 2;
+                return 1;
             } else {
                 return 4;
             }
@@ -92,7 +97,8 @@ public class BookShelfFragment extends BaseFragment {
             TextView textView = (TextView) convertView;
             if (2 == user_type) {
                 if (position == 0) {
-                    textView.setText(R.string.bf_my_book);
+                    //textView.setText(R.string.bf_my_book);
+                    textView.setText(R.string.bf_collect_book);
                 } else if (position == 1) {
                     textView.setText(R.string.bf_collect_book);
                 }

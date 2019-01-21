@@ -596,6 +596,12 @@ public interface ApiStores {
     @POST("statisticalAnalysis/queryGiveBookStatisticsByTeacher/{schoolName}/{statisticsType}")
     Observable<HttpResponse<ArrayList<TeaLimitDataBean>>> getGBookTeaLimitStatistics(@Path("schoolName") String schoolName,
                                                                                      @Path("statisticsType") int statisticsType);
+    /**
+     * 添加阅读时长
+     *
+     */
+    @POST("read/readtime/{documentGuid}")
+    Observable<HttpResponse<Object>> addBookReadTIme(@Path("documentGuid") String documentGuid);
 
     /*************************************************************************************************************/
 

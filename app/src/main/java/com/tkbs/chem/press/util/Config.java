@@ -16,7 +16,16 @@ public class Config {
     /**
      * Zmy
      */
-    public static String API_SERVER = "http://192.168.113.147:8281/app/";
+    //public static String API_SERVER = "http://192.168.113.147:8281/app/";
+            //105
+    public static String API_SERVER = "http://192.168.1.105:8281/app/";
+    //public static String API_SERVER = "http://192.168.1.103:8281/app/";
+
+    /**
+     * sitao
+     */
+    //public static String API_SERVER = "http://192.168.2.12:8281/app/";
+
     /**
      * 外网 170
      */
