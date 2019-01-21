@@ -12,8 +12,18 @@ import com.tkbs.chem.press.base.BaseActivity;
 import com.tkbs.chem.press.util.Config;
 import com.tkbs.chem.press.util.UiUtils;
 
+import java.util.HashMap;
+
 import butterknife.BindView;
 import butterknife.OnClick;
+import cn.sharesdk.framework.Platform;
+import cn.sharesdk.framework.PlatformActionListener;
+import cn.sharesdk.onekeyshare.OnekeyShare;
+import cn.sharesdk.onekeyshare.ShareContentCustomizeCallback;
+import cn.sharesdk.sina.weibo.SinaWeibo;
+import cn.sharesdk.tencent.qq.QQ;
+import cn.sharesdk.wechat.friends.Wechat;
+import cn.sharesdk.wechat.moments.WechatMoments;
 
 public class SettingActivity extends BaseActivity implements View.OnClickListener {
 
@@ -92,7 +102,8 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 startActivityForResult(new Intent(SettingActivity.this, LoginActivity.class), Config.ACCOUNT_SWITCHING);
                 break;
             case R.id.ll_change_password:
-                startActivity(new Intent(SettingActivity.this, ChangePasswordWebActivity.class));
+//                startActivity(new Intent(SettingActivity.this, ChangePasswordWebActivity.class));
+                showShare();
                 break;
             default:
                 break;
@@ -112,5 +123,71 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                     break;
             }
         }
+    }
+
+    private void showShare() {
+        OnekeyShare oks = new OnekeyShare();
+        //关闭sso授权
+//        oks.disableSSOWhenAuthorize();
+        //设置一个总开关，用于在分享前若需要授权，则禁用sso功能  添加这个才成功
+        oks.disableSSOWhenAuthorize();
+        // title标题，微信、QQ和QQ空间等平台使用
+        oks.setTitle("分享测试");
+        // titleUrl QQ和QQ空间跳转链接
+        oks.setTitleUrl("http://sharesdk.cn");
+        // text是分享文本，所有平台都需要这个字段
+        oks.setText("我是分享文本");
+        // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
+        oks.setImagePath("/sdcard/test.jpg");//确保SDcard下面存在此张图片
+        // url在微信、微博，Facebook等平台中使用
+        oks.setUrl("http://sharesdk.cn");
+        // comment是我对这条分享的评论，仅在人人网使用
+        oks.setComment("我是测试评论文本");
+
+        // 启动分享GUI
+        oks.setShareContentCustomizeCallback(new ShareContentCustomizeCallback() {
+            @Override
+            public void onShare(Platform platform, cn.sharesdk.framework.Platform.ShareParams paramsToShare) {
+                if (Wechat.NAME.equals(platform.getName()) ||
+                        WechatMoments.NAME.equals(platform.getName())) {
+                    paramsToShare.setShareType(Platform.SHARE_WEBPAGE);
+                    paramsToShare.setUrl("http://www.xianzhiwang.cn/");
+                    paramsToShare.setText("微信测试微信测试");
+                    paramsToShare.setImageUrl("http://221.122.68.72:8070/webFile/column/20181008183210912495.jpg");
+                    paramsToShare.setTitle("微信测试能不能行啦还");
+                }
+                if (SinaWeibo.NAME.equals(platform.getName())) {
+                    paramsToShare.setText("微博微博微博测试");
+                    paramsToShare.setUrl("http://www.xianzhiwang.cn/");
+                    paramsToShare.setImageUrl("http://221.122.68.72:8070/webFile/column/20181008183210912495.jpg");
+                }
+                if (QQ.NAME.equals(platform.getName())) {
+                    paramsToShare.setTitle("QQ");
+                    paramsToShare.setTitleUrl("http://www.xianzhiwang.cn/");
+                    paramsToShare.setText("QQQQQQ测试");
+                    paramsToShare.setUrl("http://www.xianzhiwang.cn/");
+                    paramsToShare.setImageUrl("http://221.122.68.72:8070/webFile/column/20181008183210912495.jpg");
+                }
+            }
+        });
+
+        oks.setCallback(new PlatformActionListener() {
+            @Override
+            public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
+                toastShow("成功");
+            }
+
+            @Override
+            public void onError(Platform platform, int i, Throwable throwable) {
+                toastShow("失败" + i);
+            }
+
+            @Override
+            public void onCancel(Platform platform, int i) {
+                toastShow("取消" + i);
+            }
+        });
+        oks.show(this);
+
     }
 }

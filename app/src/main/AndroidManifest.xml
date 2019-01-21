@@ -82,7 +82,8 @@
         <!-- 一键审核 -->
         <activity android:name=".activity.OneKeyManageBookActivity" />
         <!-- 用户管理 -->
-        <activity android:name=".activity.UserManageActivity" />
+        <activity android:name=".activity.UserManageActivity"
+            android:windowSoftInputMode="stateHidden|stateUnchanged"/>
         <!-- 修改密码 -->
         <activity
             android:name=".activity.ChangePasswordActivity"

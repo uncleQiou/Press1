@@ -350,7 +350,12 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
         public void getBookDetail(String guidStr) {
             guid = guidStr;
             //  刷新界面
-            bookDetailWeb.loadUrl(bookUrl);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    bookDetailWeb.reload();
+                }
+            });
         }
 
         @JavascriptInterface

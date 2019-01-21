@@ -142,10 +142,11 @@
                 android:textColor="@color/text_main_6"
                 android:textSize="@dimen/text_14sp" />
 
-            <TextView
+            <EditText
                 android:id="@+id/tv_school"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@null"
                 android:textColor="@color/text_main_3"
                 android:textSize="@dimen/text_14sp" />
         </LinearLayout>
@@ -162,10 +163,11 @@
                 android:textColor="@color/text_main_6"
                 android:textSize="@dimen/text_14sp" />
 
-            <TextView
+            <EditText
                 android:id="@+id/tv_faculty"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@null"
                 android:textColor="@color/text_main_3"
                 android:textSize="@dimen/text_14sp" />
         </LinearLayout>
@@ -182,10 +184,11 @@
                 android:textColor="@color/text_main_6"
                 android:textSize="@dimen/text_14sp" />
 
-            <TextView
+            <EditText
                 android:id="@+id/tv_teacher_job"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@null"
                 android:textColor="@color/text_main_3"
                 android:textSize="@dimen/text_14sp" />
         </LinearLayout>
@@ -229,6 +232,21 @@
                 android:textColor="@color/text_main_3"
                 android:textSize="@dimen/text_14sp" />
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_save_modify"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="@dimen/margin_10dp"
+            android:background="@drawable/rounded_rectangle_blue"
+            android:paddingBottom="@dimen/margin_5dp"
+            android:paddingLeft="@dimen/margin_20dp"
+            android:paddingRight="@dimen/margin_20dp"
+            android:paddingTop="@dimen/margin_5dp"
+            android:text="@string/save_modify"
+            android:textColor="@color/hg_app_main_color"
+            android:textSize="@dimen/text_14sp" />
     </LinearLayout>
 
 </ScrollView>

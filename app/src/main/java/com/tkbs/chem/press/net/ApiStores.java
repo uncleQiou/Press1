@@ -250,7 +250,7 @@ public interface ApiStores {
      * @param guids
      * @return
      */
-    @POST("sampleBook")
+    @POST("sampleBook/deleteSampleByGuid")
     Observable<HttpResponse<Object>> deleteSampleBook(@Query("guids") String[] guids);
 
     /**

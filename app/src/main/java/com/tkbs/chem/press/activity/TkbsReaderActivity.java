@@ -107,6 +107,9 @@ public class TkbsReaderActivity extends BaseActivity implements View.OnClickList
         bookId = getIntent().getStringExtra("BookId");
         readData = getIntent().getStringExtra("ReadData");
         param3 = getIntent().getStringExtra("PARAM3");
+        if (null == param3) {
+            param3 = "";
+        }
         isLocaRead = getIntent().getBooleanExtra("isLoacRead", false);
         isReadAll = getIntent().getBooleanExtra("isReadAll", false);
         if (isLocaRead) {
@@ -141,16 +144,17 @@ public class TkbsReaderActivity extends BaseActivity implements View.OnClickList
     protected void initTitle() {
 
     }
+
     /**
      * 添加阅读记录
      */
-    private void addReadTime(){
+    private void addReadTime() {
         //showProgressDialog();
         addSubscription(apiStores.addBookReadTIme(bookId), new ApiCallback<HttpResponse<Object>>() {
             @Override
             public void onSuccess(HttpResponse<Object> model) {
                 if (model.isStatus()) {
-                   handler.sendEmptyMessageDelayed(1000,60000);
+                    handler.sendEmptyMessageDelayed(1000, 60000);
                 } else {
                     toastShow(model.getErrorDescription());
                 }
@@ -407,9 +411,9 @@ public class TkbsReaderActivity extends BaseActivity implements View.OnClickList
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                if (null != param3 && param3.length() > 0) {
-                    tkbsReadWeb.loadUrl("javascript:getCataLog(" + param3 + ")");
-                }
+//                if (null != param3 && param3.length() > 0) {
+//                    tkbsReadWeb.loadUrl("javascript:getCataLog(" + param3 + ")");
+//                }
             }
         });
         tkbsReadWeb.setWebChromeClient(new ReWebChomeClient(this) {
@@ -546,6 +550,11 @@ public class TkbsReaderActivity extends BaseActivity implements View.OnClickList
         @JavascriptInterface
         public boolean isLoacRead() {
             return isLocaRead;
+        }
+
+        @JavascriptInterface
+        public String getParamNum() {
+            return param3;
         }
 
         @JavascriptInterface

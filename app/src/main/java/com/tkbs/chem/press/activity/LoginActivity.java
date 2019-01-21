@@ -80,7 +80,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         //edUsername.setText("xx000001");
         //edPassword.setText("1");
         // 147 ywy
-        edUsername.setText("hhd");
+        edUsername.setText("zhangh");
         edPassword.setText("111111");
         // 147 js
         //edUsername.setText("he11");

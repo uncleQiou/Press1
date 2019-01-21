@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.tkbs.chem.press.R;
@@ -27,11 +28,12 @@ public class TeacherInforFragment extends BaseFragment {
     private TextView tvContactWay;
     private TextView tvMailbox;
     private TextView tvLocation;
-    private TextView tvSchool;
-    private TextView tvFaculty;
-    private TextView tvTeacherJob;
+    private EditText tvSchool;
+    private EditText tvFaculty;
+    private EditText tvTeacherJob;
     private TextView tvOfficePhone;
     private TextView tvTeachingCourse;
+    private TextView tv_save_modify;
     private String guid;
 
     @Override
@@ -50,13 +52,20 @@ public class TeacherInforFragment extends BaseFragment {
         tvContactWay = (TextView) findViewById(R.id.tv_contact_way);
         tvMailbox = (TextView) findViewById(R.id.tv_mailbox);
         tvLocation = (TextView) findViewById(R.id.tv_location);
-        tvSchool = (TextView) findViewById(R.id.tv_school);
-        tvFaculty = (TextView) findViewById(R.id.tv_faculty);
-        tvTeacherJob = (TextView) findViewById(R.id.tv_teacher_job);
+        tvSchool = (EditText) findViewById(R.id.tv_school);
+        tvFaculty = (EditText) findViewById(R.id.tv_faculty);
+        tvTeacherJob = (EditText) findViewById(R.id.tv_teacher_job);
         tvOfficePhone = (TextView) findViewById(R.id.tv_office_phone);
+        tv_save_modify = (TextView) findViewById(R.id.tv_save_modify);
         tvTeachingCourse = (TextView) findViewById(R.id.tv_teaching_course);
         getUserInfo(guid);
 
+        tv_save_modify.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                toastShow(R.string.save_modify);
+            }
+        });
 //        tvRealName.setText("张志");
 //        tvSex.setText("男");
 //        tvBirthDate.setText("2018年10月19日10:56:21");
