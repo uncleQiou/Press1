@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Window;
 import android.view.WindowManager;
@@ -37,6 +38,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     public ApiStores apiStores = AppClient.retrofit().create(ApiStores.class);
     public SharedPreferences preference;
     public String WebPath;
+    public boolean mStateEnable;
 
     private MyBaseActiviy_Broad oBaseActiviy_Broad;
 
@@ -92,12 +94,23 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        // super.onStart();中将mStateSaved置为false
+        mStateEnable = true;
     }
 
     @Override
     protected void onResume() {
+        // onPause之后便可能调用onSaveInstanceState，因此onresume中也需要置true
+        mStateEnable = true;
         super.onResume();
         mActivity = this;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        // super.onSaveInstanceState();中将mStateSaved置为true
+        mStateEnable = false;
+        super.onSaveInstanceState(outState, outPersistentState);
     }
 
     @Override
@@ -109,6 +122,13 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     public void finish() {
         super.finish();
+    }
+
+    @Override
+    protected void onStop() {
+        // super.onStop();中将mStateSaved置为true
+        mStateEnable = false;
+        super.onStop();
     }
 
     @Override
@@ -194,5 +214,13 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     *
+     * activity状态是否处于可修改周期内，避免状态丢失的错误
+     * @return
+     */
+    public boolean isStateEnable() {
+        return mStateEnable;
+    }
 
 }

@@ -205,8 +205,11 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
     @Subscribe(threadMode = ThreadMode.MainThread)
     public void RefreshUi(MessageEvent messageEvent) {
         if ("Refresh".endsWith(messageEvent.getMessage())) {
-            recycler_bookshelf.showSwipeRefresh();
-            getData(true);
+            if (this.isVisible()){
+                recycler_bookshelf.showSwipeRefresh();
+                getData(true);
+            }
+
         }
     }
 

@@ -82,8 +82,9 @@
         <!-- 一键审核 -->
         <activity android:name=".activity.OneKeyManageBookActivity" />
         <!-- 用户管理 -->
-        <activity android:name=".activity.UserManageActivity"
-            android:windowSoftInputMode="stateHidden|stateUnchanged"/>
+        <activity
+            android:name=".activity.UserManageActivity"
+            android:windowSoftInputMode="stateHidden|stateUnchanged" />
         <!-- 修改密码 -->
         <activity
             android:name=".activity.ChangePasswordActivity"
@@ -126,8 +127,9 @@
         <activity android:name=".activity.PayRecordActivity" />
         <!-- 个人定制 -->
         <activity android:name=".activity.PersonalTailorActivity" />
-        <!--我的账户-->
+        <!-- 我的账户 -->
         <activity android:name=".activity.MyAccountActivity" />
+        <activity android:name=".activity.ThreePartBindingActivity"></activity>
     </application>
 
 </manifest>

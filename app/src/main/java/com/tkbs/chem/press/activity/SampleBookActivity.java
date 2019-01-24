@@ -210,7 +210,6 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
                         myAdapter.addAll(bookList);
                         recycler.dismissSwipeRefresh();
                         recycler.getRecyclerView().scrollToPosition(0);
-                        recycler.showNoMore();
 
                     } else {
                         bookList.addAll(model.getData());
@@ -613,8 +612,11 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
                  * 0、已审核
                  * 1、未审核
                  * 2、未通过
+                 * 0 >> 2  审批通过
+                 * 1 >> 1  审批中
+                 * 2 >> 3  未通过
                  */
-                if (0 == data.getState()) {
+                if (2 == data.getState()) {
                     img_state.setImageResource(R.mipmap.book_guanli_label_approved);
                     btn_state.setVisibility(View.GONE);
                     cb_select_item.setChecked(false);
@@ -626,7 +628,7 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
                     btn_state.setVisibility(View.VISIBLE);
                     btn_state.setText(R.string.approval);
 
-                } else if (2 == data.getState()) {
+                } else if (3 == data.getState()) {
                     img_state.setImageResource(R.mipmap.book_guanli_label_unthrough);
                     btn_state.setVisibility(View.VISIBLE);
                     btn_state.setText(R.string.reason);

@@ -10,35 +10,14 @@ import java.io.File;
 public class Config {
     public static final String TOPIC = " ";
     /**
-     * Xjl
+     * 105
      */
-    //public static String API_SERVER = "http://192.168.113.146:8281/app/";
-    /**
-     * Zmy
-     */
-    //public static String API_SERVER = "http://192.168.113.147:8281/app/";
-            //105
 //    public static String API_SERVER = "http://192.168.1.105:8281/app/";
-    public static String API_SERVER = "http://192.168.1.103:8281/app/";
-
     /**
      * sitao
      */
-    //public static String API_SERVER = "http://192.168.2.12:8281/app/";
+    public static String API_SERVER = "http://192.168.1.103:8281/app/";
 
-    /**
-     * 外网 170
-     */
-//    public static String API_SERVER = "http://59.110.229.170:8281/app/";
-    /**
-     * 外网 120
-     */
-//    public static String API_SERVER = "http://106.12.214.120:8281/app/";
-
-    /**
-     *  TKBS url
-     */
-//    public static String API_SERVER_BOOK = "http://221.122.68.70:8097/";
 
     /**
      * String

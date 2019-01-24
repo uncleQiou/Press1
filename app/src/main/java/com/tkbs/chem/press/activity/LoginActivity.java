@@ -3,6 +3,8 @@ package com.tkbs.chem.press.activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -11,12 +13,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.orhanobut.logger.Logger;
 import com.tkbs.chem.press.MainActivity;
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.base.BaseActivity;
 import com.tkbs.chem.press.base.BaseApplication;
 import com.tkbs.chem.press.bean.HttpResponse;
 import com.tkbs.chem.press.bean.LoginRequestBen;
+import com.tkbs.chem.press.bean.PayResult;
 import com.tkbs.chem.press.bean.UserBean;
 import com.tkbs.chem.press.net.ApiCallback;
 import com.tkbs.chem.press.util.Config;
@@ -25,6 +29,7 @@ import com.tkbs.chem.press.util.UiUtils;
 
 
 import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -64,6 +69,26 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     LinearLayout llWechatLogin;
     int loginState = 1;
 
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 1: {
+                    String uId = (String) msg.obj;
+                    Logger.e("UID:" + uId);
+                    loginWeChat(uId);
+                    break;
+                }
+                case 2:
+
+                    break;
+
+                default:
+                    break;
+            }
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,11 +105,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         //edUsername.setText("xx000001");
         //edPassword.setText("1");
         // 147 ywy
-        edUsername.setText("zhangh");
-        edPassword.setText("111111");
-        // 147 js
-        //edUsername.setText("he11");
-        //edPassword.setText("he1111");
+//        edUsername.setText("zhangh");
+//        edPassword.setText("111111");
+        // 103 js
+        edUsername.setText("xx000001");
+        edPassword.setText("1");
         settingView();
     }
 
@@ -141,15 +166,50 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 toastShow(R.string.str_qq);
                 Platform plat = ShareSDK.getPlatform(QQ.NAME);
                 plat.showUser(null);
+                bingType = "qq";
                 break;
             case R.id.ll_wechat_login:
                 toastShow(R.string.str_wechat);
-                showShare();
+//                showShare();
+                bingType = "wechat";
+                weChatLogin();
+//                loginWeChat("oClK75sXKa5gGQtwc0w9p9AWNR_E");
                 break;
             default:
                 break;
         }
 
+    }
+
+    /**
+     * 微信三方登陆
+     */
+    private void weChatLogin() {
+        Platform wechat = ShareSDK.getPlatform(Wechat.NAME);
+        wechat.setPlatformActionListener(new PlatformActionListener() {
+            @Override
+            public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
+
+                // 用户 Userid 请求服务器 成功 直接登陆 不成功 注册
+//                loginWeChat(platform.getDb().getUserId());
+                Message msg = new Message();
+                msg.what = 1;
+                msg.obj = platform.getDb().getUserId();
+                mHandler.sendMessage(msg);
+
+            }
+
+            @Override
+            public void onError(Platform platform, int i, Throwable throwable) {
+                Logger.e("失败");
+            }
+
+            @Override
+            public void onCancel(Platform platform, int i) {
+                Logger.e("用户取消");
+            }
+        });
+        wechat.authorize();
     }
 
 
@@ -277,6 +337,62 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     setResult(RESULT_OK);
                     finish();
                 } else {
+                    toastShow(model.getErrorDescription());
+                }
+
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                toastShow(msg);
+            }
+
+            @Override
+            public void onFinish() {
+                dismissProgressDialog();
+            }
+        });
+    }
+
+    /**
+     * 微信三方登陆
+     */
+    private String otherUserId;
+    private String bingType;
+
+    private void loginWeChat(final String wechatUId) {
+        otherUserId = wechatUId;
+        Logger.e("userID:" + otherUserId);
+        showProgressDialog();
+        addSubscription(apiStores.loginByWechat(wechatUId), new ApiCallback<HttpResponse<UserBean>>() {
+            @Override
+            public void onSuccess(HttpResponse<UserBean> model) {
+                //用户 Userid 请求服务器 成功 直接登陆 不成功 注册
+                if (model.isStatus()) {
+                    Logger.e("已有账号");
+                    UserBean user = model.getData();
+                    SharedPreferences.Editor edit = BaseApplication.preferences.edit();
+                    edit.putString(Config.LOGIN_NAME, user.getLogin_name());
+                    edit.putString(Config.PASSWORD, user.getPASSWORD());
+                    edit.putString(Config.NICK_NAME, user.getNick_name());
+                    edit.putString(Config.REAL_NAME, user.getReal_name());
+                    edit.putString(Config.WORKPHONE, user.getWorkphone());
+                    edit.putString(Config.PHONE, user.getPhone());
+                    edit.putInt(Config.MEMBER_TYPE, user.getMember_type());
+                    edit.commit();
+                    //  refresh MainActivity
+                    EventBus.getDefault().post(new MessageEvent("Refresh"));
+//                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                    setResult(RESULT_OK);
+                    finish();
+                } else {
+                    // 调用注册页面 刷新登陆
+                    Logger.e("需要注册");
+                    Intent intent = new Intent(LoginActivity.this, ThreePartBindingActivity.class);
+                    intent.putExtra("USERID", otherUserId);
+                    intent.putExtra("BINGTYPE", bingType);
+                    startActivity(intent);
+//                    finish();
                     toastShow(model.getErrorDescription());
                 }
 

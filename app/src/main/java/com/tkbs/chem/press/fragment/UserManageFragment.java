@@ -116,14 +116,16 @@ public class UserManageFragment extends BaseFragment implements View.OnClickList
     @Subscribe(threadMode = ThreadMode.MainThread)
     public void RefreshUi(MessageEvent messageEvent) {
         if ("UserManageFragment".endsWith(messageEvent.getMessage())) {
-            recycler.post(new Runnable() {
-                @Override
-                public void run() {
-                    recycler.showSwipeRefresh();
-                    page = 1;
-                    getUserList(true);
-                }
-            });
+            if (this.isVisible()) {
+                recycler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        recycler.showSwipeRefresh();
+                        page = 1;
+                        getUserList(true);
+                    }
+                });
+            }
         }
     }
 
@@ -141,7 +143,6 @@ public class UserManageFragment extends BaseFragment implements View.OnClickList
                         myAdapter.addAll(userList);
                         recycler.dismissSwipeRefresh();
                         recycler.getRecyclerView().scrollToPosition(0);
-                        recycler.showNoMore();
                     } else {
                         userList.addAll(model.getData().getList());
                         myAdapter.addAll(model.getData().getList());
@@ -329,7 +330,7 @@ public class UserManageFragment extends BaseFragment implements View.OnClickList
                 tv_givebook_num.setText(data.getGiveBookNumber() + "本");
                 tv_black_list.setText(0 == data.getState() ? R.string.blacklist : R.string.remove_blacklist);
                 // 当赠书达到上限的时候 按钮 由隐藏 变为灰色无点击事件
-                if (!isCanGiveBook){
+                if (!isCanGiveBook) {
                     tv_give_book.setBackground(getResources().getDrawable(R.drawable.rounded_rectangle_blue));
                     tv_give_book.setTextColor(getResources().getColor(R.color.hg_app_main_color));
                     tv_give_book.setOnClickListener(new View.OnClickListener() {
@@ -341,7 +342,7 @@ public class UserManageFragment extends BaseFragment implements View.OnClickList
                             getActivity().startActivity(intent);
                         }
                     });
-                }else {
+                } else {
                     tv_give_book.setBackground(getResources().getDrawable(R.drawable.rounded_rectangle_gray));
                     tv_give_book.setTextColor(getResources().getColor(R.color.text_main_6));
                     tv_give_book.setOnClickListener(new View.OnClickListener() {

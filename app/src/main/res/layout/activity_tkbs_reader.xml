@@ -51,19 +51,34 @@
                     android:textColor="@color/text_main_6" />
             </LinearLayout>
 
-
-            <TextView
-                android:id="@+id/img_toc"
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:background="@color/gray_normal"
-                android:drawableLeft="@mipmap/ic_popup_toc"
-                android:gravity="center"
-                android:paddingBottom="5dp"
-                android:paddingLeft="10dip"
-                android:paddingTop="5dp"
-                android:textSize="30sp" />
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/img_toc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:drawableLeft="@mipmap/ic_popup_toc"
+                    android:padding="@dimen/margin_5dp"
+                    android:textSize="30sp" />
+
+                <TextView
+                    android:id="@+id/tv_page_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center_vertical"
+                    android:padding="@dimen/margin_10dp"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_16sp" />
+            </RelativeLayout>
+
         </RelativeLayout>
 
 

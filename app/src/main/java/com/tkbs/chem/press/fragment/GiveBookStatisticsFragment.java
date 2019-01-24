@@ -142,7 +142,9 @@ public class GiveBookStatisticsFragment extends BaseFragment implements View.OnC
     @Subscribe(threadMode = ThreadMode.MainThread)
     public void RefreshUi(MessageEvent messageEvent) {
         if ("RefreshTJ".endsWith(messageEvent.getMessage())) {
-            getData();
+            if (this.isVisible()) {
+                getData();
+            }
         }
     }
 
@@ -670,7 +672,7 @@ public class GiveBookStatisticsFragment extends BaseFragment implements View.OnC
                         showBarChart(barChart_time, tjTimeData, liftDownConner, barChartColor);
 
                     }
-                }else {
+                } else {
                     toastShow(model.getErrorDescription());
                 }
 

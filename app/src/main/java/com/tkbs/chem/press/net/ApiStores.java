@@ -63,6 +63,26 @@ public interface ApiStores {
     @POST("login/toLogin")
     Observable<HttpResponse<UserBean>> PressLogin(@Body RequestBody body);
 
+    /**
+     * 三方登陆
+     * 微信
+     *
+     * @param wxUserId
+     * @return
+     */
+    @POST("login/toLoginByWechat")
+    Observable<HttpResponse<UserBean>> loginByWechat(@Query("wxUserId") String wxUserId);
+
+    /**
+     * 三方登陆
+     * 查询用户信息
+     *
+     * @param memberGuid
+     * @return
+     */
+    @POST("mmMember/queryMemberInfo/{memberGuid}")
+    Observable<HttpResponse<UserBean>> thrLoginUserInfo(@Path("memberGuid") String memberGuid);
+
     /***
      * 获取图片路径
      *
@@ -596,9 +616,9 @@ public interface ApiStores {
     @POST("statisticalAnalysis/queryGiveBookStatisticsByTeacher/{schoolName}/{statisticsType}")
     Observable<HttpResponse<ArrayList<TeaLimitDataBean>>> getGBookTeaLimitStatistics(@Path("schoolName") String schoolName,
                                                                                      @Path("statisticsType") int statisticsType);
+
     /**
      * 添加阅读时长
-     *
      */
     @POST("read/readtime/{documentGuid}")
     Observable<HttpResponse<Object>> addBookReadTIme(@Path("documentGuid") String documentGuid);

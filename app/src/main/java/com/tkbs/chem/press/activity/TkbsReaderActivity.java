@@ -54,6 +54,8 @@ public class TkbsReaderActivity extends BaseActivity implements View.OnClickList
     ImageView imgRefresh;
     @BindView(R.id.tv_download)
     TextView tvDownload;
+    @BindView(R.id.tv_page_num)
+    TextView tvPageNum;
     private String err_url;
     private int progressNum;
     private String bookId;
@@ -125,7 +127,7 @@ public class TkbsReaderActivity extends BaseActivity implements View.OnClickList
                 TkbsReaderActivity.this.finish();
             }
         });
-        imgToc.getBackground().setAlpha(100);
+//        imgToc.getBackground().setAlpha(100);
         imgToc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -136,6 +138,7 @@ public class TkbsReaderActivity extends BaseActivity implements View.OnClickList
                 startActivityForResult(intent, 886);
             }
         });
+        tvPageNum.setText("0/0");
         initWeb();
 //        rlDialog.setOnClickListener(this);
     }
@@ -517,6 +520,18 @@ public class TkbsReaderActivity extends BaseActivity implements View.OnClickList
         }
 
         @JavascriptInterface
+        public void showPage(final int currentpage, final int totalPage) {
+//            Logger.e(currentpage + "/" + totalPage);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    tvPageNum.setText(currentpage + "/" + totalPage);
+                }
+            });
+
+        }
+
+        @JavascriptInterface
         public String getReadData() {
             return readData;
         }
@@ -573,7 +588,6 @@ public class TkbsReaderActivity extends BaseActivity implements View.OnClickList
 
         @JavascriptInterface
         public void finshRead() {
-            // TODO 添加退出阅读时间
             finish();
         }
 

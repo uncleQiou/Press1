@@ -87,8 +87,10 @@ public class DiscoverFragment extends BaseFragment {
     @Subscribe(threadMode = ThreadMode.MainThread)
     public void RefreshUi(MessageEvent messageEvent) {
         if ("Refresh".endsWith(messageEvent.getMessage())) {
-            recycler_discover.showSwipeRefresh();
-            getData(true);
+            if (this.isVisible()) {
+                recycler_discover.showSwipeRefresh();
+                getData(true);
+            }
         }
     }
 

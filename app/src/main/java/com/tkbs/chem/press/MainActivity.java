@@ -1,7 +1,9 @@
 package com.tkbs.chem.press;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -30,6 +32,9 @@ import com.tkbs.chem.press.myinterface.HomeInterface;
 import com.tkbs.chem.press.net.ApiCallback;
 import com.tkbs.chem.press.util.Config;
 import com.tkbs.chem.press.util.MessageEvent;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -122,7 +127,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     public void RefreshUi(MessageEvent messageEvent) {
         if ("Refresh".endsWith(messageEvent.getMessage())) {
             initdata();
-//            goBookCity();
         }
     }
 
@@ -171,11 +175,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
 
         //开启事务
-        FragmentTransaction ft =
-                getSupportFragmentManager().beginTransaction();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 
         //添加首页
-        ft.add(R.id.fl_main_content, bookCityFragment).commit();
+        ft.add(R.id.fl_main_content, bookCityFragment).commitAllowingStateLoss();
         //默认设置为第0个
         setIndexSelected(1);
     }
@@ -192,16 +195,21 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
         //判断是否添加
         if (!mFragments[index].isAdded()) {
-            ft.add(R.id.fl_main_content, mFragments[index]).show(mFragments[index]);
+            if (isStateEnable()) {
+                ft.add(R.id.fl_main_content, mFragments[index]).show(mFragments[index]);
+            }
         } else {
-            ft.show(mFragments[index]);
+            if (isStateEnable()) {
+                ft.show(mFragments[index]);
+            }
         }
 
-        ft.commit();
+        ft.commitAllowingStateLoss();
 
         //再次赋值
         mIndex = index;
     }
+
 
     //重写onkeydown方法
     @Override
@@ -331,6 +339,4 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             }
         });
     }
-
-
 }

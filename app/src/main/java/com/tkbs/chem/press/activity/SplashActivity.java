@@ -80,9 +80,13 @@ public class SplashActivity extends BaseActivity {
         getPersimmions();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
     private final int SDK_PERMISSION_REQUEST = 127;
 
-    @TargetApi(23)
     private void getPersimmions() {
         PermissionUtils.isCameraPermission(SplashActivity.this, 0x007);
         PermissionUtils.isCameraPermission(SplashActivity.this, 0x009);
@@ -107,10 +111,6 @@ public class SplashActivity extends BaseActivity {
             // 读取电话状态权限
             if (addPermission(permissions, Manifest.permission.READ_PHONE_STATE)) {
             }
-            // 读取电话状态权限
-//            if (addPermission(permissions, Manifest.permission.READ_PHONE_STATE)) {
-//                permissions.add(Manifest.permission.READ_PHONE_STATE);
-//            }
 
             if (permissions.size() > 0) {
                 requestPermissions(permissions.toArray(new String[permissions.size()]), SDK_PERMISSION_REQUEST);
@@ -132,7 +132,8 @@ public class SplashActivity extends BaseActivity {
 
     @TargetApi(23)
     private boolean addPermission(ArrayList<String> permissionsList, String permission) {
-        if (checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) { // 如果应用没有获得对应权限,则添加到列表中,准备批量申请
+        if (checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
+            // 如果应用没有获得对应权限,则添加到列表中,准备批量申请
             if (shouldShowRequestPermissionRationale(permission)) {
                 return true;
             } else {
@@ -206,6 +207,7 @@ public class SplashActivity extends BaseActivity {
      * 游客免登陆
      */
     private void NoLanding() {
+        // TODO 再申请一次权限
         showProgressDialog();
         addSubscription(apiStores.NoLanding(UiUtils.getid(SplashActivity.this)),
                 new ApiCallback<HttpResponse<UserBean>>() {

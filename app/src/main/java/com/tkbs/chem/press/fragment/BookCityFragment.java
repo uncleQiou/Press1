@@ -187,10 +187,13 @@ public class BookCityFragment extends BaseFragment implements View.OnClickListen
     @Subscribe(threadMode = ThreadMode.MainThread)
     public void RefreshUi(MessageEvent messageEvent) {
         if ("Refresh".endsWith(messageEvent.getMessage())) {
-            mRecyclerView.showSwipeRefresh();
-            getBannerData(true);
+            if (this.isVisible()) {
+                mRecyclerView.showSwipeRefresh();
+                getBannerData(true);
+            }
         }
     }
+
     private class MyLoader extends ImageLoader {
         @Override
         public void displayImage(Context context, Object path, ImageView imageView) {
@@ -474,7 +477,7 @@ public class BookCityFragment extends BaseFragment implements View.OnClickListen
         @Override
         public View getViewForPage(int position, View convertView, ViewGroup container) {
 //            if (convertView == null) {
-                convertView = new RecyclerView(container.getContext());
+            convertView = new RecyclerView(container.getContext());
 //                convertView = new TextView(container.getContext());
 //            }
             //  RecyclerView 三排显示
