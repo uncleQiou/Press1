@@ -1,5 +1,6 @@
 package com.tkbs.chem.press.activity;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -180,6 +181,13 @@ public class GiveBookManagementActivity extends BaseActivity implements View.OnC
             //  refresh UserManageFragment
             EventBus.getDefault().post(new MessageEvent("UserManageFragment"));
             finish();
+        }
+
+        @JavascriptInterface
+        public void goBookDetail(String guidBook) {
+            Intent intent = new Intent(GiveBookManagementActivity.this, BookDetailActivity.class);
+            intent.putExtra("guid", guidBook);
+            GiveBookManagementActivity.this.startActivity(intent);
         }
 
 

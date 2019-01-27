@@ -92,6 +92,19 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
     private int type;
 
 
+    /**
+     * 时间排序
+     */
+    private int timeOrder;
+    /**
+     * 书名排序
+     */
+    private int titleOrder;
+    /**
+     * 热度排序
+     */
+    private int degreeOrder;
+
     // 升序
     private boolean isAscendingOrder = true;
     private ArrayList<SampleBookItemDataBean> dataList;
@@ -106,6 +119,10 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
         super.onCreateViewLazy(savedInstanceState);
         setContentView(R.layout.fragment_bookshelf_item);
         type = getArguments().getInt("Type");
+        /**
+         * 默认时间正序
+         */
+        timeOrder = Config.SORT_UP;
         EventBus.getDefault().register(this);
         ll_sort_edit = (LinearLayout) findViewById(R.id.ll_sort_edit);
         ll_sort_edit.setOnClickListener(this);
@@ -149,6 +166,7 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
         recycler_bookshelf.post(new Runnable() {
             @Override
             public void run() {
+                page = 1;
                 recycler_bookshelf.showSwipeRefresh();
                 getData(true);
             }
@@ -189,7 +207,8 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
 //                tv_delete.setText(R.string.str_delete);
 //                toastShow("业务员我的图书");
                 tv_download.setVisibility(View.GONE);
-                tv_delete.setText(R.string.delete_collect); tv_download.setVisibility(View.GONE);
+                tv_delete.setText(R.string.delete_collect);
+                tv_download.setVisibility(View.GONE);
                 tv_delete.setText(R.string.delete_collect);
                 break;
             case 5:
@@ -205,7 +224,7 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
     @Subscribe(threadMode = ThreadMode.MainThread)
     public void RefreshUi(MessageEvent messageEvent) {
         if ("Refresh".endsWith(messageEvent.getMessage())) {
-            if (this.isVisible()){
+            if (this.isVisible()) {
                 recycler_bookshelf.showSwipeRefresh();
                 getData(true);
             }
@@ -215,10 +234,14 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
 
     /**
      * 获取样书数据
+     * 1 正序
+     * 2 倒序
+     * 默认 时间 正序
      */
     private void getSampleBookListData(final boolean isRefresh) {
         showProgressDialog();
-        addSubscription(apiStores.getSampleBookList(page), new ApiCallback<HttpResponse<ArrayList<SampleBookItemDataBean>>>() {
+
+        addSubscription(apiStores.getSampleBookList(page, timeOrder, titleOrder), new ApiCallback<HttpResponse<ArrayList<SampleBookItemDataBean>>>() {
             @Override
             public void onSuccess(HttpResponse<ArrayList<SampleBookItemDataBean>> model) {
                 if (model.isStatus()) {
@@ -264,7 +287,7 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
      */
     private void getCollectionBookListData(final boolean isRefresh) {
         showProgressDialog();
-        addSubscription(apiStores.getCollectionBookList(page), new ApiCallback<HttpResponse<ArrayList<SampleBookItemDataBean>>>() {
+        addSubscription(apiStores.getCollectionBookList(page, timeOrder, titleOrder), new ApiCallback<HttpResponse<ArrayList<SampleBookItemDataBean>>>() {
             @Override
             public void onSuccess(HttpResponse<ArrayList<SampleBookItemDataBean>> model) {
                 if (model.isStatus()) {
@@ -310,7 +333,7 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
      */
     private void getBuyedBookListData(final boolean isRefresh) {
         showProgressDialog();
-        addSubscription(apiStores.getBuyedBookList(page), new ApiCallback<HttpResponse<ArrayList<SampleBookItemDataBean>>>() {
+        addSubscription(apiStores.getBuyedBookList(page, timeOrder, titleOrder, degreeOrder), new ApiCallback<HttpResponse<ArrayList<SampleBookItemDataBean>>>() {
             @Override
             public void onSuccess(HttpResponse<ArrayList<SampleBookItemDataBean>> model) {
                 if (model.isStatus()) {
@@ -356,7 +379,7 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
      */
     private void getGiveBookListData(final boolean isRefresh) {
         showProgressDialog();
-        addSubscription(apiStores.getGiveBookList(page), new ApiCallback<HttpResponse<ArrayList<SampleBookItemDataBean>>>() {
+        addSubscription(apiStores.getGiveBookList(page, timeOrder, titleOrder), new ApiCallback<HttpResponse<ArrayList<SampleBookItemDataBean>>>() {
             @Override
             public void onSuccess(HttpResponse<ArrayList<SampleBookItemDataBean>> model) {
                 if (model.isStatus()) {
@@ -527,33 +550,61 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
                 bookShelfItemAdapter.notifyDataSetChanged();
                 break;
             case R.id.tv_sort_book_name:
-                if (null == dataList) {
-                    return;
-                }
-                recycler_bookshelf.showSwipeRefresh();
-                sortByBookName();
-                bookShelfItemAdapter.clear();
-                bookShelfItemAdapter.addAll(dataList);
-                recycler_bookshelf.dismissSwipeRefresh();
-                recycler_bookshelf.getRecyclerView().scrollToPosition(0);
+//                if (null == dataList) {
+//                    return;
+//                }
+//                recycler_bookshelf.showSwipeRefresh();
+//                sortByBookName();
+//                bookShelfItemAdapter.clear();
+//                bookShelfItemAdapter.addAll(dataList);
+//                recycler_bookshelf.dismissSwipeRefresh();
+//                recycler_bookshelf.getRecyclerView().scrollToPosition(0);
+                timeOrder = Config.SORT_NOONE;
+                titleOrder = Config.SORT_UP;
+                recycler_bookshelf.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        page = 1;
+                        recycler_bookshelf.showSwipeRefresh();
+                        getData(true);
+                    }
+                });
                 break;
             case R.id.ll_sort_time:
-                if (null == dataList) {
-                    return;
-                }
-                recycler_bookshelf.showSwipeRefresh();
+//                if (null == dataList) {
+//                    return;
+//                }
+//                recycler_bookshelf.showSwipeRefresh();
+//                img_sort_time.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down : R.mipmap.bookshelf_icon_up);
+//                if (isAscendingOrder) {
+//                    isAscendingOrder = false;
+//                    sortByDateUp();
+//                } else {
+//                    isAscendingOrder = true;
+//                    sortByDateDown();
+//                }
+//                bookShelfItemAdapter.clear();
+//                bookShelfItemAdapter.addAll(dataList);
+//                recycler_bookshelf.dismissSwipeRefresh();
+//                recycler_bookshelf.getRecyclerView().scrollToPosition(0);
                 img_sort_time.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down : R.mipmap.bookshelf_icon_up);
                 if (isAscendingOrder) {
                     isAscendingOrder = false;
-                    sortByDateUp();
+                    timeOrder = Config.SORT_DOWN;
+                    titleOrder = Config.SORT_NOONE;
                 } else {
                     isAscendingOrder = true;
-                    sortByDateDown();
+                    timeOrder = Config.SORT_UP;
+                    titleOrder = Config.SORT_NOONE;
                 }
-                bookShelfItemAdapter.clear();
-                bookShelfItemAdapter.addAll(dataList);
-                recycler_bookshelf.dismissSwipeRefresh();
-                recycler_bookshelf.getRecyclerView().scrollToPosition(0);
+                recycler_bookshelf.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        page = 1;
+                        recycler_bookshelf.showSwipeRefresh();
+                        getData(true);
+                    }
+                });
                 break;
             case R.id.tv_delete:
                 switch (type) {

@@ -14,22 +14,17 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.orhanobut.logger.Logger;
-import com.tkbs.chem.press.MainActivity;
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.base.BaseActivity;
 import com.tkbs.chem.press.base.BaseApplication;
 import com.tkbs.chem.press.bean.HttpResponse;
 import com.tkbs.chem.press.bean.LoginRequestBen;
-import com.tkbs.chem.press.bean.PayResult;
 import com.tkbs.chem.press.bean.UserBean;
 import com.tkbs.chem.press.net.ApiCallback;
 import com.tkbs.chem.press.util.Config;
 import com.tkbs.chem.press.util.MessageEvent;
-import com.tkbs.chem.press.util.UiUtils;
-
 
 import java.util.HashMap;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -104,7 +99,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         // 146 ywy
         //edUsername.setText("xx000001");
         //edPassword.setText("1");
-        // 147 ywy
+        // 105 ywy
 //        edUsername.setText("zhangh");
 //        edPassword.setText("111111");
         // 103 js
@@ -151,10 +146,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 toastShow(R.string.click_get);
                 break;
             case R.id.btn_login:
-                toastShow(R.string.login);
                 //IMEI
-                toastShow("唯一标识：" + UiUtils.getid(LoginActivity.this));
-//                startActivity(new Intent(LoginActivity.this, NewsActivity.class));
+//                toastShow("唯一标识：" + UiUtils.getid(LoginActivity.this));
                 login();
                 break;
             case R.id.btn_register:

@@ -131,7 +131,11 @@ public interface ApiStores {
      * @return
      */
     @POST("resDocument/customizationFour/{guid}/{pageNum}/10")
-    Observable<HttpResponse<ArrayList<ThreeClassifyDataBena>>> ThreeClassifyData(@Path("guid") String guid, @Path("pageNum") int pageNum);
+    Observable<HttpResponse<ArrayList<ThreeClassifyDataBena>>> ThreeClassifyData(@Path("guid") String guid,
+                                                                                 @Path("pageNum") int pageNum,
+                                                                                 @Query("timeOrder") int timeOrder,
+                                                                                 @Query("titleOrder") int titleOrder,
+                                                                                 @Query("degreeOrder") int degreeOrder);
 
     /**
      * 我的定制
@@ -151,7 +155,9 @@ public interface ApiStores {
      * 样书管理列表
      */
     @POST("sampleBook/querySampleBookOne/{pageNum}/10")
-    Observable<HttpResponse<ArrayList<SampleBookManageDataBean>>> SampleBookManageList(@Path("pageNum") int page);
+    Observable<HttpResponse<ArrayList<SampleBookManageDataBean>>> SampleBookManageList(@Path("pageNum") int page,
+                                                                                       @Query("timeOrder") int timeOrder,
+                                                                                       @Query("titleOrder") int titleOrder);
 
 //    /**
 //     * 样书管理详情 废弃
@@ -179,7 +185,9 @@ public interface ApiStores {
      * @return
      */
     @POST("mmMember/queryMemberList/{pageNum}/10")
-    Observable<HttpResponse<UserManageNewDataBean>> UserManageDataList(@Path("pageNum") int page);
+    Observable<HttpResponse<UserManageNewDataBean>> UserManageDataList(@Path("pageNum") int page,
+                                                                       @Query("timeOrder") int timeOrder,
+                                                                       @Query("titleOrder") int titleOrder);
 
 //    /**
 //     * 用户管理——用户信息 废弃
@@ -262,7 +270,9 @@ public interface ApiStores {
      * @return
      */
     @POST("sampleBook/queryFreeSampleBook/{pageNum}/10")
-    Observable<HttpResponse<ArrayList<SampleBookItemDataBean>>> getSampleBookList(@Path("pageNum") int pageNum);
+    Observable<HttpResponse<ArrayList<SampleBookItemDataBean>>> getSampleBookList(@Path("pageNum") int pageNum,
+                                                                                  @Query("timeOrder") int timeOrder,
+                                                                                  @Query("titleOrder") int titleOrder);
 
     /**
      * 书架 ——免费样书 教师  删除
@@ -280,7 +290,9 @@ public interface ApiStores {
      * @return
      */
     @POST("collection/{pageNum}/10")
-    Observable<HttpResponse<ArrayList<SampleBookItemDataBean>>> getCollectionBookList(@Path("pageNum") int pageNum);
+    Observable<HttpResponse<ArrayList<SampleBookItemDataBean>>> getCollectionBookList(@Path("pageNum") int pageNum,
+                                                                                      @Query("timeOrder") int timeOrder,
+                                                                                      @Query("titleOrder") int titleOrder);
 
     /**
      * 书架 ——我的收藏 教师
@@ -307,7 +319,10 @@ public interface ApiStores {
      * @return
      */
     @POST("order/{pageNum}/10")
-    Observable<HttpResponse<ArrayList<SampleBookItemDataBean>>> getBuyedBookList(@Path("pageNum") int pageNum);
+    Observable<HttpResponse<ArrayList<SampleBookItemDataBean>>> getBuyedBookList(@Path("pageNum") int pageNum,
+                                                                                 @Query("timeOrder") int timeOrder,
+                                                                                 @Query("titleOrder") int titleOrder,
+                                                                                 @Query("degreeOrder") int degreeOrder);
 
     /**
      * 书架 ——我的赠书 教师
@@ -316,7 +331,9 @@ public interface ApiStores {
      * @return
      */
     @POST("giveBook/{pageNum}/10")
-    Observable<HttpResponse<ArrayList<SampleBookItemDataBean>>> getGiveBookList(@Path("pageNum") int pageNum);
+    Observable<HttpResponse<ArrayList<SampleBookItemDataBean>>> getGiveBookList(@Path("pageNum") int pageNum,
+                                                                                @Query("timeOrder") int timeOrder,
+                                                                                @Query("titleOrder") int titleOrder);
 
     /**
      * 书架 ——我的赠书 教师 删除

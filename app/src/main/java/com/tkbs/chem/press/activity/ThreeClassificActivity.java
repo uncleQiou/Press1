@@ -21,6 +21,7 @@ import com.tkbs.chem.press.bean.BookCityResDocument;
 import com.tkbs.chem.press.bean.HttpResponse;
 import com.tkbs.chem.press.bean.ThreeClassifyDataBena;
 import com.tkbs.chem.press.net.ApiCallback;
+import com.tkbs.chem.press.util.Config;
 
 import java.text.Collator;
 import java.text.RuleBasedCollator;
@@ -80,6 +81,18 @@ public class ThreeClassificActivity extends BaseActivity implements View.OnClick
     // 升序
     private boolean isAscendingOrder = true;
     private ArrayList<ThreeClassifyDataBena> bookDatas;
+    /**
+     * 时间排序
+     */
+    private int timeOrder;
+    /**
+     * 书名排序
+     */
+    private int titleOrder;
+    /**
+     * 热度排序
+     */
+    private int degreeOrder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +109,10 @@ public class ThreeClassificActivity extends BaseActivity implements View.OnClick
         guid = getIntent().getStringExtra("guid");
         titleStr = getIntent().getStringExtra("title");
         mHandler = new Handler();
+        /**
+         * 默认时间正序
+         */
+        timeOrder = Config.SORT_UP;
         myAdapter = new MyAdapter(this);
         recycler = (RefreshRecyclerView) findViewById(R.id.recycler);
         recycler.setSwipeRefreshColors(0xFF437845, 0xFFE44F98, 0xFF2FAC21);
@@ -120,6 +137,7 @@ public class ThreeClassificActivity extends BaseActivity implements View.OnClick
         recycler.post(new Runnable() {
             @Override
             public void run() {
+                page = 1;
                 recycler.showSwipeRefresh();
                 getClassifyData(true);
             }
@@ -134,7 +152,7 @@ public class ThreeClassificActivity extends BaseActivity implements View.OnClick
 
     private void getClassifyData(final boolean isRefresh) {
         showProgressDialog();
-        addSubscription(apiStores.ThreeClassifyData(guid, page), new ApiCallback<HttpResponse<ArrayList<ThreeClassifyDataBena>>>() {
+        addSubscription(apiStores.ThreeClassifyData(guid, page, timeOrder, titleOrder, degreeOrder), new ApiCallback<HttpResponse<ArrayList<ThreeClassifyDataBena>>>() {
             @Override
             public void onSuccess(HttpResponse<ArrayList<ThreeClassifyDataBena>> model) {
                 if (model.isStatus()) {
@@ -209,44 +227,87 @@ public class ThreeClassificActivity extends BaseActivity implements View.OnClick
                 }
                 break;
             case R.id.ll_sort_time:
-                if (null == bookDatas) {
-                    return;
-                }
-                recycler.showSwipeRefresh();
+//                if (null == bookDatas) {
+//                    return;
+//                }
+//                recycler.showSwipeRefresh();
+//                imgSortTime.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down : R.mipmap.bookshelf_icon_up);
+//                if (isAscendingOrder) {
+//                    isAscendingOrder = false;
+//                    sortByDateUp();
+//                } else {
+//                    isAscendingOrder = true;
+//                    sortByDateDown();
+//                }
+//                myAdapter.clear();
+//                myAdapter.addAll(bookDatas);
+//                recycler.dismissSwipeRefresh();
+//                recycler.getRecyclerView().scrollToPosition(0);
+
                 imgSortTime.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down : R.mipmap.bookshelf_icon_up);
                 if (isAscendingOrder) {
                     isAscendingOrder = false;
-                    sortByDateUp();
+                    timeOrder = Config.SORT_DOWN;
+                    titleOrder = Config.SORT_NOONE;
+                    degreeOrder = Config.SORT_NOONE;
                 } else {
                     isAscendingOrder = true;
-                    sortByDateDown();
+                    timeOrder = Config.SORT_UP;
+                    titleOrder = Config.SORT_NOONE;
+                    degreeOrder = Config.SORT_NOONE;
                 }
-                myAdapter.clear();
-                myAdapter.addAll(bookDatas);
-                recycler.dismissSwipeRefresh();
-                recycler.getRecyclerView().scrollToPosition(0);
+                recycler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        page = 1;
+                        recycler.showSwipeRefresh();
+                        getClassifyData(true);
+                    }
+                });
                 break;
             case R.id.tv_sort_book_name:
-                if (null == bookDatas) {
-                    return;
-                }
-                recycler.showSwipeRefresh();
-                sortByBookName();
-                myAdapter.clear();
-                myAdapter.addAll(bookDatas);
-                recycler.dismissSwipeRefresh();
-                recycler.getRecyclerView().scrollToPosition(0);
+//                if (null == bookDatas) {
+//                    return;
+//                }
+//                recycler.showSwipeRefresh();
+//                sortByBookName();
+//                myAdapter.clear();
+//                myAdapter.addAll(bookDatas);
+//                recycler.dismissSwipeRefresh();
+//                recycler.getRecyclerView().scrollToPosition(0);
+                timeOrder = Config.SORT_NOONE;
+                titleOrder = Config.SORT_UP;
+                degreeOrder = Config.SORT_NOONE;
+                recycler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        page = 1;
+                        recycler.showSwipeRefresh();
+                        getClassifyData(true);
+                    }
+                });
                 break;
             case R.id.tv_sort_hot:
-                if (null == bookDatas) {
-                    return;
-                }
-                recycler.showSwipeRefresh();
-                sortBydEgreeDown();
-                myAdapter.clear();
-                myAdapter.addAll(bookDatas);
-                recycler.dismissSwipeRefresh();
-                recycler.getRecyclerView().scrollToPosition(0);
+//                if (null == bookDatas) {
+//                    return;
+//                }
+//                recycler.showSwipeRefresh();
+//                sortBydEgreeDown();
+//                myAdapter.clear();
+//                myAdapter.addAll(bookDatas);
+//                recycler.dismissSwipeRefresh();
+//                recycler.getRecyclerView().scrollToPosition(0);
+                timeOrder = Config.SORT_NOONE;
+                titleOrder = Config.SORT_NOONE;
+                degreeOrder = Config.SORT_UP;
+                recycler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        page = 1;
+                        recycler.showSwipeRefresh();
+                        getClassifyData(true);
+                    }
+                });
                 break;
             default:
                 break;

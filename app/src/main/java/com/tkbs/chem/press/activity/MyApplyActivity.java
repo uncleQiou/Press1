@@ -222,7 +222,13 @@ public class MyApplyActivity extends BaseActivity implements View.OnClickListene
                 tv_apply_name.setText(data.getDocumentName());
                 tv_apply_date.setText(data.getCreateDate());
                 //0表示已审批  1表示未审批2表示未通过
-                if (data.getState() == 0) {
+                /***
+                 * 0 >> 2  审批通过
+                 * 1 >> 1  审批中
+                 * 2 >> 3  未通过
+
+                 */
+                if (data.getState() == 2) {
                     tv_apply_state.setText(R.string.apply_done);
                     tv_apply_state.setBackgroundResource(R.drawable.btn_apply_state1);
                     img_apply_point.setImageResource(R.drawable.apply_round_2);

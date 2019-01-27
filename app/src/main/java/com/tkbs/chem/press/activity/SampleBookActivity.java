@@ -654,7 +654,7 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
                                     //toUserHome(context);
                                     ApprovalSubmitData submitData = confirmDialog.getSubmitData();
                                     submitData.setGuid(data.getGuid());
-                                    submitData.setIsPass(0);
+                                    submitData.setIsPass(2);
                                     approvalSubmit(submitData);
                                 }
 
@@ -662,7 +662,7 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
                                 public void doCancel() {
                                     ApprovalSubmitData submitData = confirmDialog.getSubmitData();
                                     submitData.setGuid(data.getGuid());
-                                    submitData.setIsPass(1);
+                                    submitData.setIsPass(3);
                                     approvalSubmit(submitData);
                                     confirmDialog.dismiss();
                                 }

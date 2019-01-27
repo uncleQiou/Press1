@@ -22,6 +22,7 @@ import com.tkbs.chem.press.bean.RechargeResult;
 import com.tkbs.chem.press.bean.UserManageDataBean;
 import com.tkbs.chem.press.bean.UserManageNewDataBean;
 import com.tkbs.chem.press.net.ApiCallback;
+import com.tkbs.chem.press.util.Config;
 import com.tkbs.chem.press.util.MessageEvent;
 
 import java.text.Collator;
@@ -59,6 +60,14 @@ public class UserManageFragment extends BaseFragment implements View.OnClickList
     private int page = 1;
     private Handler mHandler;
     private boolean isCanGiveBook;
+    /**
+     * 时间排序
+     */
+    private int timeOrder;
+    /**
+     * 书名排序
+     */
+    private int titleOrder;
 
     @Override
     protected View getPreviewLayout(LayoutInflater inflater, ViewGroup container) {
@@ -106,6 +115,7 @@ public class UserManageFragment extends BaseFragment implements View.OnClickList
         recycler.post(new Runnable() {
             @Override
             public void run() {
+                page = 1;
                 recycler.showSwipeRefresh();
                 getUserList(true);
             }
@@ -131,7 +141,7 @@ public class UserManageFragment extends BaseFragment implements View.OnClickList
 
     private void getUserList(final boolean isRefresh) {
         showProgressDialog();
-        addSubscription(apiStores.UserManageDataList(page), new ApiCallback<HttpResponse<UserManageNewDataBean>>() {
+        addSubscription(apiStores.UserManageDataList(page, timeOrder, titleOrder), new ApiCallback<HttpResponse<UserManageNewDataBean>>() {
             @Override
             public void onSuccess(HttpResponse<UserManageNewDataBean> model) {
                 if (model.isStatus()) {
@@ -183,6 +193,7 @@ public class UserManageFragment extends BaseFragment implements View.OnClickList
                     recycler.post(new Runnable() {
                         @Override
                         public void run() {
+                            page = 1;
                             recycler.showSwipeRefresh();
                             getUserList(true);
                         }
@@ -212,15 +223,25 @@ public class UserManageFragment extends BaseFragment implements View.OnClickList
                 break;
             case R.id.ll_sort_time:
                 // 姓名排序
-                if (null == userList) {
-                    return;
-                }
-                recycler.showSwipeRefresh();
-                sortByTeaName();
-                myAdapter.clear();
-                myAdapter.addAll(userList);
-                recycler.dismissSwipeRefresh();
-                recycler.getRecyclerView().scrollToPosition(0);
+//                if (null == userList) {
+//                    return;
+//                }
+//                recycler.showSwipeRefresh();
+//                sortByTeaName();
+//                myAdapter.clear();
+//                myAdapter.addAll(userList);
+//                recycler.dismissSwipeRefresh();
+//                recycler.getRecyclerView().scrollToPosition(0);
+                timeOrder = Config.SORT_NOONE;
+                titleOrder = Config.SORT_UP;
+                recycler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        page = 1;
+                        recycler.showSwipeRefresh();
+                        getUserList(true);
+                    }
+                });
                 break;
             case R.id.ll_sort_state:
                 // 状态排序

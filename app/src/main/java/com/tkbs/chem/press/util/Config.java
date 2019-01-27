@@ -14,7 +14,7 @@ public class Config {
      */
 //    public static String API_SERVER = "http://192.168.1.105:8281/app/";
     /**
-     * sitao
+     *si tao
      */
     public static String API_SERVER = "http://192.168.1.103:8281/app/";
 
@@ -78,4 +78,17 @@ public class Config {
     // 资源加密密钥
     public static String SUBJECT_ENCRYPT_KEY = "1234567890";
     public static String FILE_KEY = "12345678";
+
+    /**
+     * 正序
+     */
+    public static int SORT_UP = 1;
+    /**
+     * 倒序
+     */
+    public static int SORT_DOWN = 2;
+    /**
+     * 不排序
+     */
+    public static int SORT_NOONE = 0;
 }

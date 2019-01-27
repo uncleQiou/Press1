@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -68,6 +69,8 @@ public abstract class BaseActivity extends AppCompatActivity {
             //通知栏所需颜色
             tintManager.setStatusBarTintResource(R.color.white);
         }
+        //黑色
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         preference = getSharedPreferences("press", Context.MODE_PRIVATE);
         WebPath = preference.getString("webPath", "");
         mActivity = this;
@@ -215,8 +218,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     /**
-     *
      * activity状态是否处于可修改周期内，避免状态丢失的错误
+     *
      * @return
      */
     public boolean isStateEnable() {

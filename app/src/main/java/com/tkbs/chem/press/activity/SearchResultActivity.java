@@ -507,7 +507,9 @@ public class SearchResultActivity extends BaseActivity implements View.OnClickLi
             @Override
             public void onItemViewClick(BookCityResDocument data) {
                 super.onItemViewClick(data);
-
+                Intent intent = new Intent(context, BookDetailActivity.class);
+                intent.putExtra("guid", data.getGuid());
+                context.startActivity(intent);
             }
         }
 

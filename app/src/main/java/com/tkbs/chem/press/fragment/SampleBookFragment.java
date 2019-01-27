@@ -21,6 +21,7 @@ import com.tkbs.chem.press.bean.SampleBookItemDataBean;
 import com.tkbs.chem.press.bean.SampleBookManageDataBean;
 import com.tkbs.chem.press.bean.ThreeClassifyDataBena;
 import com.tkbs.chem.press.net.ApiCallback;
+import com.tkbs.chem.press.util.Config;
 
 import java.text.Collator;
 import java.text.RuleBasedCollator;
@@ -58,6 +59,19 @@ public class SampleBookFragment extends BaseFragment implements View.OnClickList
     // 升序
     private boolean isAscendingOrder = true;
 
+    /**
+     * 时间排序
+     */
+    private int timeOrder;
+    /**
+     * 书名排序
+     */
+    private int titleOrder;
+    /**
+     * 热度排序
+     */
+    private int degreeOrder;
+
     @Override
     protected View getPreviewLayout(LayoutInflater inflater, ViewGroup container) {
         return inflater.inflate(R.layout.layout_preview, container, false);
@@ -75,6 +89,8 @@ public class SampleBookFragment extends BaseFragment implements View.OnClickList
         ll_sort_book_name.setOnClickListener(this);
         ll_sort_state = (LinearLayout) findViewById(R.id.ll_sort_state);
         ll_sort_state.setOnClickListener(this);
+        // 没有状态进行排序 隐藏
+        ll_sort_state.setVisibility(View.GONE);
         recycler = (RefreshRecyclerView) findViewById(R.id.recycler);
         tv_sort_time = (TextView) findViewById(R.id.tv_sort_time);
         img_sort_time = (ImageView) findViewById(R.id.img_sort_time);
@@ -106,6 +122,7 @@ public class SampleBookFragment extends BaseFragment implements View.OnClickList
         recycler.post(new Runnable() {
             @Override
             public void run() {
+                page = 1;
                 recycler.showSwipeRefresh();
                 getSampleBookList(true);
             }
@@ -115,7 +132,7 @@ public class SampleBookFragment extends BaseFragment implements View.OnClickList
 
     private void getSampleBookList(final boolean isRefresh) {
         showProgressDialog();
-        addSubscription(apiStores.SampleBookManageList(page), new ApiCallback<HttpResponse<ArrayList<SampleBookManageDataBean>>>() {
+        addSubscription(apiStores.SampleBookManageList(page, timeOrder, titleOrder), new ApiCallback<HttpResponse<ArrayList<SampleBookManageDataBean>>>() {
             @Override
             public void onSuccess(HttpResponse<ArrayList<SampleBookManageDataBean>> model) {
                 if (model.isStatus()) {
@@ -195,34 +212,61 @@ public class SampleBookFragment extends BaseFragment implements View.OnClickList
                 getActivity().startActivity(new Intent(getActivity(), SearchActivity.class));
                 break;
             case R.id.ll_sort_time:
-                if (null == bookList) {
-                    return;
-                }
-                recycler.showSwipeRefresh();
+//                if (null == bookList) {
+//                    return;
+//                }
+//                recycler.showSwipeRefresh();
+//                img_sort_time.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down : R.mipmap.bookshelf_icon_up);
+//                if (isAscendingOrder) {
+//                    isAscendingOrder = false;
+//                    sortByDateUp();
+//                } else {
+//                    isAscendingOrder = true;
+//                    sortByDateDown();
+//                }
+//                myAdapter.clear();
+//                myAdapter.addAll(bookList);
+//                recycler.dismissSwipeRefresh();
+//                recycler.getRecyclerView().scrollToPosition(0);
                 img_sort_time.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down : R.mipmap.bookshelf_icon_up);
                 if (isAscendingOrder) {
                     isAscendingOrder = false;
-                    sortByDateUp();
+                    timeOrder = Config.SORT_DOWN;
+                    titleOrder = Config.SORT_NOONE;
                 } else {
                     isAscendingOrder = true;
-                    sortByDateDown();
+                    timeOrder = Config.SORT_UP;
+                    titleOrder = Config.SORT_NOONE;
                 }
-                myAdapter.clear();
-                myAdapter.addAll(bookList);
-                recycler.dismissSwipeRefresh();
-                recycler.getRecyclerView().scrollToPosition(0);
+                recycler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        page = 1;
+                        recycler.showSwipeRefresh();
+                        getSampleBookList(true);
+                    }
+                });
                 break;
             case R.id.ll_sort_book_name:
-                if (null == bookList) {
-                    return;
-                }
-                recycler.showSwipeRefresh();
-                sortByTeaName();
-                myAdapter.clear();
-                myAdapter.addAll(bookList);
-                recycler.dismissSwipeRefresh();
-                recycler.getRecyclerView().scrollToPosition(0);
-
+//                if (null == bookList) {
+//                    return;
+//                }
+//                recycler.showSwipeRefresh();
+//                sortByTeaName();
+//                myAdapter.clear();
+//                myAdapter.addAll(bookList);
+//                recycler.dismissSwipeRefresh();
+//                recycler.getRecyclerView().scrollToPosition(0);
+                timeOrder = Config.SORT_NOONE;
+                titleOrder = Config.SORT_UP;
+                recycler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        page = 1;
+                        recycler.showSwipeRefresh();
+                        getSampleBookList(true);
+                    }
+                });
                 break;
             case R.id.ll_sort_state:
                 if (null == bookList) {

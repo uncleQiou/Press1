@@ -14,7 +14,7 @@ public class GiveBookListBean {
      */
 
     private long time_limit;
-    private int price;
+    private double price;
     private String guid;
     private String title;
 
@@ -26,11 +26,11 @@ public class GiveBookListBean {
         this.time_limit = time_limit;
     }
 
-    public int getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
