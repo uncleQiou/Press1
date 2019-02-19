@@ -109,10 +109,7 @@ public class ThreeClassificActivity extends BaseActivity implements View.OnClick
         guid = getIntent().getStringExtra("guid");
         titleStr = getIntent().getStringExtra("title");
         mHandler = new Handler();
-        /**
-         * 默认时间正序
-         */
-        timeOrder = Config.SORT_UP;
+        timeOrder = Config.SORT_NOONE;
         myAdapter = new MyAdapter(this);
         recycler = (RefreshRecyclerView) findViewById(R.id.recycler);
         recycler.setSwipeRefreshColors(0xFF437845, 0xFFE44F98, 0xFF2FAC21);

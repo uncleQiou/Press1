@@ -239,13 +239,13 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_margin="@dimen/margin_10dp"
-            android:background="@drawable/rounded_rectangle_blue"
+            android:background="@drawable/rounded_rectangle_gray"
             android:paddingBottom="@dimen/margin_5dp"
             android:paddingLeft="@dimen/margin_20dp"
             android:paddingRight="@dimen/margin_20dp"
             android:paddingTop="@dimen/margin_5dp"
             android:text="@string/save_modify"
-            android:textColor="@color/hg_app_main_color"
+            android:textColor="@color/text_main_9"
             android:textSize="@dimen/text_14sp" />
     </LinearLayout>
 

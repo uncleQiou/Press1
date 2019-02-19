@@ -130,6 +130,10 @@ public class SampleBookStatisticsFragment extends BaseFragment implements View.O
     @Subscribe(threadMode = ThreadMode.MainThread)
     public void RefreshUi(MessageEvent messageEvent) {
         if ("RefreshTJ".endsWith(messageEvent.getMessage())) {
+            dateType = 1;
+            statisticsTimeType = 1;
+            statisticsSchType = 1;
+            statisticsTeaType = 1;
             getData();
         }
     }

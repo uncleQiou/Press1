@@ -129,7 +129,8 @@
         <activity android:name=".activity.PersonalTailorActivity" />
         <!-- 我的账户 -->
         <activity android:name=".activity.MyAccountActivity" />
-        <activity android:name=".activity.ThreePartBindingActivity"></activity>
+        <!--三方登陆绑定-->
+        <activity android:name=".activity.ThreePartBindingActivity"/>
     </application>
 
 </manifest>

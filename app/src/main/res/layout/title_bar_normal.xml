@@ -32,4 +32,14 @@
         android:textColor="@color/text_main_6"
         android:textSize="@dimen/text_16sp" />
 
+    <ImageView
+        android:id="@+id/img_share"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/margin_10dp"
+        android:src="@mipmap/nav_icon_share"
+        android:visibility="gone"/>
+
 </RelativeLayout>

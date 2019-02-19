@@ -3,6 +3,7 @@ package com.tkbs.chem.press.activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -26,9 +27,19 @@ import com.tkbs.chem.press.view.BookBuyPopupWindow;
 import com.tkbs.chem.press.view.ReWebChomeClient;
 
 import java.io.File;
+import java.util.HashMap;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.sharesdk.framework.Platform;
+import cn.sharesdk.framework.PlatformActionListener;
+import cn.sharesdk.onekeyshare.OnekeyShare;
+import cn.sharesdk.onekeyshare.ShareContentCustomizeCallback;
+import cn.sharesdk.sina.weibo.SinaWeibo;
+import cn.sharesdk.tencent.qq.QQ;
+import cn.sharesdk.wechat.friends.Wechat;
+import cn.sharesdk.wechat.moments.WechatMoments;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import de.greenrobot.event.ThreadMode;
@@ -45,6 +56,8 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
     TextView tvRight;
     @BindView(R.id.book_detail_web)
     WebView bookDetailWeb;
+    @BindView(R.id.img_share)
+    ImageView imgShare;
     private String guid;
 
     private BookBuyPopupWindow menuWindow;
@@ -65,6 +78,8 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
 //        guid = "34DBCCE472A14205A2431AF22538644D";
         Logger.e("bookGuid == " + guid);
         EventBus.getDefault().register(this);
+        imgShare.setVisibility(View.VISIBLE);
+        imgShare.setOnClickListener(this);
         createDir();
         initWeb();
     }
@@ -72,7 +87,6 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
     @Subscribe(threadMode = ThreadMode.MainThread)
     public void RefreshUi(MessageEvent messageEvent) {
         if ("PaySuccess".endsWith(messageEvent.getMessage())) {
-            Logger.e("支付成功 刷新页面");
             refreshUI();
         }
     }
@@ -160,6 +174,15 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
         bookDetailWeb.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                if (!url.startsWith("http://") && !url.startsWith("https://")) {
+                    try {
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                        startActivity(intent);
+                        return true;
+                    } catch (Exception e) {
+                        return false;
+                    }
+                }
                 view.loadUrl(url);
                 return super.shouldOverrideUrlLoading(view, url);
             }
@@ -235,8 +258,10 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.back:
-//                downLoadBook("sss");
                 finish();
+                break;
+            case R.id.img_share:
+                showShare();
                 break;
             default:
                 break;
@@ -299,6 +324,79 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
             }
         }
         return null;
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
+    }
+
+    private void showShare() {
+        OnekeyShare oks = new OnekeyShare();
+        //关闭sso授权
+//        oks.disableSSOWhenAuthorize();
+        //设置一个总开关，用于在分享前若需要授权，则禁用sso功能  添加这个才成功
+        oks.disableSSOWhenAuthorize();
+        // title标题，微信、QQ和QQ空间等平台使用
+        oks.setTitle("分享测试");
+        // titleUrl QQ和QQ空间跳转链接
+        oks.setTitleUrl("http://sharesdk.cn");
+        // text是分享文本，所有平台都需要这个字段
+        oks.setText("我是分享文本");
+        // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
+        oks.setImagePath("/sdcard/test.jpg");//确保SDcard下面存在此张图片
+        // url在微信、微博，Facebook等平台中使用
+        oks.setUrl("http://sharesdk.cn");
+        // comment是我对这条分享的评论，仅在人人网使用
+        oks.setComment("我是测试评论文本");
+
+        // 启动分享GUI
+        oks.setShareContentCustomizeCallback(new ShareContentCustomizeCallback() {
+            @Override
+            public void onShare(Platform platform, cn.sharesdk.framework.Platform.ShareParams paramsToShare) {
+                if (Wechat.NAME.equals(platform.getName()) ||
+                        WechatMoments.NAME.equals(platform.getName())) {
+                    paramsToShare.setShareType(Platform.SHARE_WEBPAGE);
+                    paramsToShare.setUrl("http://www.xianzhiwang.cn/");
+                    paramsToShare.setText("微信测试微信测试");
+                    paramsToShare.setImageUrl("http://221.122.68.72:8070/webFile/column/20181008183210912495.jpg");
+                    paramsToShare.setTitle("微信测试能不能行啦还");
+                }
+                if (SinaWeibo.NAME.equals(platform.getName())) {
+                    paramsToShare.setText("微博微博微博测试");
+                    paramsToShare.setUrl("http://www.xianzhiwang.cn/");
+                    paramsToShare.setImageUrl("http://221.122.68.72:8070/webFile/column/20181008183210912495.jpg");
+                }
+                if (QQ.NAME.equals(platform.getName())) {
+                    paramsToShare.setTitle("QQ");
+                    paramsToShare.setTitleUrl("http://www.xianzhiwang.cn/");
+                    paramsToShare.setText("QQQQQQ测试");
+                    paramsToShare.setUrl("http://www.xianzhiwang.cn/");
+                    paramsToShare.setImageUrl("http://221.122.68.72:8070/webFile/column/20181008183210912495.jpg");
+                }
+            }
+        });
+
+        oks.setCallback(new PlatformActionListener() {
+            @Override
+            public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
+                toastShow("成功");
+            }
+
+            @Override
+            public void onError(Platform platform, int i, Throwable throwable) {
+                toastShow("失败" + i);
+            }
+
+            @Override
+            public void onCancel(Platform platform, int i) {
+                toastShow("取消" + i);
+            }
+        });
+        oks.show(this);
+
     }
 
     private class BookDetailInterface {

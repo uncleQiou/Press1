@@ -143,6 +143,10 @@ public class GiveBookStatisticsFragment extends BaseFragment implements View.OnC
     public void RefreshUi(MessageEvent messageEvent) {
         if ("RefreshTJ".endsWith(messageEvent.getMessage())) {
             if (this.isVisible()) {
+                dateType = 1;
+                statisticsTimeType = 1;
+                statisticsSchType = 1;
+                statisticsTeaType = 1;
                 getData();
             }
         }

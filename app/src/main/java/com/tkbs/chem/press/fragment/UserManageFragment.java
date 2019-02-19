@@ -27,7 +27,6 @@ import com.tkbs.chem.press.util.MessageEvent;
 
 import java.text.Collator;
 import java.text.RuleBasedCollator;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -377,7 +376,6 @@ public class UserManageFragment extends BaseFragment implements View.OnClickList
                 tv_black_list.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        toastShow(R.string.blacklist);
                         int state = 0 == data.getState() ? 1 : 0;
                         setUserBlacklist(data.getUserGuid(), state);
                     }
@@ -401,6 +399,4 @@ public class UserManageFragment extends BaseFragment implements View.OnClickList
 
 
     }
-
-
 }
