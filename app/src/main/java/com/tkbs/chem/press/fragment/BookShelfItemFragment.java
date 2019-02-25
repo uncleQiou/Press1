@@ -229,6 +229,15 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
                 getData(true);
             }
 
+        }else if ("RefreshBookShelf".endsWith(messageEvent.getMessage())){
+            recycler_bookshelf.post(new Runnable() {
+                @Override
+                public void run() {
+                    page = 1;
+                    recycler_bookshelf.showSwipeRefresh();
+                    getData(true);
+                }
+            });
         }
     }
 

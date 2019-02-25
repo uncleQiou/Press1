@@ -1,6 +1,7 @@
 package com.tkbs.chem.press;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PersistableBundle;
@@ -17,11 +18,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.orhanobut.logger.Logger;
+import com.tkbs.chem.press.activity.LoginActivity;
 import com.tkbs.chem.press.activity.SearchActivity;
 import com.tkbs.chem.press.activity.SearchClassifyActivity;
 import com.tkbs.chem.press.base.BaseActivity;
 import com.tkbs.chem.press.base.BaseApplication;
 import com.tkbs.chem.press.bean.HttpResponse;
+import com.tkbs.chem.press.bean.UserBean;
 import com.tkbs.chem.press.fragment.BookCityFragment;
 import com.tkbs.chem.press.fragment.BookShelfFragment;
 import com.tkbs.chem.press.fragment.DiscoverFragment;
@@ -117,7 +120,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         initTabs();
     }
 
-
     @Override
     protected void initTitle() {
 
@@ -187,6 +189,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         if (mIndex == index) {
             return;
         }
+        checkBlackUser();
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction ft = fragmentManager.beginTransaction();
 
@@ -312,6 +315,53 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     break;
             }
         }
+    }
+
+    private int user_sate;
+
+    /**
+     * 检查用户是否是黑名单用户
+     */
+    private void checkBlackUser() {
+        showProgressDialog();
+        addSubscription(apiStores.updateUserInfo(), new ApiCallback<HttpResponse<UserBean>>() {
+            @Override
+            public void onSuccess(HttpResponse<UserBean> model) {
+                if (model.isStatus()) {
+                    UserBean user = model.getData();
+                    SharedPreferences.Editor edit = BaseApplication.preferences.edit();
+                    edit.putString(Config.LOGIN_NAME, user.getLogin_name());
+                    edit.putString(Config.PASSWORD, user.getPASSWORD());
+                    edit.putString(Config.NICK_NAME, user.getNick_name());
+                    edit.putString(Config.REAL_NAME, user.getReal_name());
+                    edit.putString(Config.WORKPHONE, user.getWorkphone());
+                    edit.putString(Config.PHONE, user.getPhone());
+                    edit.putInt(Config.MEMBER_TYPE, user.getMember_type());
+                    edit.putInt(Config.MEMBER_STATE, user.getState());
+                    edit.commit();
+                    user_sate = user.getState();
+                    if (user_sate == 1) {
+                        // 黑名单
+                        toastShow("用户已被禁用，请联系管理员");
+                        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                        startActivityForResult(intent,Config.ACCOUNT_SWITCHING);
+                    }
+                } else {
+                    toastShow(model.getErrorDescription());
+                }
+
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                toastShow(msg);
+            }
+
+            @Override
+            public void onFinish() {
+                dismissProgressDialog();
+            }
+        });
     }
 
     private void getWebPath() {

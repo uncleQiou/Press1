@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.orhanobut.logger.Logger;
 import com.shizhefei.view.indicator.IndicatorViewPager;
 import com.shizhefei.view.indicator.ScrollIndicatorView;
 import com.shizhefei.view.indicator.slidebar.ColorBar;
@@ -60,6 +59,14 @@ public class BookShelfFragment extends BaseFragment {
         bookShelfViewPager.setOffscreenPageLimit(4);
         indicatorViewPager = new IndicatorViewPager(bookSelfIndicator, bookShelfViewPager);
         indicatorViewPager.setAdapter(new MyBookShelfAdapter(getChildFragmentManager()));
+        indicatorViewPager.setOnIndicatorPageChangeListener(new IndicatorViewPager.OnIndicatorPageChangeListener() {
+            @Override
+            public void onIndicatorPageChange(int preItem, int currentItem) {
+                int i = currentItem;
+                EventBus.getDefault().post(new MessageEvent("RefreshBookShelf"));
+            }
+        });
+
 
 
     }

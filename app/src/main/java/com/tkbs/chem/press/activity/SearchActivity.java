@@ -206,7 +206,13 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             classfyGuid.add(classify.getCatagoryGuid());
         }
         tvClassfy.setText(searchClassify);
-        llClassfy.setVisibility(View.VISIBLE);
+        llClassfy.setVisibility(View.GONE);
+        // 分類下直接搜索
+        Intent intent = new Intent(SearchActivity.this, SearchResultActivity.class);
+        intent.putStringArrayListExtra("Classfy", classfyGuid);
+        intent.putExtra("SearchKey", edSearch.getText().toString().trim());
+        startActivity(intent);
+        finish();
     }
 
     /**

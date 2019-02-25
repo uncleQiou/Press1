@@ -16,6 +16,7 @@ import com.tkbs.chem.press.bean.MyApplyDataBean;
 import com.tkbs.chem.press.bean.OpinionManageBean;
 import com.tkbs.chem.press.bean.OrderInfo;
 import com.tkbs.chem.press.bean.OrderInfoBean;
+import com.tkbs.chem.press.bean.PhoneCodeBean;
 import com.tkbs.chem.press.bean.RechargeConfigDataBean;
 import com.tkbs.chem.press.bean.RechargeRecordDataBean;
 import com.tkbs.chem.press.bean.RechargeResult;
@@ -25,6 +26,7 @@ import com.tkbs.chem.press.bean.SampleBookItemDataBean;
 import com.tkbs.chem.press.bean.SampleBookManageDataBean;
 import com.tkbs.chem.press.bean.SearchHotKey;
 import com.tkbs.chem.press.bean.SecondClassifyDataBean;
+import com.tkbs.chem.press.bean.ShareDataBean;
 import com.tkbs.chem.press.bean.StatisticsCoordinateDataBean;
 import com.tkbs.chem.press.bean.TeaLimitDataBean;
 import com.tkbs.chem.press.bean.ThreeClassifyDataBena;
@@ -62,6 +64,14 @@ public interface ApiStores {
      */
     @POST("login/toLogin")
     Observable<HttpResponse<UserBean>> PressLogin(@Body RequestBody body);
+    /**
+     * 手机验证码登陆
+     *
+     * @param body
+     * @return
+     */
+    @POST("login/toLoginByPhone")
+    Observable<HttpResponse<UserBean>> PressLoginByPhone(@Body RequestBody body);
 
     /**
      * 三方登陆
@@ -82,6 +92,12 @@ public interface ApiStores {
      */
     @POST("mmMember/queryMemberInfo/{memberGuid}")
     Observable<HttpResponse<UserBean>> thrLoginUserInfo(@Path("memberGuid") String memberGuid);
+    /**
+     * 更新用戶信息
+     * @return
+     */
+    @POST("mmMember/queryMemberInfo")
+    Observable<HttpResponse<UserBean>> updateUserInfo();
 
     /***
      * 获取图片路径
@@ -639,6 +655,22 @@ public interface ApiStores {
      */
     @POST("read/readtime/{documentGuid}")
     Observable<HttpResponse<Object>> addBookReadTIme(@Path("documentGuid") String documentGuid);
+
+    /**
+     * 获取手机验证码
+     */
+    @POST("login/loginToSendSms")
+    Observable<HttpResponse<PhoneCodeBean>> obtainPhoneCode (@Query("phone") String  phone);
+    /**
+     * 获取分享內容
+     */
+    @POST("share/info/{guid}")
+    Observable<HttpResponse<ShareDataBean>> ObtainShareData (@Path("guid") String  guid);
+    /**
+     * 删除订单
+     */
+    @POST("order/deleteOrder/{guid}")
+    Observable<HttpResponse<Object>> deleteOrder (@Path("guid") String  guid);
 
     /*************************************************************************************************************/
 

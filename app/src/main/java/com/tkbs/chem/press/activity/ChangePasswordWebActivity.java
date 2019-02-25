@@ -166,7 +166,7 @@ public class ChangePasswordWebActivity extends BaseActivity implements View.OnCl
 
         @JavascriptInterface
         public void toLogin() {
-            // TODO 删除个人信息
+            //  删除个人信息
             Intent intent = new Intent(ChangePasswordWebActivity.this, LoginActivity.class);
             startActivity(intent);
             finish();

@@ -29,7 +29,16 @@ public class ConsumptionRecordsDataBean {
     private int degree;
     private String guid;
     private String title;
+    private String orderGuid;
     private long create_date;
+
+    public String getOrderGuid() {
+        return orderGuid;
+    }
+
+    public void setOrderGuid(String orderGuid) {
+        this.orderGuid = orderGuid;
+    }
 
     public String getCover() {
         return cover;

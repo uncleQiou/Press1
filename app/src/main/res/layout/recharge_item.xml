@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/ll_recharge_item"
-    android:layout_width="wrap_content"
+    android:layout_width="@dimen/margin_90dp"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/margin_5dp"
     android:background="@drawable/recharge_item_bg"
@@ -16,9 +16,9 @@
         android:id="@+id/tv_token_num"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="1000点"
+        android:text="1900CIP币"
         android:textColor="@color/hg_app_main_color"
-        android:textSize="@dimen/text_16sp" />
+        android:textSize="@dimen/text_13sp" />
 
     <TextView
         android:id="@+id/tv_rmb_num"
@@ -28,5 +28,5 @@
         android:layout_marginTop="@dimen/margin_3dp"
         android:text="售价：0.99"
         android:textColor="@color/hg_app_main_color"
-        android:textSize="@dimen/text_14sp" />
+        android:textSize="@dimen/text_12sp" />
 </LinearLayout>

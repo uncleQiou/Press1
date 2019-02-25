@@ -256,6 +256,7 @@ public class OpinionManageFragment extends BaseFragment implements View.OnClickL
         class MyOpinionHolder extends BaseViewHolder<OpinionManageBean> {
 
             private TextView tv_opinion_title;
+            private TextView tv_opinion_who;
             private TextView tv_opinion_content;
             private RecyclerView reply_recycler;
             private TextView tv_reply;
@@ -268,6 +269,7 @@ public class OpinionManageFragment extends BaseFragment implements View.OnClickL
             public void onInitializeView() {
                 super.onInitializeView();
                 tv_opinion_title = findViewById(R.id.tv_opinion_title);
+                tv_opinion_who = findViewById(R.id.tv_opinion_who);
                 tv_opinion_content = findViewById(R.id.tv_opinion_content);
                 reply_recycler = findViewById(R.id.reply_recycler);
                 tv_reply = findViewById(R.id.tv_reply);
@@ -276,15 +278,16 @@ public class OpinionManageFragment extends BaseFragment implements View.OnClickL
             @Override
             public void setData(final OpinionManageBean data) {
                 super.setData(data);
-                tv_opinion_content.setText(data.getContent());
+                tv_opinion_content.setText("    "+data.getContent());
+                tv_opinion_who.setText(data.getCreateUser());
                 tv_opinion_title.setText(data.getCreateDate());
-                tv_reply.setText("回复" + data.getCreateUser());
+                tv_reply.setText("回复" );
                 tv_reply.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         ll_reply_layot.setVisibility(View.VISIBLE);
                         parentId = data.getOpinionId();
-                        ed_reply.setHint("回复" + data.getCreateUser());
+                        ed_reply.setHint("回复");
                     }
                 });
 

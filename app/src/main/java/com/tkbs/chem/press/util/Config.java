@@ -51,6 +51,7 @@ public class Config {
     public static final String REAL_NAME = "real_name";
     public static final String WORKPHONE = "workphone";
     public static final String PHONE = "phone";
+    public static final String MEMBER_STATE = "state";
     /**
      * 1、超级管理员 2、业务员 3、教师 4、普通用户 5、游客
      */

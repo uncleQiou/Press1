@@ -45,7 +45,9 @@ public class OpinionReplyItemAdapter extends RecyclerView.Adapter<OpinionReplyIt
         //  private Integer type;//1、平台回复 2、我的回复
         if (list.get(position).getType() == 1) {
             holder.tv_reply_from.setTextColor(ContextCompat.getColor(context, R.color.apply_violet));
-            holder.tv_reply_from.setText(R.string.reply_from_platform);
+//            holder.tv_reply_from.setText(R.string.reply_from_platform);
+            holder.tv_reply_from.setText(list.get(position).getCreateUser());
+            //
         } else {
             holder.tv_reply_from.setTextColor(ContextCompat.getColor(context, R.color.hg_app_main_color));
             holder.tv_reply_from.setText(list.get(position).getCreateUser());

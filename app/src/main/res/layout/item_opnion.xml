@@ -6,13 +6,26 @@
     android:orientation="vertical"
     android:layout_marginBottom="@dimen/margin_10dp"
     android:padding="@dimen/margin_10dp">
-
+<LinearLayout
+    android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:layout_height="wrap_content">
     <TextView
-        android:id="@+id/tv_opinion_title"
+        android:id="@+id/tv_opinion_who"
         android:layout_width="match_parent"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
         android:textColor="@color/text_main_6"
         android:textSize="@dimen/text_14sp" />
+
+    <TextView
+        android:id="@+id/tv_opinion_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/text_main_6"
+        android:textSize="@dimen/text_14sp" />
+</LinearLayout>
+
 
     <TextView
         android:id="@+id/tv_opinion_content"

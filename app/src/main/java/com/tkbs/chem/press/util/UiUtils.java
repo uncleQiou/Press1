@@ -2,6 +2,7 @@ package com.tkbs.chem.press.util;
 
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.telephony.TelephonyManager;
 import android.text.Html;
@@ -283,11 +284,12 @@ public class UiUtils {
 
             // 得到要显示文件的坐标
             // 103152
-            int htmlPos = Integer.parseInt(index.get("htmlPos"));
+            int htmlPos = Integer.parseInt(index.get("pngPos"));
+//            int htmlPos = Integer.parseInt(index.get("htmlPos"));
             // 539
             // int htmlLen = Integer.parseInt(index.get("htmlLen"));
             // 544
-            int htmlEncodeLen = Integer.parseInt(index.get("htmlEncodeLen"));
+            int htmlEncodeLen = Integer.parseInt(index.get("pngEncodeLen"));
 
             // 从开始指定的位置读取: 并且解密html文件:
             FileInputStream inputStream2 = null;
@@ -380,4 +382,13 @@ public class UiUtils {
     }
 
 
+    /**
+     * 清除账户信息
+     * @param context
+     */
+    public static void ClearSp(Context context){
+        SharedPreferences.Editor edit = BaseApplication.preferences.edit();
+        edit.clear();
+        edit.commit();
+    }
 }

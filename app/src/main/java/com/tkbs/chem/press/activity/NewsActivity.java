@@ -284,10 +284,12 @@ public class NewsActivity extends BaseActivity implements View.OnClickListener {
                     Intent intent = new Intent(NewsActivity.this, BookDetailActivity.class);
                     intent.putExtra("guid", data.getRelationGuid());
                     context.startActivity(intent);
+                }else if (messageType == 1){
+
                 } else {
                     //6用户管理-用户详情页
                     //7样书管理-当前用户的审批页
-                    getUserData(data.getRelationGuid(), messageType);
+                    getUserData(data.getUserGuid(), messageType);
 
                 }
 

@@ -1,9 +1,11 @@
 package com.tkbs.chem.press.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +18,13 @@ import com.shizhefei.view.indicator.slidebar.ColorBar;
 import com.shizhefei.view.indicator.transition.OnTransitionTextListener;
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.base.BaseActivity;
+import com.tkbs.chem.press.bean.CreateOrderDataBean;
+import com.tkbs.chem.press.bean.HttpResponse;
 import com.tkbs.chem.press.fragment.BookShelfItemFragment;
 import com.tkbs.chem.press.fragment.PayRecordItemFragment;
 import com.tkbs.chem.press.fragment.TextFragment;
+import com.tkbs.chem.press.net.ApiCallback;
+import com.tkbs.chem.press.view.BookBuyPopupWindow;
 
 import butterknife.BindView;
 import butterknife.OnClick;

@@ -5,8 +5,13 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -18,11 +23,14 @@ import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.base.BaseActivity;
 import com.tkbs.chem.press.base.BaseApplication;
 import com.tkbs.chem.press.bean.HttpResponse;
+import com.tkbs.chem.press.bean.LoginByPhoneRequestBen;
 import com.tkbs.chem.press.bean.LoginRequestBen;
+import com.tkbs.chem.press.bean.PhoneCodeBean;
 import com.tkbs.chem.press.bean.UserBean;
 import com.tkbs.chem.press.net.ApiCallback;
 import com.tkbs.chem.press.util.Config;
 import com.tkbs.chem.press.util.MessageEvent;
+import com.tkbs.chem.press.util.UiUtils;
 
 import java.util.HashMap;
 
@@ -53,7 +61,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     @BindView(R.id.ed_password)
     EditText edPassword;
     @BindView(R.id.tv_get_code)
-    TextView tvGetCode;
+    Button tvGetCode;
     @BindView(R.id.btn_login)
     TextView btnLogin;
     @BindView(R.id.btn_register)
@@ -63,6 +71,46 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     @BindView(R.id.ll_wechat_login)
     LinearLayout llWechatLogin;
     int loginState = 1;
+    private PhoneCodeBean phoneCodeData;
+    //监听前的文本
+    private CharSequence temp;
+    //光标开始位置
+    private int editStart;
+    //光标结束位置
+    private int editEnd;
+    private int timeCutDown = 60;
+    private final int charMaxNum = 11;
+    private TextWatcher myTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            temp = charSequence;
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            /** 得到光标开始和结束位置 ,超过最大数后记录刚超出的数字索引进行控制 */
+            if (1 == loginState){return;}
+            editStart = edUsername.getSelectionStart();
+            editEnd = edUsername.getSelectionEnd();
+            if (temp.length() >= charMaxNum) {
+                if (temp.length() > charMaxNum) {
+                    editable.delete(editStart - 1, editEnd);
+                    int tempSelection = editStart;
+                    edUsername.setText(editable);
+                    edUsername.setSelection(tempSelection);
+                }
+
+                tvGetCode.setEnabled(true);
+            } else {
+                tvGetCode.setEnabled(false);
+            }
+        }
+    };
 
     private Handler mHandler = new Handler() {
         @Override
@@ -75,7 +123,20 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     break;
                 }
                 case 2:
-
+                    if (timeCutDown == 0) {
+                        if (null != tvGetCode) {
+                            tvGetCode.setEnabled(true);
+                            tvGetCode.setText("获取验证码");
+                        }
+                        if (null != edUsername){
+                            edUsername.setEnabled(true);}
+                    } else {
+                        if (null != tvGetCode){
+                            tvGetCode.setEnabled(false);
+                            tvGetCode.setText("已发送(" + timeCutDown + ")");}
+                        timeCutDown--;
+                        mHandler.sendEmptyMessageDelayed(2, 1000);
+                    }
                     break;
 
                 default:
@@ -105,6 +166,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         // 103 js
         edUsername.setText("xx000001");
         edPassword.setText("1");
+        UiUtils.ClearSp(getApplicationContext());
         settingView();
     }
 
@@ -113,13 +175,21 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             // 用户名 密码登陆
             tvChangeTip.setText(R.string.change_phone_login);
             edUsername.setHint(R.string.please_input_username);
+            edUsername.addTextChangedListener(myTextWatcher);
+            edUsername.setText("");
+            edPassword.setText("");
             edPassword.setHint(R.string.please_input_password);
+            edPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
             tvGetCode.setVisibility(View.GONE);
         } else if (2 == loginState) {
             // 手机验证码登陆
             tvChangeTip.setText(R.string.change_password_login);
             edUsername.setHint(R.string.input_phone_number);
+            edUsername.setText("");
+            edPassword.setText("");
+            edUsername.addTextChangedListener(myTextWatcher);
             edPassword.setHint(R.string.please_input_checkcode);
+            edPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
             tvGetCode.setVisibility(View.VISIBLE);
         }
     }
@@ -143,12 +213,25 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 settingView();
                 break;
             case R.id.tv_get_code:
-                toastShow(R.string.click_get);
+                if (edUsername.getText().toString().trim().length()>0 && checkPhoneNumber()){
+                    obtainPhoneCode();
+                }else {
+                    toastShow(R.string.input_login_msg);
+                }
+
                 break;
             case R.id.btn_login:
-                //IMEI
-//                toastShow("唯一标识：" + UiUtils.getid(LoginActivity.this));
-                login();
+                if (edUsername.getText().toString().trim().length()>0 &&
+                        edPassword.getText().toString().trim().length()>0){
+                    if (1 == loginState){
+                        login();
+                    }else {
+                        loginByPhone();
+                    }
+                }else {
+                    toastShow(R.string.input_login_msg);
+                }
+
                 break;
             case R.id.btn_register:
                 toastShow(R.string.register_now);
@@ -172,6 +255,49 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 break;
         }
 
+    }
+
+    private String phoneNumber;
+    /**
+     * 检验电话号码是否符合规范
+     *
+     * @return
+     */
+    private boolean checkPhoneNumber() {
+        phoneNumber = edUsername.getText().toString().trim();
+        if (!UiUtils.isNullorEmpty(phoneNumber) && phoneNumber.matches("1\\d{10}")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    /**
+     * 获取手机验证码
+     */
+    private void obtainPhoneCode() {
+        showProgressDialog();
+        addSubscription(apiStores.obtainPhoneCode(edUsername.getText().toString().trim()), new ApiCallback<HttpResponse<PhoneCodeBean>>() {
+            @Override
+            public void onSuccess(HttpResponse<PhoneCodeBean> model) {
+                if (model.isStatus()) {
+                    phoneCodeData = model.getData();
+                    toastShow(R.string.send_success);
+                    mHandler.sendEmptyMessage(2);
+                } else {
+                    toastShow(model.getErrorDescription());
+                }
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                toastShow(msg);
+            }
+
+            @Override
+            public void onFinish() {
+                dismissProgressDialog();
+            }
+        });
     }
 
     /**
@@ -323,6 +449,62 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     edit.putString(Config.WORKPHONE, user.getWorkphone());
                     edit.putString(Config.PHONE, user.getPhone());
                     edit.putInt(Config.MEMBER_TYPE, user.getMember_type());
+                    edit.putInt(Config.MEMBER_STATE, user.getState());
+                    edit.commit();
+                    //  refresh MainActivity
+                    EventBus.getDefault().post(new MessageEvent("Refresh"));
+//                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                    setResult(RESULT_OK);
+                    finish();
+                } else {
+                    toastShow(model.getErrorDescription());
+                }
+
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                toastShow(msg);
+            }
+
+            @Override
+            public void onFinish() {
+                dismissProgressDialog();
+            }
+        });
+    }
+    /**
+     * 手机登陆
+     */
+    private void loginByPhone() {
+        //hash
+        //tamp
+         //msgNum//验证码
+        //phone
+        //{"loginName":"xx000001","password":"1"}
+        LoginByPhoneRequestBen loginByPhoneRequestBen = new LoginByPhoneRequestBen();
+        loginByPhoneRequestBen.setPhone(edUsername.getText().toString().trim());
+        loginByPhoneRequestBen.setMsgNum(edPassword.getText().toString().trim());
+        loginByPhoneRequestBen.setHash(phoneCodeData.getHash());
+        loginByPhoneRequestBen.setTamp(phoneCodeData.getTamp());
+        final Gson gson = new Gson();
+        String route = gson.toJson(loginByPhoneRequestBen);
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), route);
+        showProgressDialog();
+        addSubscription(apiStores.PressLoginByPhone(body), new ApiCallback<HttpResponse<UserBean>>() {
+            @Override
+            public void onSuccess(HttpResponse<UserBean> model) {
+                if (model.isStatus()) {
+                    UserBean user = model.getData();
+                    SharedPreferences.Editor edit = BaseApplication.preferences.edit();
+                    edit.putString(Config.LOGIN_NAME, user.getLogin_name());
+                    edit.putString(Config.PASSWORD, user.getPASSWORD());
+                    edit.putString(Config.NICK_NAME, user.getNick_name());
+                    edit.putString(Config.REAL_NAME, user.getReal_name());
+                    edit.putString(Config.WORKPHONE, user.getWorkphone());
+                    edit.putString(Config.PHONE, user.getPhone());
+                    edit.putInt(Config.MEMBER_TYPE, user.getMember_type());
+                    edit.putInt(Config.MEMBER_STATE, user.getState());
                     edit.commit();
                     //  refresh MainActivity
                     EventBus.getDefault().post(new MessageEvent("Refresh"));
@@ -372,6 +554,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     edit.putString(Config.WORKPHONE, user.getWorkphone());
                     edit.putString(Config.PHONE, user.getPhone());
                     edit.putInt(Config.MEMBER_TYPE, user.getMember_type());
+                    edit.putInt(Config.MEMBER_STATE, user.getState());
                     edit.commit();
                     //  refresh MainActivity
                     EventBus.getDefault().post(new MessageEvent("Refresh"));
@@ -379,14 +562,20 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     setResult(RESULT_OK);
                     finish();
                 } else {
-                    // 调用注册页面 刷新登陆
-                    Logger.e("需要注册");
-                    Intent intent = new Intent(LoginActivity.this, ThreePartBindingActivity.class);
-                    intent.putExtra("USERID", otherUserId);
-                    intent.putExtra("BINGTYPE", bingType);
-                    startActivity(intent);
+                    // 调用注册页面 刷新登陆 6005 黑名单
+                    if (model.getErrorCode() == 6011){
+                        Logger.e("需要注册");
+                        Intent intent = new Intent(LoginActivity.this, ThreePartBindingActivity.class);
+                        intent.putExtra("USERID", otherUserId);
+                        intent.putExtra("BINGTYPE", bingType);
+                        startActivity(intent);
 //                    finish();
-                    toastShow(model.getErrorDescription());
+                        toastShow(model.getErrorDescription());
+                    }else {
+                        toastShow(model.getErrorDescription());
+
+                    }
+
                 }
 
             }

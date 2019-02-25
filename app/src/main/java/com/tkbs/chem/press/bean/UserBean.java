@@ -46,6 +46,8 @@ public class UserBean {
     private String job;
     private String equipment;
     private int member_type;
+    // 0 正常 1 黑名单
+    private int state;
 
     public int getMember_type() {
         return member_type;
@@ -197,5 +199,13 @@ public class UserBean {
 
     public void setJob(String job) {
         this.job = job;
+    }
+
+    public int getState() {
+        return state;
+    }
+
+    public void setState(int state) {
+        this.state = state;
     }
 }

@@ -460,7 +460,9 @@ public class SearchResultActivity extends BaseActivity implements View.OnClickLi
             @Override
             public void onItemViewClick(BookCityResDocument data) {
                 super.onItemViewClick(data);
-
+                Intent intent = new Intent(SearchResultActivity.this, BookDetailActivity.class);
+                intent.putExtra("guid", data.getGuid());
+                SearchResultActivity.this.startActivity(intent);
             }
 
 
@@ -507,9 +509,9 @@ public class SearchResultActivity extends BaseActivity implements View.OnClickLi
             @Override
             public void onItemViewClick(BookCityResDocument data) {
                 super.onItemViewClick(data);
-                Intent intent = new Intent(context, BookDetailActivity.class);
+                Intent intent = new Intent(SearchResultActivity.this, BookDetailActivity.class);
                 intent.putExtra("guid", data.getGuid());
-                context.startActivity(intent);
+                SearchResultActivity.this.startActivity(intent);
             }
         }
 

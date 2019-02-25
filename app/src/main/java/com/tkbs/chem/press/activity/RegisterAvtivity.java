@@ -227,6 +227,7 @@ public class RegisterAvtivity extends BaseActivity implements View.OnClickListen
                         edit.putString(Config.WORKPHONE, user.getWorkphone());
                         edit.putString(Config.PHONE, user.getPhone());
                         edit.putInt(Config.MEMBER_TYPE, user.getMember_type());
+                        edit.putInt(Config.MEMBER_STATE, user.getState());
                         edit.commit();
                         //  refresh MainActivity
                         EventBus.getDefault().post(new MessageEvent("Refresh"));

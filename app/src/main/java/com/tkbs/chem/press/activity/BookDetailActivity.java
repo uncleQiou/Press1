@@ -20,6 +20,8 @@ import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.base.BaseActivity;
 import com.tkbs.chem.press.bean.CreateOrderDataBean;
 import com.tkbs.chem.press.bean.HttpResponse;
+import com.tkbs.chem.press.bean.PhoneCodeBean;
+import com.tkbs.chem.press.bean.ShareDataBean;
 import com.tkbs.chem.press.net.ApiCallback;
 import com.tkbs.chem.press.util.Config;
 import com.tkbs.chem.press.util.MessageEvent;
@@ -261,11 +263,39 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
                 finish();
                 break;
             case R.id.img_share:
-                showShare();
+                obtainPhoneCode();
                 break;
             default:
                 break;
         }
+    }
+    /**
+     * 获取分享分享数据
+     */
+    private ShareDataBean shareData = new ShareDataBean();
+    private void obtainPhoneCode() {
+        showProgressDialog();
+        addSubscription(apiStores.ObtainShareData(guid), new ApiCallback<HttpResponse<ShareDataBean>>() {
+            @Override
+            public void onSuccess(HttpResponse<ShareDataBean> model) {
+                if (model.isStatus()) {
+                    shareData = model.getData();
+                    showShare();
+                } else {
+                    toastShow(model.getErrorDescription());
+                }
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                toastShow(msg);
+            }
+
+            @Override
+            public void onFinish() {
+                dismissProgressDialog();
+            }
+        });
     }
 
     @Override
@@ -329,7 +359,7 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
+        //  add setContentView(...) invocation
         ButterKnife.bind(this);
     }
 
@@ -340,17 +370,18 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
         //设置一个总开关，用于在分享前若需要授权，则禁用sso功能  添加这个才成功
         oks.disableSSOWhenAuthorize();
         // title标题，微信、QQ和QQ空间等平台使用
-        oks.setTitle("分享测试");
+        oks.setTitle(shareData.getTitle());
         // titleUrl QQ和QQ空间跳转链接
-        oks.setTitleUrl("http://sharesdk.cn");
+        oks.setTitleUrl(shareData.getUrl());
         // text是分享文本，所有平台都需要这个字段
-        oks.setText("我是分享文本");
+        oks.setText(shareData.getIntroduction());
         // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
-        oks.setImagePath("/sdcard/test.jpg");//确保SDcard下面存在此张图片
+        oks.setImagePath(shareData.getCover());
+        //确保SDcard下面存在此张图片
         // url在微信、微博，Facebook等平台中使用
-        oks.setUrl("http://sharesdk.cn");
+        oks.setUrl(shareData.getUrl());
         // comment是我对这条分享的评论，仅在人人网使用
-        oks.setComment("我是测试评论文本");
+        oks.setComment(shareData.getTitle());
 
         // 启动分享GUI
         oks.setShareContentCustomizeCallback(new ShareContentCustomizeCallback() {
@@ -359,22 +390,23 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
                 if (Wechat.NAME.equals(platform.getName()) ||
                         WechatMoments.NAME.equals(platform.getName())) {
                     paramsToShare.setShareType(Platform.SHARE_WEBPAGE);
-                    paramsToShare.setUrl("http://www.xianzhiwang.cn/");
-                    paramsToShare.setText("微信测试微信测试");
-                    paramsToShare.setImageUrl("http://221.122.68.72:8070/webFile/column/20181008183210912495.jpg");
-                    paramsToShare.setTitle("微信测试能不能行啦还");
+                    paramsToShare.setUrl(shareData.getUrl());
+                    paramsToShare.setText(shareData.getIntroduction());
+                    paramsToShare.setImageUrl(shareData.getCover());
+                    paramsToShare.setImagePath(shareData.getCover());
+                    paramsToShare.setTitle(shareData.getTitle());
                 }
                 if (SinaWeibo.NAME.equals(platform.getName())) {
-                    paramsToShare.setText("微博微博微博测试");
-                    paramsToShare.setUrl("http://www.xianzhiwang.cn/");
-                    paramsToShare.setImageUrl("http://221.122.68.72:8070/webFile/column/20181008183210912495.jpg");
+                    paramsToShare.setText(shareData.getIntroduction());
+                    paramsToShare.setUrl(shareData.getUrl());
+                    paramsToShare.setImageUrl(shareData.getCover());
                 }
                 if (QQ.NAME.equals(platform.getName())) {
-                    paramsToShare.setTitle("QQ");
-                    paramsToShare.setTitleUrl("http://www.xianzhiwang.cn/");
-                    paramsToShare.setText("QQQQQQ测试");
-                    paramsToShare.setUrl("http://www.xianzhiwang.cn/");
-                    paramsToShare.setImageUrl("http://221.122.68.72:8070/webFile/column/20181008183210912495.jpg");
+                    paramsToShare.setTitle(shareData.getTitle());
+                    paramsToShare.setTitleUrl(shareData.getUrl());
+                    paramsToShare.setText(shareData.getIntroduction());
+                    paramsToShare.setUrl(shareData.getUrl());
+                    paramsToShare.setImageUrl(shareData.getCover());
                 }
             }
         });

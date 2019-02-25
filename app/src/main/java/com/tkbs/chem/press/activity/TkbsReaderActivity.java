@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.load.Encoder;
 import com.orhanobut.logger.Logger;
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.base.BaseActivity;
@@ -62,7 +64,7 @@ public class TkbsReaderActivity extends BaseActivity implements View.OnClickList
     private String readData;
     private String param3 = "";
     private boolean isLocaRead;
-    private int readHistory;
+    private int readHistory = 1;
     private boolean isReadAll;
     private String filePath;
     /**
@@ -558,8 +560,12 @@ public class TkbsReaderActivity extends BaseActivity implements View.OnClickList
         @JavascriptInterface
         public String readTkbs(String guid, int pageNum) {
             readHistory = pageNum;
-            String result = new String(UiUtils.readTkbs(guid, pageNum));
-            return result;
+//            String result = new String(UiUtils.readTkbs(guid, pageNum));
+//            return result;
+
+            return Base64.encodeToString(UiUtils.readTkbs(guid, pageNum),0);
+
+//            return UiUtils.readTkbs(guid, pageNum);
         }
 
         @JavascriptInterface

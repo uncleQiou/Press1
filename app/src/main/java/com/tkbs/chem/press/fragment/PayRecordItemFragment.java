@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.GridLayoutManager;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,11 +17,13 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.activity.BookDetailActivity;
+import com.tkbs.chem.press.activity.RechargeActivity;
 import com.tkbs.chem.press.activity.RechargeRecordActivity;
 import com.tkbs.chem.press.activity.TkbsReaderActivity;
 import com.tkbs.chem.press.base.BaseApplication;
 import com.tkbs.chem.press.base.BaseFragment;
 import com.tkbs.chem.press.bean.ConsumptionRecordsDataBean;
+import com.tkbs.chem.press.bean.CreateOrderDataBean;
 import com.tkbs.chem.press.bean.HttpResponse;
 import com.tkbs.chem.press.bean.MessageBean;
 import com.tkbs.chem.press.bean.SampleBookDetailDataBean;
@@ -29,6 +32,7 @@ import com.tkbs.chem.press.bean.ThreeClassifyDataBena;
 import com.tkbs.chem.press.net.ApiCallback;
 import com.tkbs.chem.press.util.Config;
 import com.tkbs.chem.press.util.TimeUtils;
+import com.tkbs.chem.press.view.BookBuyPopupWindow;
 
 import java.text.Collator;
 import java.text.RuleBasedCollator;
@@ -182,6 +186,42 @@ public class PayRecordItemFragment extends BaseFragment implements View.OnClickL
                 new PayRecordData("afdfasdfadsfas"),
 
         };
+    }
+
+    /**
+     * 删除订单
+     */
+    private void deleteOrder(String guid) {
+        showProgressDialog();
+        addSubscription(apiStores.deleteOrder(guid), new ApiCallback<HttpResponse<Object>>() {
+            @Override
+            public void onSuccess(HttpResponse<Object> model) {
+                if (model.isStatus()){
+                    toastShow(R.string.delete_order);
+                    recycler_pay_record.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            page = 1;
+                            recycler_pay_record.showSwipeRefresh();
+                            getData(true);
+                        }
+                    });
+                }else {
+                    toastShow(model.getErrorDescription());
+                }
+
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                toastShow(msg);
+            }
+
+            @Override
+            public void onFinish() {
+                dismissProgressDialog();
+            }
+        });
     }
 
     @Override
@@ -362,7 +402,7 @@ public class PayRecordItemFragment extends BaseFragment implements View.OnClickL
             }
 
             @Override
-            public void setData(ConsumptionRecordsDataBean data) {
+            public void setData(final ConsumptionRecordsDataBean data) {
                 super.setData(data);
                 tv_book_name.setText(data.getTitle());
                 Glide.with(context).load(data.getCover())
@@ -371,15 +411,25 @@ public class PayRecordItemFragment extends BaseFragment implements View.OnClickL
                 // 订单失败 去图书详情  10 支付中 20 支付成功 30支付失败
                 if (data.getPay_state() == 20) {
                     tv_go_pay.setVisibility(View.GONE);
+                    tv_delete_order.setVisibility(View.GONE);
                 } else {
                     tv_go_pay.setVisibility(View.VISIBLE);
+                    tv_delete_order.setVisibility(View.VISIBLE);
                 }
                 tv_book_value.setText(data.getPay_price() + "CIP币");
                 tv_order_date.setText(TimeUtils.getTime(data.getCreate_date()));
                 tv_delete_order.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        toastShow(R.string.delete_order);
+                        if (data.getPay_state() == 10 || data.getPay_state() == 30){
+                            deleteOrder(data.getOrderGuid());
+                        }
+                    }
+                });
+                tv_go_pay.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        createOrder(data.getGuid());
                     }
                 });
 
@@ -410,5 +460,91 @@ public class PayRecordItemFragment extends BaseFragment implements View.OnClickL
         public void setName(String name) {
             this.name = name;
         }
+    }
+
+    private BookBuyPopupWindow menuWindow;
+
+    /***
+     * 为弹出窗口实现监听类
+     */
+    private View.OnClickListener itemsOnClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            menuWindow.dismiss();
+            switch (v.getId()) {
+                // 去充值
+                case R.id.tv_go_recharge:
+                    Intent intent = new Intent(getActivity(), RechargeActivity.class);
+                    intent.putExtra("guid", payGuid);
+                    startActivity(intent);
+                    break;
+                // 支付
+                case R.id.tv_pay:
+                    //  调用扣点接口
+                    ConfirmPayment();
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
+
+    private String payGuid;
+    /**
+     * 获取充值配置
+     */
+    private void createOrder(String guid) {
+        showProgressDialog();
+        payGuid = guid;
+        addSubscription(apiStores.createOrder(guid), new ApiCallback<HttpResponse<CreateOrderDataBean>>() {
+            @Override
+            public void onSuccess(HttpResponse<CreateOrderDataBean> model) {
+
+                menuWindow = new BookBuyPopupWindow(getActivity(), itemsOnClick,
+                        model.getData().getVirtualPrice(), model.getData().getAccountBalance());
+                menuWindow.showAtLocation(getActivity().findViewById(R.id.title),
+                        Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                toastShow(msg);
+            }
+
+            @Override
+            public void onFinish() {
+                dismissProgressDialog();
+            }
+        });
+    }
+
+    /**
+     * 支付
+     */
+    private void ConfirmPayment() {
+        showProgressDialog();
+        addSubscription(apiStores.ConfirmPayment(payGuid), new ApiCallback<HttpResponse<Object>>() {
+            @Override
+            public void onSuccess(HttpResponse<Object> model) {
+                recycler_pay_record.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        page = 1;
+                        recycler_pay_record.showSwipeRefresh();
+                        getData(true);
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                toastShow(msg);
+            }
+
+            @Override
+            public void onFinish() {
+                dismissProgressDialog();
+            }
+        });
     }
 }

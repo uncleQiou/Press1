@@ -89,16 +89,16 @@
                 android:textColorHint="@color/white"
                 android:textSize="@dimen/text_16sp" />
 
-            <TextView
+            <Button
                 android:id="@+id/tv_get_code"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/btn_login_checkcode"
-                android:paddingBottom="@dimen/margin_5dp"
+                android:layout_height="@dimen/height_getcode"
+                android:background="@drawable/selector_btn_yzm"
+                android:text="@string/click_get"
                 android:paddingLeft="@dimen/margin_10dp"
                 android:paddingRight="@dimen/margin_10dp"
-                android:paddingTop="@dimen/margin_5dp"
-                android:text="@string/click_get"
+                android:enabled="false"
+                android:gravity="center"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_16sp" />
         </LinearLayout>
