@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -288,6 +289,12 @@ public class OpinionManageFragment extends BaseFragment implements View.OnClickL
                         ll_reply_layot.setVisibility(View.VISIBLE);
                         parentId = data.getOpinionId();
                         ed_reply.setHint("回复");
+                        // 显示键盘
+                        ed_reply.setFocusable(true);
+                        ed_reply.setFocusableInTouchMode(true);
+                        ed_reply.requestFocus();
+                        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.showSoftInput(ed_reply,0);
                     }
                 });
 

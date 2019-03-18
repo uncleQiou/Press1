@@ -11,6 +11,7 @@ import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.base.BaseActivity;
 import com.tkbs.chem.press.bean.HttpResponse;
 import com.tkbs.chem.press.net.ApiCallback;
+import com.tkbs.chem.press.util.Config;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -89,7 +90,14 @@ public class MyAccountActivity extends BaseActivity implements View.OnClickListe
                 startActivity(new Intent(MyAccountActivity.this, PayRecordActivity.class));
                 break;
             case R.id.tv_recharge:
-                startActivity(new Intent(MyAccountActivity.this, RechargeActivity.class));
+                int user_type = preference.getInt(Config.MEMBER_TYPE, 3);
+                if (user_type == 5){
+                    startActivity(new Intent(MyAccountActivity.this, LoginActivity.class));
+                    finish();
+                } else {
+                    startActivity(new Intent(MyAccountActivity.this, RechargeActivity.class));
+                    finish();
+                }
                 break;
             default:
                 break;

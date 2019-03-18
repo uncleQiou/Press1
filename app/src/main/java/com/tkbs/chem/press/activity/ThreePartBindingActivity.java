@@ -222,6 +222,7 @@ public class ThreePartBindingActivity extends BaseActivity implements View.OnCli
                         UserBean user = model.getData();
                         SharedPreferences.Editor edit = BaseApplication.preferences.edit();
                         edit.putString(Config.LOGIN_NAME, user.getLogin_name());
+                        edit.putString(Config.GUID, user.getGuid());
                         edit.putString(Config.PASSWORD, user.getPASSWORD());
                         edit.putString(Config.NICK_NAME, user.getNick_name());
                         edit.putString(Config.REAL_NAME, user.getReal_name());

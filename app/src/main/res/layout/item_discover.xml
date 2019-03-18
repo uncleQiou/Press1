@@ -20,13 +20,26 @@
         android:background="@color/white"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tv_message_content"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/margin_10dp"
-            android:textColor="@color/text_main_3"
-            android:textSize="@dimen/text_16sp" />
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/img_unread"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:padding="@dimen/margin_10dp"
+                android:src="@mipmap/red_point"/>
+            <TextView
+                android:id="@+id/tv_message_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/margin_10dp"
+                android:textColor="@color/text_main_3"
+                android:textSize="@dimen/text_16sp" />
+
+        </LinearLayout>
+
 
         <LinearLayout
             android:id="@+id/ll_click_check"

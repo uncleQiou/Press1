@@ -306,7 +306,8 @@ public class BookCityFragment extends BaseFragment implements View.OnClickListen
                     list_path = new ArrayList<String>();
                     list_title = new ArrayList<String>();
                     for (int i = 0; i < model.data.size(); i++) {
-                        list_title.add(model.data.get(i).getTitle());
+                        list_title.add("");
+//                        list_title.add(model.data.get(i).getTitle());
                         list_path.add(BaseApplication.imgBasePath + model.data.get(i).getFile_path());
 //                        list_path.add(UiUtils.ImageMachining(model.data.get(i).getFile_path()));
                     }
@@ -495,6 +496,7 @@ public class BookCityFragment extends BaseFragment implements View.OnClickListen
             recyclerView.addItemDecoration(new GridSpacingItemDecoration(spanCount, spacing, includeEdge));
             //   设置三级书籍 九本
             recyclerView.setNestedScrollingEnabled(false);
+            // TODO 重新获取数据
             BookCityItemAdapter bookCityItemAdapter = new BookCityItemAdapter(getActivity(), indicatorList.get(position).getResDocuments());
             recyclerView.setAdapter(bookCityItemAdapter);
             return convertView;

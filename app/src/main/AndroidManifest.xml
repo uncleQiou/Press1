@@ -48,7 +48,8 @@
         </activity>
         <activity
             android:name=".MainActivity"
-            android:launchMode="singleTask" />
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="stateHidden|stateUnchanged"/>
         <!-- 搜索界面 -->
         <activity
             android:name=".activity.SearchActivity"
@@ -129,8 +130,12 @@
         <activity android:name=".activity.PersonalTailorActivity" />
         <!-- 我的账户 -->
         <activity android:name=".activity.MyAccountActivity" />
-        <!--三方登陆绑定-->
-        <activity android:name=".activity.ThreePartBindingActivity"/>
+        <!-- 三方登陆绑定 -->
+        <activity android:name=".activity.ThreePartBindingActivity" />
+        <!--忘记密码-->
+        <activity android:name=".activity.ForgetPasswordActivity" />
+        <!--修改绑定手机号-->
+        <activity android:name=".activity.ModifyPhoneWebActivity"/>
     </application>
 
 </manifest>

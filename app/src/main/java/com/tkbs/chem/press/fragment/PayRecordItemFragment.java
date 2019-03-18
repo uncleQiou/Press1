@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -130,6 +131,7 @@ public class PayRecordItemFragment extends BaseFragment implements View.OnClickL
             }
         });
         recycler_pay_record.getNoMoreView().setText(R.string.no_more_data);
+        changeTextColor(0);
     }
 
     private void getData(final boolean isRefresh) {
@@ -245,6 +247,7 @@ public class PayRecordItemFragment extends BaseFragment implements View.OnClickL
                 payRecordAdapter.addAll(dataList);
                 recycler_pay_record.dismissSwipeRefresh();
                 recycler_pay_record.getRecyclerView().scrollToPosition(0);
+                changeTextColor(0);
                 break;
             case R.id.ll_sort_book_name:
                 if (null == dataList) {
@@ -256,6 +259,7 @@ public class PayRecordItemFragment extends BaseFragment implements View.OnClickL
                 payRecordAdapter.addAll(dataList);
                 recycler_pay_record.dismissSwipeRefresh();
                 recycler_pay_record.getRecyclerView().scrollToPosition(0);
+                changeTextColor(1);
                 break;
             case R.id.ll_sort_hot:
                 if (null == dataList) {
@@ -267,12 +271,44 @@ public class PayRecordItemFragment extends BaseFragment implements View.OnClickL
                 payRecordAdapter.addAll(dataList);
                 recycler_pay_record.dismissSwipeRefresh();
                 recycler_pay_record.getRecyclerView().scrollToPosition(0);
+                changeTextColor(2);
                 break;
             default:
                 break;
         }
     }
 
+    /**
+     * 修改排序字体颜色
+     */
+    private void changeTextColor(int flg){
+
+        if (flg == 0){
+            // 时间排序
+            setTextColor(tv_sort_time,1);
+            setTextColor(tv_sort_book_name,0);
+            setTextColor(tv_sort_hot,0);
+        }else if (flg == 1){
+            // 姓名排序
+            setTextColor(tv_sort_time,0);
+            setTextColor(tv_sort_book_name,1);
+            setTextColor(tv_sort_hot,0);
+        }else if (flg == 2){
+
+            setTextColor(tv_sort_time,0);
+            setTextColor(tv_sort_book_name,0);
+            setTextColor(tv_sort_hot,1);
+        }
+
+    }
+    private void setTextColor(TextView textView,int flg){
+        if (flg == 0){
+            textView.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.text_main_6));
+        }else {
+            textView.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.apply_violet));
+        }
+
+    }
     /**
      * 按时间排序 升序
      */

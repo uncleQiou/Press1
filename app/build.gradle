@@ -75,6 +75,11 @@ android {
 
             }
         }
+        MobPush {
+            devInfo {
+
+            }
+        }
 
     }
 }

@@ -46,6 +46,7 @@ import cn.sharesdk.tencent.qq.QQ;
 import cn.sharesdk.wechat.friends.Wechat;
 import cn.sharesdk.wechat.moments.WechatMoments;
 import de.greenrobot.event.EventBus;
+import okhttp3.MediaType;
 import okhttp3.RequestBody;
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
@@ -71,6 +72,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     @BindView(R.id.ll_wechat_login)
     LinearLayout llWechatLogin;
     int loginState = 1;
+    @BindView(R.id.btn_forget_ps)
+    TextView btnForgetPs;
+    @BindView(R.id.tourist_login)
+    TextView touristLogin;
     private PhoneCodeBean phoneCodeData;
     //监听前的文本
     private CharSequence temp;
@@ -94,7 +99,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         @Override
         public void afterTextChanged(Editable editable) {
             /** 得到光标开始和结束位置 ,超过最大数后记录刚超出的数字索引进行控制 */
-            if (1 == loginState){return;}
+            if (1 == loginState) {
+                return;
+            }
             editStart = edUsername.getSelectionStart();
             editEnd = edUsername.getSelectionEnd();
             if (temp.length() >= charMaxNum) {
@@ -128,12 +135,14 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                             tvGetCode.setEnabled(true);
                             tvGetCode.setText("获取验证码");
                         }
-                        if (null != edUsername){
-                            edUsername.setEnabled(true);}
+                        if (null != edUsername) {
+                            edUsername.setEnabled(true);
+                        }
                     } else {
-                        if (null != tvGetCode){
+                        if (null != tvGetCode) {
                             tvGetCode.setEnabled(false);
-                            tvGetCode.setText("已发送(" + timeCutDown + ")");}
+                            tvGetCode.setText("已发送(" + timeCutDown + ")");
+                        }
                         timeCutDown--;
                         mHandler.sendEmptyMessageDelayed(2, 1000);
                     }
@@ -167,6 +176,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         edUsername.setText("xx000001");
         edPassword.setText("1");
         UiUtils.ClearSp(getApplicationContext());
+        NoLanding();
         settingView();
     }
 
@@ -199,8 +209,86 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
     }
 
+    /**
+     * 游客免登陆
+     */
+    private void NoLanding() {
+        showProgressDialog();
+        addSubscription(apiStores.NoLanding(UiUtils.getid(LoginActivity.this)),
+                new ApiCallback<HttpResponse<UserBean>>() {
+                    @Override
+                    public void onSuccess(HttpResponse<UserBean> model) {
+                        if (model.isStatus()) {
+                            UserBean user = model.getData();
+                            SharedPreferences.Editor edit = BaseApplication.preferences.edit();
+                            edit.putString(Config.LOGIN_NAME, user.getLogin_name());
+                            edit.putString(Config.GUID, user.getGuid());
+                            edit.putString(Config.PASSWORD, user.getPASSWORD());
+                            edit.putString(Config.NICK_NAME, user.getNick_name());
+                            edit.putString(Config.REAL_NAME, user.getReal_name());
+                            edit.putInt(Config.MEMBER_TYPE, user.getMember_type());
+                            edit.putInt(Config.MEMBER_STATE, user.getState());
+                            edit.commit();
+                        } else {
+                            toastShow(model.getErrorDescription());
+                        }
+
+                    }
+
+                    @Override
+                    public void onFailure(String msg) {
+                        toastShow(msg);
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        dismissProgressDialog();
+                    }
+                });
+    }
+    /**
+     * 游客免登陆
+     */
+    private void NoLandingToMain() {
+        showProgressDialog();
+        addSubscription(apiStores.NoLanding(UiUtils.getid(LoginActivity.this)),
+                new ApiCallback<HttpResponse<UserBean>>() {
+                    @Override
+                    public void onSuccess(HttpResponse<UserBean> model) {
+                        if (model.isStatus()) {
+                            UserBean user = model.getData();
+                            SharedPreferences.Editor edit = BaseApplication.preferences.edit();
+                            edit.putString(Config.LOGIN_NAME, user.getLogin_name());
+                            edit.putString(Config.GUID, user.getGuid());
+                            edit.putString(Config.PASSWORD, user.getPASSWORD());
+                            edit.putString(Config.NICK_NAME, user.getNick_name());
+                            edit.putString(Config.REAL_NAME, user.getReal_name());
+                            edit.putInt(Config.MEMBER_TYPE, user.getMember_type());
+                            edit.putInt(Config.MEMBER_STATE, user.getState());
+                            edit.commit();
+                            EventBus.getDefault().post(new MessageEvent("Refresh"));
+                            setResult(RESULT_OK);
+                            finish();
+                        } else {
+                            toastShow(model.getErrorDescription());
+                        }
+
+                    }
+
+                    @Override
+                    public void onFailure(String msg) {
+                        toastShow(msg);
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        dismissProgressDialog();
+                    }
+                });
+    }
+
     @OnClick({R.id.img_change, R.id.tv_get_code, R.id.btn_login, R.id.btn_register,
-            R.id.ll_qq_login, R.id.ll_wechat_login})
+            R.id.ll_qq_login, R.id.ll_wechat_login, R.id.btn_forget_ps,R.id.tourist_login})
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -213,22 +301,30 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 settingView();
                 break;
             case R.id.tv_get_code:
-                if (edUsername.getText().toString().trim().length()>0 && checkPhoneNumber()){
+                if (edUsername.getText().toString().trim().length() > 0 && checkPhoneNumber()) {
                     obtainPhoneCode();
-                }else {
+                } else {
                     toastShow(R.string.input_login_msg);
                 }
-
                 break;
+            case R.id.btn_forget_ps:
+                //   忘记密码
+                //toastShow(R.string.forget_password);
+                startActivity(new Intent(LoginActivity.this, ForgetPasswordActivity.class));
+                break;
+
             case R.id.btn_login:
-                if (edUsername.getText().toString().trim().length()>0 &&
-                        edPassword.getText().toString().trim().length()>0){
-                    if (1 == loginState){
+                if (UiUtils.isFastDoubleClick()) {
+                    return;
+                }
+                if (edUsername.getText().toString().trim().length() > 0 &&
+                        edPassword.getText().toString().trim().length() > 0) {
+                    if (1 == loginState) {
                         login();
-                    }else {
+                    } else {
                         loginByPhone();
                     }
-                }else {
+                } else {
                     toastShow(R.string.input_login_msg);
                 }
 
@@ -251,6 +347,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 weChatLogin();
 //                loginWeChat("oClK75sXKa5gGQtwc0w9p9AWNR_E");
                 break;
+            case R.id.tourist_login:
+                // 游客登录
+                NoLandingToMain();
+                break;
             default:
                 break;
         }
@@ -258,6 +358,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     }
 
     private String phoneNumber;
+
     /**
      * 检验电话号码是否符合规范
      *
@@ -271,6 +372,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             return false;
         }
     }
+
     /**
      * 获取手机验证码
      */
@@ -354,7 +456,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         // 启动分享GUI
         oks.setShareContentCustomizeCallback(new ShareContentCustomizeCallback() {
             @Override
-            public void onShare(Platform platform, cn.sharesdk.framework.Platform.ShareParams paramsToShare) {
+            public void onShare(Platform platform, Platform.ShareParams paramsToShare) {
                 if (Wechat.NAME.equals(platform.getName()) ||
                         WechatMoments.NAME.equals(platform.getName())) {
                     paramsToShare.setShareType(Platform.SHARE_WEBPAGE);
@@ -434,7 +536,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         loginRequestBen.setPassword(edPassword.getText().toString().trim());
         final Gson gson = new Gson();
         String route = gson.toJson(loginRequestBen);
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), route);
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), route);
         showProgressDialog();
         addSubscription(apiStores.PressLogin(body), new ApiCallback<HttpResponse<UserBean>>() {
             @Override
@@ -443,6 +545,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     UserBean user = model.getData();
                     SharedPreferences.Editor edit = BaseApplication.preferences.edit();
                     edit.putString(Config.LOGIN_NAME, user.getLogin_name());
+                    edit.putString(Config.GUID, user.getGuid());
                     edit.putString(Config.PASSWORD, user.getPASSWORD());
                     edit.putString(Config.NICK_NAME, user.getNick_name());
                     edit.putString(Config.REAL_NAME, user.getReal_name());
@@ -473,13 +576,14 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             }
         });
     }
+
     /**
      * 手机登陆
      */
     private void loginByPhone() {
         //hash
         //tamp
-         //msgNum//验证码
+        //msgNum//验证码
         //phone
         //{"loginName":"xx000001","password":"1"}
         LoginByPhoneRequestBen loginByPhoneRequestBen = new LoginByPhoneRequestBen();
@@ -489,7 +593,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         loginByPhoneRequestBen.setTamp(phoneCodeData.getTamp());
         final Gson gson = new Gson();
         String route = gson.toJson(loginByPhoneRequestBen);
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), route);
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), route);
         showProgressDialog();
         addSubscription(apiStores.PressLoginByPhone(body), new ApiCallback<HttpResponse<UserBean>>() {
             @Override
@@ -498,6 +602,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     UserBean user = model.getData();
                     SharedPreferences.Editor edit = BaseApplication.preferences.edit();
                     edit.putString(Config.LOGIN_NAME, user.getLogin_name());
+                    edit.putString(Config.GUID, user.getGuid());
                     edit.putString(Config.PASSWORD, user.getPASSWORD());
                     edit.putString(Config.NICK_NAME, user.getNick_name());
                     edit.putString(Config.REAL_NAME, user.getReal_name());
@@ -548,6 +653,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     UserBean user = model.getData();
                     SharedPreferences.Editor edit = BaseApplication.preferences.edit();
                     edit.putString(Config.LOGIN_NAME, user.getLogin_name());
+                    edit.putString(Config.GUID, user.getGuid());
                     edit.putString(Config.PASSWORD, user.getPASSWORD());
                     edit.putString(Config.NICK_NAME, user.getNick_name());
                     edit.putString(Config.REAL_NAME, user.getReal_name());
@@ -563,7 +669,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     finish();
                 } else {
                     // 调用注册页面 刷新登陆 6005 黑名单
-                    if (model.getErrorCode() == 6011){
+                    if (model.getErrorCode() == 6011) {
                         Logger.e("需要注册");
                         Intent intent = new Intent(LoginActivity.this, ThreePartBindingActivity.class);
                         intent.putExtra("USERID", otherUserId);
@@ -571,7 +677,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                         startActivity(intent);
 //                    finish();
                         toastShow(model.getErrorDescription());
-                    }else {
+                    } else {
                         toastShow(model.getErrorDescription());
 
                     }

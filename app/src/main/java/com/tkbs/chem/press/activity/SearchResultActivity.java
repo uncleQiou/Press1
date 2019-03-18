@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.view.View;
 import android.view.ViewGroup;
@@ -95,6 +96,19 @@ public class SearchResultActivity extends BaseActivity implements View.OnClickLi
     // 升序
     private boolean isAscendingOrder = true;
     private SPManagement.SPUtil spUtilInstance;
+    /**
+     * 时间排序
+     */
+    private int timeOrder;
+    /**
+     * 书名排序
+     */
+    private int titleOrder;
+    /**
+     * 热度排序
+     */
+    private int degreeOrder;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,7 +124,7 @@ public class SearchResultActivity extends BaseActivity implements View.OnClickLi
         spUtilInstance = SPManagement.getSPUtilInstance(Config.SAVEDTAB);
         classfyguid = getIntent().getStringArrayListExtra("Classfy");
         searchKeyStr = getIntent().getStringExtra("SearchKey");
-
+        timeOrder = Config.SORT_NOONE;
         mAdapter = new SerachResultAdapter(this);
         recycler.setSwipeRefreshColors(0xFF437845, 0xFFE44F98, 0xFF2FAC21);
         recycler.setLayoutManager(new GridLayoutManager(this, 3));
@@ -140,6 +154,8 @@ public class SearchResultActivity extends BaseActivity implements View.OnClickLi
             }
         });
         recycler.getNoMoreView().setText(R.string.no_more_data);
+        timeOrder = Config.SORT_UP;
+        changeTextColor();
     }
 
     @Override
@@ -165,7 +181,7 @@ public class SearchResultActivity extends BaseActivity implements View.OnClickLi
         Logger.e("====" + route + "===========");
         RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), route);
         showProgressDialog();
-        addSubscription(apiStores.getSearchList(page, body), new ApiCallback<HttpResponse<ArrayList<BookCityResDocument>>>() {
+        addSubscription(apiStores.getSearchList(page, body,timeOrder, titleOrder, degreeOrder), new ApiCallback<HttpResponse<ArrayList<BookCityResDocument>>>() {
             @Override
             public void onSuccess(HttpResponse<ArrayList<BookCityResDocument>> model) {
                 if (model.isStatus()) {
@@ -227,7 +243,7 @@ public class SearchResultActivity extends BaseActivity implements View.OnClickLi
             case R.id.img_sort_edit:
                 if (1 == disType) {
                     disType = 2;
-                    imgSortEdit.setImageResource(R.mipmap.customized_btn_list);
+                    imgSortEdit.setImageResource(R.mipmap.customized_btn_list_switching);
                     mAdapter = new SerachResultAdapter(this);
                     mAdapter.clear();
                     mAdapter.addAll(dataList);
@@ -236,7 +252,7 @@ public class SearchResultActivity extends BaseActivity implements View.OnClickLi
                     recycler.showNoMore();
                 } else {
                     disType = 1;
-                    imgSortEdit.setImageResource(R.mipmap.customized_btn_list_switching);
+                    imgSortEdit.setImageResource(R.mipmap.customized_btn_list);
                     mAdapter = new SerachResultAdapter(this);
                     mAdapter.clear();
                     mAdapter.addAll(dataList);
@@ -246,50 +262,91 @@ public class SearchResultActivity extends BaseActivity implements View.OnClickLi
                 }
                 break;
             case R.id.ll_sort_time:
-                if (null == dataList) {
-                    return;
-                }
-                recycler.showSwipeRefresh();
                 imgSortTime.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down : R.mipmap.bookshelf_icon_up);
                 if (isAscendingOrder) {
                     isAscendingOrder = false;
-                    sortByDateUp();
+                    timeOrder = Config.SORT_DOWN;
+                    titleOrder = Config.SORT_NOONE;
+                    degreeOrder = Config.SORT_NOONE;
                 } else {
                     isAscendingOrder = true;
-                    sortByDateDown();
+                    timeOrder = Config.SORT_UP;
+                    titleOrder = Config.SORT_NOONE;
+                    degreeOrder = Config.SORT_NOONE;
                 }
-                mAdapter.clear();
-                mAdapter.addAll(dataList);
-                recycler.dismissSwipeRefresh();
-                recycler.getRecyclerView().scrollToPosition(0);
+                recycler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        page = 1;
+                        recycler.showSwipeRefresh();
+                        getSearchedData(true);
+                    }
+                });
+                changeTextColor();
                 break;
             case R.id.tv_sort_book_name:
-                if (null == dataList) {
-                    return;
-                }
-                recycler.showSwipeRefresh();
-                sortByBookName();
-                mAdapter.clear();
-                mAdapter.addAll(dataList);
-                recycler.dismissSwipeRefresh();
-                recycler.getRecyclerView().scrollToPosition(0);
+                timeOrder = Config.SORT_NOONE;
+                titleOrder = Config.SORT_UP;
+                degreeOrder = Config.SORT_NOONE;
+                recycler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        page = 1;
+                        recycler.showSwipeRefresh();
+                        getSearchedData(true);
+                    }
+                });
+                changeTextColor();
                 break;
             case R.id.tv_sort_hot:
-                if (null == dataList) {
-                    return;
-                }
-                recycler.showSwipeRefresh();
-                sortBydEgreeDown();
-                mAdapter.clear();
-                mAdapter.addAll(dataList);
-                recycler.dismissSwipeRefresh();
-                recycler.getRecyclerView().scrollToPosition(0);
+                timeOrder = Config.SORT_NOONE;
+                titleOrder = Config.SORT_NOONE;
+                degreeOrder = Config.SORT_UP;
+                recycler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        page = 1;
+                        recycler.showSwipeRefresh();
+                        getSearchedData(true);
+                    }
+                });
+                changeTextColor();
                 break;
             default:
                 break;
         }
     }
 
+    /**
+     * 修改排序字体颜色
+     */
+    private void changeTextColor(){
+
+        // 时间排序
+        if (timeOrder == Config.SORT_NOONE){
+
+            tvSortTime.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.text_main_6));
+        }else {
+            tvSortTime.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.apply_violet));
+
+        }
+        // 姓名排序
+        if (titleOrder == Config.SORT_NOONE){
+
+            tvSortBookName.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.text_main_6));
+        }else {
+            tvSortBookName.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.apply_violet));
+        }
+        if (degreeOrder == Config.SORT_NOONE){
+
+            tvSortHot.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.text_main_6));
+        }else {
+            tvSortHot.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.apply_violet));
+
+        }
+
+
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

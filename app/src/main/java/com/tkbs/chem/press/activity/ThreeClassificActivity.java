@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.view.View;
 import android.view.ViewGroup;
@@ -140,6 +141,8 @@ public class ThreeClassificActivity extends BaseActivity implements View.OnClick
             }
         });
         recycler.getNoMoreView().setText("没有更多数据了");
+        timeOrder = Config.SORT_UP;
+        changeTextColor();
     }
 
     @Override
@@ -261,6 +264,7 @@ public class ThreeClassificActivity extends BaseActivity implements View.OnClick
                         getClassifyData(true);
                     }
                 });
+                changeTextColor();
                 break;
             case R.id.tv_sort_book_name:
 //                if (null == bookDatas) {
@@ -283,6 +287,7 @@ public class ThreeClassificActivity extends BaseActivity implements View.OnClick
                         getClassifyData(true);
                     }
                 });
+                changeTextColor();
                 break;
             case R.id.tv_sort_hot:
 //                if (null == bookDatas) {
@@ -305,12 +310,43 @@ public class ThreeClassificActivity extends BaseActivity implements View.OnClick
                         getClassifyData(true);
                     }
                 });
+                changeTextColor();
                 break;
             default:
                 break;
         }
     }
 
+    /**
+     * 修改排序字体颜色
+     */
+    private void changeTextColor(){
+
+        // 时间排序
+        if (timeOrder == Config.SORT_NOONE){
+
+            tvSortTime.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.text_main_6));
+        }else {
+            tvSortTime.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.apply_violet));
+
+        }
+        // 姓名排序
+        if (titleOrder == Config.SORT_NOONE){
+
+            tvSortBookName.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.text_main_6));
+        }else {
+            tvSortBookName.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.apply_violet));
+        }
+        if (degreeOrder == Config.SORT_NOONE){
+
+            tvSortHot.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.text_main_6));
+        }else {
+            tvSortHot.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.apply_violet));
+
+        }
+
+
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

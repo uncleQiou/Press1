@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.tkbs.chem.press.R;
+import com.tkbs.chem.press.activity.LoginActivity;
 import com.tkbs.chem.press.activity.MyAccountActivity;
 import com.tkbs.chem.press.activity.MyApplyActivity;
 import com.tkbs.chem.press.activity.MyOpinionActivity;
@@ -37,6 +38,7 @@ public class MineTeacherFragment extends BaseFragment implements View.OnClickLis
     private LinearLayout ll_my_bookshelf;
     private TextView tv_my_name;
     private TextView tv_phone;
+    private TextView tv_go_login;
     private ImageView img_set;
     private HomeInterface homeInterface;
 
@@ -62,6 +64,8 @@ public class MineTeacherFragment extends BaseFragment implements View.OnClickLis
         ll_my_bookshelf.setOnClickListener(this);
         tv_my_name = (TextView) findViewById(R.id.tv_my_name);
         tv_phone = (TextView) findViewById(R.id.tv_phone);
+        tv_go_login = (TextView) findViewById(R.id.tv_go_login);
+        tv_go_login.setOnClickListener(this);
         img_set = (ImageView) findViewById(R.id.img_set);
         img_set.setOnClickListener(this);
         ll_my_account = (LinearLayout) findViewById(R.id.ll_my_account);
@@ -86,6 +90,12 @@ public class MineTeacherFragment extends BaseFragment implements View.OnClickLis
         String name = preference.getString(Config.REAL_NAME, "");
         tv_my_name.setText(name);
         tv_phone.setText(preference.getString(Config.PHONE, ""));
+        int user_type = preference.getInt(Config.MEMBER_TYPE, 3);
+        if (user_type == 5) {
+            tv_go_login.setVisibility(View.VISIBLE);
+        }else {
+            tv_go_login.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -118,6 +128,9 @@ public class MineTeacherFragment extends BaseFragment implements View.OnClickLis
                 break;
             case R.id.img_set:
                 getActivity().startActivityForResult(new Intent(getActivity(), SettingActivity.class), Config.ACCOUNT_SWITCHING);
+                break;
+            case R.id.tv_go_login:
+                getActivity().startActivityForResult(new Intent(getActivity(), LoginActivity.class), Config.ACCOUNT_SWITCHING);
                 break;
             default:
                 break;

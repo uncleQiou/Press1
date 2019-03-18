@@ -70,9 +70,10 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         tvVersion.setText(version);
         tvContact.setText("010-19980232");
         user_type = preference.getInt(Config.MEMBER_TYPE, 3);
-        if (2 == user_type) {
-            llPhone.setVisibility(View.GONE);
-        }
+//        if (2 == user_type) {
+//            // 2019年3月8日  业务员允许修改手机号
+//            llPhone.setVisibility(View.GONE);
+//        }
     }
 
     @Override
@@ -88,8 +89,9 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 finish();
                 break;
             case R.id.ll_phone:
-                toastShow(R.string.edit_phone_number);
-                startActivity(new Intent(SettingActivity.this, ModifyPhoneNumberActivity.class));
+//                toastShow(R.string.edit_phone_number);
+                //  web 修改手机号码 web
+                startActivity(new Intent(SettingActivity.this, ModifyPhoneWebActivity.class));
                 break;
             case R.id.ll_version:
                 toastShow(R.string.version_update);
@@ -98,7 +100,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 toastShow(R.string.contact_us);
                 break;
             case R.id.tv_exit:
-                toastShow(R.string.exit_logon);
+//                toastShow(R.string.exit_logon);
                 startActivityForResult(new Intent(SettingActivity.this, LoginActivity.class), Config.ACCOUNT_SWITCHING);
                 break;
             case R.id.ll_change_password:

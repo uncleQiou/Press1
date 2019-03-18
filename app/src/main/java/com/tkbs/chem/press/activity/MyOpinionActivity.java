@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -325,6 +326,13 @@ public class MyOpinionActivity extends BaseActivity implements View.OnClickListe
                     public void onClick(View view) {
                         llReplyLayot.setVisibility(View.VISIBLE);
                         parentId = data.getOpinionId();
+                        edReply.setHint("回复");
+                        // 显示键盘
+                        edReply.setFocusable(true);
+                        edReply.setFocusableInTouchMode(true);
+                        edReply.requestFocus();
+                        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.showSoftInput(edReply,0);
                     }
                 });
 

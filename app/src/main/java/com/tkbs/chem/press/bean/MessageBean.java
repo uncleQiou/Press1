@@ -17,7 +17,7 @@ public class MessageBean {
      * content : xxx0002注册了
      * messageType : 6
      * remark :
-     * state :
+     * state : 1 未读 2 已读 3 删除
      * createUser :
      * createDate : 1544854901000
      * modifyUser :
@@ -34,7 +34,10 @@ public class MessageBean {
     private String content;
     private int messageType;
     private String remark;
-    private String state;
+    /**
+     * 1 未读 2 已读 3 删除
+     */
+    private int state;
     private String createUser;
     private long createDate;
     private String modifyUser;
@@ -107,11 +110,11 @@ public class MessageBean {
         this.remark = remark;
     }
 
-    public String getState() {
+    public int getState() {
         return state;
     }
 
-    public void setState(String state) {
+    public void setState(int state) {
         this.state = state;
     }
 

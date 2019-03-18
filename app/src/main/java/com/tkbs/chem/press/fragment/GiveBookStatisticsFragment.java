@@ -444,6 +444,16 @@ public class GiveBookStatisticsFragment extends BaseFragment implements View.OnC
         //是否绘制在图表里面
         legend.setDrawInside(false);
 
+//        barChart.setDoubleTapToZoomEnabled(false);
+//        //禁止拖拽
+//        barChart.setDragEnabled(false);
+//        //X轴或Y轴禁止缩放
+//        barChart.setScaleXEnabled(false);
+//        barChart.setScaleYEnabled(false);
+//        barChart.setScaleEnabled(false);
+//        //禁止所有事件
+//        barChart.setTouchEnabled(false);
+
     }
 
 

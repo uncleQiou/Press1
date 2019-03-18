@@ -16,7 +16,7 @@ public class Config {
     /**
      *si tao
      */
-//    public static String API_SERVER = "http://192.168.1.103:8281/app/";
+//    public static String API_SERVER = "http://192.168.1.106:8281/app/";
 
 
     /**
@@ -46,6 +46,7 @@ public class Config {
      * 用户信息保存Key
      */
     public static final String LOGIN_NAME = "login_name";
+    public static final String GUID = "guid";
     public static final String PASSWORD = "PASSWORD";
     public static final String NICK_NAME = "nick_name";
     public static final String REAL_NAME = "real_name";

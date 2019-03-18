@@ -7,6 +7,7 @@ import android.support.multidex.MultiDex;
 
 import com.bumptech.glide.request.RequestOptions;
 import com.mob.MobSDK;
+import com.mob.pushsdk.MobPush;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
 import com.tkbs.chem.press.R;
@@ -33,6 +34,10 @@ public class BaseApplication extends Application {
     public void onCreate() {
         super.onCreate();
         MobSDK.init(this);
+        //设置别名
+        MobPush.setAlias("press");
+        // 设置标签
+//        MobPush.addTags("");
         myApplication = this;
         options = new RequestOptions();
         options.placeholder(R.drawable.ic_default_image);

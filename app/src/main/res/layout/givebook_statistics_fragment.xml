@@ -42,6 +42,39 @@
                 android:textSize="@dimen/text_14sp" />
         </LinearLayout>
 
+
+
+        <LinearLayout
+            android:id="@+id/ll_smbook_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:gravity="center_vertical"
+            android:padding="@dimen/margin_10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="|"
+                android:textColor="@color/hg_app_main_color"
+                android:textSize="@dimen/text_16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_10dp"
+                android:layout_weight="1"
+                android:text="@string/sort_time"
+                android:textColor="@color/text_main_3"
+                android:textSize="@dimen/text_16sp" />
+
+            <ImageView
+                android:layout_width="@dimen/margin_15dp"
+                android:layout_height="@dimen/margin_15dp"
+                android:visibility="gone"
+                android:src="@mipmap/bookcity_icon_more" />
+        </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -100,38 +133,6 @@
             </RadioGroup>
 
         </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/ll_smbook_time"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:gravity="center_vertical"
-            android:padding="@dimen/margin_10dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="|"
-                android:textColor="@color/hg_app_main_color"
-                android:textSize="@dimen/text_16sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin_10dp"
-                android:layout_weight="1"
-                android:text="@string/sort_time"
-                android:textColor="@color/text_main_3"
-                android:textSize="@dimen/text_16sp" />
-
-            <ImageView
-                android:layout_width="@dimen/margin_15dp"
-                android:layout_height="@dimen/margin_15dp"
-                android:src="@mipmap/bookcity_icon_more" />
-        </LinearLayout>
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -221,6 +222,7 @@
                 android:textSize="@dimen/text_16sp" />
 
             <ImageView
+                android:visibility="gone"
                 android:layout_width="@dimen/margin_15dp"
                 android:layout_height="@dimen/margin_15dp"
                 android:src="@mipmap/bookcity_icon_more" />
@@ -324,6 +326,7 @@
                 android:textSize="@dimen/text_16sp" />
 
             <ImageView
+                android:visibility="gone"
                 android:layout_width="@dimen/margin_15dp"
                 android:layout_height="@dimen/margin_15dp"
                 android:src="@mipmap/bookcity_icon_more" />

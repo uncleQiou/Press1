@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.view.View;
@@ -168,6 +169,7 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
             }
         });
         recycler.getNoMoreView().setText("没有更多数据了");
+        changeTextColor(0);
         // 设置默认值
         tvTimeLimit.setText(items[2]);
         timeLimit = 3;
@@ -315,6 +317,7 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
                 recycler.dismissSwipeRefresh();
                 recycler.getRecyclerView().scrollToPosition(0);
                 recycler.showNoMore();
+                changeTextColor(0);
                 break;
             case R.id.ll_sort_hot:
                 //热度排序
@@ -328,6 +331,7 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
                 recycler.dismissSwipeRefresh();
                 recycler.getRecyclerView().scrollToPosition(0);
                 recycler.showNoMore();
+                changeTextColor(1);
                 break;
             case R.id.ll_sort_book_name:
                 //书名排序
@@ -341,6 +345,7 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
                 recycler.dismissSwipeRefresh();
                 recycler.getRecyclerView().scrollToPosition(0);
                 recycler.showNoMore();
+                changeTextColor(2);
                 break;
             case R.id.ll_sort_state:
                 //状态排序
@@ -354,6 +359,7 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
                 recycler.dismissSwipeRefresh();
                 recycler.getRecyclerView().scrollToPosition(0);
                 recycler.showNoMore();
+                changeTextColor(3);
                 break;
             case R.id.one_key_approve:
 //                startActivity(new Intent(SampleBookActivity.this, OneKeyManageBookActivity.class));
@@ -380,6 +386,46 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
         }
     }
 
+    /**
+     * 修改排序字体颜色
+     */
+    private void changeTextColor(int flg){
+
+        if (flg == 0){
+            // 时间排序
+            setTextColor(tvSortTime,1);
+            setTextColor(tvSortHot,0);
+            setTextColor(tvSortBookName,0);
+            setTextColor(tvSortState,0);
+        }else if (flg == 1){
+            // 姓名排序
+            setTextColor(tvSortTime,0);
+            setTextColor(tvSortHot,1);
+            setTextColor(tvSortBookName,0);
+            setTextColor(tvSortState,0);
+        }else if (flg == 2){
+
+            setTextColor(tvSortTime,0);
+            setTextColor(tvSortHot,0);
+            setTextColor(tvSortBookName,1);
+            setTextColor(tvSortState,0);
+        }else if (flg == 3){
+
+            setTextColor(tvSortTime,0);
+            setTextColor(tvSortHot,0);
+            setTextColor(tvSortBookName,0);
+            setTextColor(tvSortState,1);
+        }
+
+    }
+    private void setTextColor(TextView textView,int flg){
+        if (flg == 0){
+            textView.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.text_main_6));
+        }else {
+            textView.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.apply_violet));
+        }
+
+    }
     /**
      * 一键审核
      */

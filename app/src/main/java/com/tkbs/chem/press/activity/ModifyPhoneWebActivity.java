@@ -1,6 +1,5 @@
 package com.tkbs.chem.press.activity;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -15,27 +14,20 @@ import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-import com.orhanobut.logger.Logger;
-import com.tkbs.chem.press.MainActivity;
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.base.BaseActivity;
 import com.tkbs.chem.press.base.BaseApplication;
 import com.tkbs.chem.press.bean.HttpResponse;
-import com.tkbs.chem.press.bean.LoginRequestBen;
 import com.tkbs.chem.press.bean.UserBean;
 import com.tkbs.chem.press.net.ApiCallback;
 import com.tkbs.chem.press.util.Config;
-import com.tkbs.chem.press.util.MessageEvent;
 import com.tkbs.chem.press.util.UiUtils;
 import com.tkbs.chem.press.view.ReWebChomeClient;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import de.greenrobot.event.EventBus;
-import okhttp3.RequestBody;
 
-public class RegisterAvtivity extends BaseActivity implements View.OnClickListener, ReWebChomeClient.OpenFileChooserCallBack {
+public class ModifyPhoneWebActivity extends BaseActivity implements View.OnClickListener, ReWebChomeClient.OpenFileChooserCallBack {
 
     @BindView(R.id.back)
     ImageView back;
@@ -43,11 +35,11 @@ public class RegisterAvtivity extends BaseActivity implements View.OnClickListen
     TextView title;
     @BindView(R.id.tv_right)
     TextView tvRight;
-    @BindView(R.id.register_web)
-    WebView registerWeb;
-
-    private String baseUrl = Config.API_SERVER + "hello/register.html";
-
+    @BindView(R.id.img_share)
+    ImageView imgShare;
+    @BindView(R.id.web_view)
+    WebView webView;
+    private String baseUrl = Config.API_SERVER + "hello/change_phone.html";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,7 +47,7 @@ public class RegisterAvtivity extends BaseActivity implements View.OnClickListen
 
     @Override
     protected int getLayoutId() {
-        return R.layout.activity_register_avtivity;
+        return R.layout.activity_modify_phone_web;
     }
 
     @Override
@@ -65,9 +57,8 @@ public class RegisterAvtivity extends BaseActivity implements View.OnClickListen
 
     @Override
     protected void initTitle() {
-        title.setText(R.string.register);
+        title.setText(R.string.modify_phone_title);
     }
-
     @OnClick({R.id.back})
     @Override
     public void onClick(View view) {
@@ -79,9 +70,8 @@ public class RegisterAvtivity extends BaseActivity implements View.OnClickListen
                 break;
         }
     }
-
     private void initWeb() {
-        WebSettings setting = registerWeb.getSettings();
+        WebSettings setting = webView.getSettings();
         //允许加载javascript
         setting.setJavaScriptEnabled(true);
         //允许缩放
@@ -97,12 +87,12 @@ public class RegisterAvtivity extends BaseActivity implements View.OnClickListen
         setting.setDomStorageEnabled(true);
         setting.setJavaScriptCanOpenWindowsAutomatically(true);
         setting.setSupportMultipleWindows(true);
-        registerWeb.addJavascriptInterface(new RegisterInterface(), "TKBS");
+        webView.addJavascriptInterface(new ModifyPhoneInterface(), "TKBS");
         /*****************************************************************
          * 在点击请求的是链接时才会调用，重写此方法返回true表明点击网页里
          * 面的链接还是在当前的WebView里跳转，不会跳到浏览器上运行。
          *****************************************************************/
-        registerWeb.setWebViewClient(new WebViewClient() {
+        webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 view.loadUrl(url);
@@ -130,7 +120,7 @@ public class RegisterAvtivity extends BaseActivity implements View.OnClickListen
                 super.onPageFinished(view, url);
             }
         });
-        registerWeb.setWebChromeClient(new ReWebChomeClient(this) {
+        webView.setWebChromeClient(new ReWebChomeClient(this) {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
                 super.onProgressChanged(view, newProgress);
@@ -140,33 +130,16 @@ public class RegisterAvtivity extends BaseActivity implements View.OnClickListen
             }
         });
 
-        registerWeb.loadUrl(baseUrl);
+        webView.loadUrl(baseUrl);
     }
-
     @Override
     public void openFileChooserCallBack(ValueCallback<Uri> uploadMsg, String acceptType) {
 
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            switch (requestCode) {
-                case 0:
-                    String result = data.getStringExtra("result");
-                    registerWeb.loadUrl("javascript:getInterestList(" + result + ")");
-                    Logger.e(result);
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
+    private class ModifyPhoneInterface {
 
-    private class RegisterInterface {
-
-        RegisterInterface() {
+        ModifyPhoneInterface() {
         }
 
 
@@ -188,68 +161,56 @@ public class RegisterAvtivity extends BaseActivity implements View.OnClickListen
         public String getUser() {
             String user = preference.getString("login_name", "") +
                     "," +
-                    preference.getString("PASSWORD", "") + "," + UiUtils.getid(RegisterAvtivity.this);
+                    preference.getString("PASSWORD", "") + "," + UiUtils.getid(ModifyPhoneWebActivity.this);
 
             return user;
         }
 
         @JavascriptInterface
-        public void finshBookDetail() {
-            finish();
+        public void toSetting() {
+            //  更新个人信息
+            updateUserInfo();
         }
 
-        @JavascriptInterface
-        public void MyInterest() {
-            startActivityForResult(new Intent(RegisterAvtivity.this, MyInterestActivity.class), 0);
-        }
 
-        @JavascriptInterface
-        public void login(String loginName, String password) {
-
-            //{"loginName":"xx000001","password":"1"}
-            LoginRequestBen loginRequestBen = new LoginRequestBen();
-            loginRequestBen.setLoginName(loginName);
-            loginRequestBen.setPassword(password);
-            final Gson gson = new Gson();
-            String route = gson.toJson(loginRequestBen);
-            RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), route);
-            showProgressDialog();
-            addSubscription(apiStores.PressLogin(body), new ApiCallback<HttpResponse<UserBean>>() {
-                @Override
-                public void onSuccess(HttpResponse<UserBean> model) {
-                    if (model.isStatus()) {
-                        UserBean user = model.getData();
-                        SharedPreferences.Editor edit = BaseApplication.preferences.edit();
-                        edit.putString(Config.LOGIN_NAME, user.getLogin_name());
-                        edit.putString(Config.GUID, user.getGuid());
-                        edit.putString(Config.PASSWORD, user.getPASSWORD());
-                        edit.putString(Config.NICK_NAME, user.getNick_name());
-                        edit.putString(Config.REAL_NAME, user.getReal_name());
-                        edit.putString(Config.WORKPHONE, user.getWorkphone());
-                        edit.putString(Config.PHONE, user.getPhone());
-                        edit.putInt(Config.MEMBER_TYPE, user.getMember_type());
-                        edit.putInt(Config.MEMBER_STATE, user.getState());
-                        edit.commit();
-                        //  refresh MainActivity
-                        EventBus.getDefault().post(new MessageEvent("Refresh"));
-                        startActivity(new Intent(RegisterAvtivity.this, MainActivity.class));
-                        finish();
-                    } else {
-                        toastShow(model.getErrorDescription());
-                    }
-
+    }
+    /**
+     * 检查用户是否是黑名单用户
+     */
+    private void updateUserInfo() {
+        showProgressDialog();
+        addSubscription(apiStores.updateUserInfo(), new ApiCallback<HttpResponse<UserBean>>() {
+            @Override
+            public void onSuccess(HttpResponse<UserBean> model) {
+                if (model.isStatus()) {
+                    UserBean user = model.getData();
+                    SharedPreferences.Editor edit = BaseApplication.preferences.edit();
+                    edit.putString(Config.LOGIN_NAME, user.getLogin_name());
+                    edit.putString(Config.GUID, user.getGuid());
+                    edit.putString(Config.PASSWORD, user.getPASSWORD());
+                    edit.putString(Config.NICK_NAME, user.getNick_name());
+                    edit.putString(Config.REAL_NAME, user.getReal_name());
+                    edit.putString(Config.WORKPHONE, user.getWorkphone());
+                    edit.putString(Config.PHONE, user.getPhone());
+                    edit.putInt(Config.MEMBER_TYPE, user.getMember_type());
+                    edit.putInt(Config.MEMBER_STATE, user.getState());
+                    edit.commit();
+                    finish();
+                } else {
+                    toastShow(model.getErrorDescription());
                 }
 
-                @Override
-                public void onFailure(String msg) {
-                    toastShow(msg);
-                }
+            }
 
-                @Override
-                public void onFinish() {
-                    dismissProgressDialog();
-                }
-            });
-        }
+            @Override
+            public void onFailure(String msg) {
+                toastShow(msg);
+            }
+
+            @Override
+            public void onFinish() {
+                dismissProgressDialog();
+            }
+        });
     }
 }

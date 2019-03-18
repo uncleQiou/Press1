@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PersistableBundle;
@@ -81,6 +82,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         unbinder = ButterKnife.bind(this);
         initdata();
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         initTitle();
         //动态注册广播
         oBaseActiviy_Broad = new MyBaseActiviy_Broad();

@@ -130,6 +130,36 @@ public class NewsActivity extends BaseActivity implements View.OnClickListener {
 
     }
 
+    /**
+     * 阅读消息
+     * @param guidMsg
+     */
+    private void readMessage(String guidMsg){
+        showProgressDialog();
+        addSubscription(apiStores.readMessage(guidMsg), new ApiCallback<HttpResponse<Object>>() {
+            @Override
+            public void onSuccess(HttpResponse<Object> model) {
+                if (model.isStatus()) {
+
+                } else {
+                    toastShow(model.getErrorDescription());
+                }
+
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                toastShow(msg);
+            }
+
+            @Override
+            public void onFinish() {
+                dismissProgressDialog();
+
+            }
+        });
+    }
+
     private void getUserData(final String userGuid, final int messageType) {
         showProgressDialog();
         addSubscription(apiStores.getMessageUserData(userGuid), new ApiCallback<HttpResponse<MessageUserBean>>() {
@@ -246,6 +276,7 @@ public class NewsActivity extends BaseActivity implements View.OnClickListener {
 
             private TextView tv_news_title;
             private TextView tv_news_date;
+            private ImageView img_unread;
             private LinearLayout ll_details;
 
             public MyNewsHolder(ViewGroup parent) {
@@ -258,13 +289,27 @@ public class NewsActivity extends BaseActivity implements View.OnClickListener {
                 tv_news_title = findViewById(R.id.tv_news_title);
                 tv_news_date = findViewById(R.id.tv_news_date);
                 ll_details = findViewById(R.id.ll_details);
+                img_unread = findViewById(R.id.img_unread);
             }
 
             @Override
-            public void setData(final MessageBean data) {
+            public void setData( MessageBean data) {
                 super.setData(data);
                 tv_news_title.setText(data.getContent());
                 tv_news_date.setText(TimeUtils.getTime(data.getCreateDate()));
+//                img_unread.setVisibility(data.getState() == 1?View.VISIBLE:View.GONE);
+                if (data.getState() == 1){
+                    img_unread.setVisibility(View.VISIBLE);
+                }else {
+                    img_unread.setVisibility(View.GONE);
+                }
+                if (data.getMessageType() == 1 || data.getMessageType() == 9 ){
+                    img_unread.setVisibility(View.GONE);
+                    ll_details.setVisibility(View.GONE);
+                }else {
+//                    img_unread.setVisibility(View.VISIBLE);
+                    ll_details.setVisibility(View.VISIBLE);
+                }
 //                ll_details.setOnClickListener(new View.OnClickListener() {
 //                    @Override
 //                    public void onClick(View view) {
@@ -276,7 +321,9 @@ public class NewsActivity extends BaseActivity implements View.OnClickListener {
             @Override
             public void onItemViewClick(MessageBean data) {
                 super.onItemViewClick(data);
-                //1、手动发布 2、自动发布 3、审批通过 4、审批未通过 5、赠书 6、注册 7、申请样书
+                readMessage(data.getGuid());
+                img_unread.setVisibility(View.GONE);
+                //1、手动发布 2、自动发布 3、审批通过 4、审批未通过 5、赠书 6、注册 7、申请样书 8、资源消息 9、资源消息- 无资源链接
                 //1不跳 2-5都是详情页 6用户管理-用户详情页 7样书管理-当前用户的审批页
                 int messageType = data.getMessageType();
                 if (messageType > 1 && messageType < 6) {
@@ -284,13 +331,21 @@ public class NewsActivity extends BaseActivity implements View.OnClickListener {
                     Intent intent = new Intent(NewsActivity.this, BookDetailActivity.class);
                     intent.putExtra("guid", data.getRelationGuid());
                     context.startActivity(intent);
-                }else if (messageType == 1){
+                }else if (messageType == 8){
+                    // 跳转图书详情
+                    Intent intent = new Intent(NewsActivity.this, BookDetailActivity.class);
+                    intent.putExtra("guid", data.getRelationGuid());
+                    context.startActivity(intent);
+                } else if (messageType == 1){
 
-                } else {
+                } else if(messageType == 6){
                     //6用户管理-用户详情页
-                    //7样书管理-当前用户的审批页
-                    getUserData(data.getUserGuid(), messageType);
 
+                    getUserData(data.getRelationGuid(), messageType);
+
+                }else if(messageType == 7){
+                    //7样书管理-当前用户的审批页
+                    getUserData(data.getRelationGuid(), messageType);
                 }
 
             }

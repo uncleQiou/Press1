@@ -8,6 +8,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -156,6 +157,36 @@ public class DiscoverFragment extends BaseFragment {
         }, 1000);
     }
 
+    /**
+     * 阅读消息
+     * @param guidMsg
+     */
+    private void readMessage(String guidMsg){
+        showProgressDialog();
+        addSubscription(apiStores.readMessage(guidMsg), new ApiCallback<HttpResponse<Object>>() {
+            @Override
+            public void onSuccess(HttpResponse<Object> model) {
+                if (model.isStatus()) {
+
+                } else {
+                    toastShow(model.getErrorDescription());
+                }
+
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                toastShow(msg);
+            }
+
+            @Override
+            public void onFinish() {
+                dismissProgressDialog();
+
+            }
+        });
+    }
+
     private DiscoverItemData[] getTestData() {
         return new DiscoverItemData[]{
                 new DiscoverItemData("忍受不了打击和挫折，陈守不住忽视和平淡"),
@@ -191,6 +222,7 @@ public class DiscoverFragment extends BaseFragment {
 
             private TextView tv_message_date;
             private TextView tv_message_content;
+            private ImageView img_unread;
             private LinearLayout ll_click_check;
 
             public DiscoverItemHolder(ViewGroup parent) {
@@ -203,6 +235,7 @@ public class DiscoverFragment extends BaseFragment {
                 tv_message_date = findViewById(R.id.tv_message_date);
                 tv_message_content = findViewById(R.id.tv_message_content);
                 ll_click_check = findViewById(R.id.ll_click_check);
+                img_unread = findViewById(R.id.img_unread);
             }
 
             @Override
@@ -210,21 +243,42 @@ public class DiscoverFragment extends BaseFragment {
                 super.setData(data);
                 tv_message_date.setText(TimeUtils.getTime(data.getCreateDate()));
                 tv_message_content.setText(data.getContent());
+                img_unread.setVisibility(data.getState() == 1?View.VISIBLE:View.GONE);
+                if (data.getMessageType() == 1 || data.getMessageType() == 9 ){
+                    img_unread.setVisibility(View.GONE);
+                    ll_click_check.setVisibility(View.GONE);
+                }else {
+                    ll_click_check.setVisibility(View.VISIBLE);
+                }
+//                if (data.getState() == 1){
+//                    // 未读
+//                    img_unread.setVisibility(View.VISIBLE);
+//                }else {
+//                    // 已读
+//                    img_unread.setVisibility(View.GONE);
+//                }
 
             }
 
             @Override
             public void onItemViewClick(MessageBean data) {
                 super.onItemViewClick(data);
-                //1、手动发布 2、自动发布 3、审批通过 4、审批未通过 5、赠书 6、注册 7、申请样书
-                //1不跳 2-5都是详情页 6用户管理-用户详情页 7样书管理-当前用户的审批页
+                //1、手动发布 2、自动发布 3、审批通过 4、审批未通过 5、赠书 6、注册 7、申请样书  8、资源消息 9、资源消息- 无资源链接
+                //1不跳 2-5都是详情页 6用户管理-用户详情页 7样书管理-当前用户的审批页 8 图书想去 9 不跳
+                readMessage(data.getGuid());
+                img_unread.setVisibility(View.GONE);
                 int messageType = data.getMessageType();
                 if (messageType > 1 && messageType < 6) {
                     // 跳转图书详情
                     Intent intent = new Intent(getActivity(), BookDetailActivity.class);
                     intent.putExtra("guid", data.getRelationGuid());
                     context.startActivity(intent);
-                } else if (messageType == 6) {
+                } else if (messageType == 8){
+                    // 跳转图书详情
+                    Intent intent = new Intent(getActivity(), BookDetailActivity.class);
+                    intent.putExtra("guid", data.getRelationGuid());
+                    context.startActivity(intent);
+                }else if (messageType == 6) {
                     // 6用户管理-用户详情页
                 } else if (messageType == 7) {
                     // 7样书管理-当前用户的审批页

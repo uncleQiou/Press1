@@ -38,7 +38,7 @@ public class BookCityResDocument {
     private String title;
     private String author;
     private long publishTime;
-    private int price;
+    private double price;
     private int degree;
     private String cover;
 
@@ -114,11 +114,11 @@ public class BookCityResDocument {
         this.publishTime = publishTime;
     }
 
-    public int getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 }

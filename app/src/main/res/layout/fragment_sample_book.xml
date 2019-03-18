@@ -3,6 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/app_bag"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     android:orientation="vertical">
 
     <LinearLayout
@@ -12,6 +14,7 @@
         android:orientation="vertical">
 
         <LinearLayout
+            android:visibility="gone"
             android:id="@+id/ll_search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -36,6 +39,54 @@
                 android:textSize="@dimen/text_14sp" />
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/margin_50dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:background="@color/white"
+            android:gravity="center_vertical">
+
+            <LinearLayout
+                android:id="@+id/ll_search_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/margin_10dp"
+                android:layout_weight="1"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:background="@drawable/rounded_rectangle_gray"
+                android:gravity="center_vertical"
+                android:padding="@dimen/margin_10dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_10dp"
+                    android:src="@mipmap/icon_search" />
+
+                <TextView
+                    android:id="@+id/ed_search"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_8dp"
+                    android:background="@null"
+                    android:clickable="false"
+                    android:hint="@string/manager_search_hint"
+                    android:textColor="@color/text_main_6"
+                    android:textSize="@dimen/text_14sp" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_do_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/margin_10dp"
+                android:text="@string/str_search"
+                android:textColor="@color/text_main_3"
+                android:textSize="@dimen/text_16sp" />
+        </LinearLayout>
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/margin_1dp"
@@ -114,8 +165,50 @@
         </LinearLayout>
     </LinearLayout>
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
     <cn.lemon.view.RefreshRecyclerView
         android:id="@+id/recycler"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:id="@+id/ll_reply_layot"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@drawable/miaobian_normal"
+            android:gravity="center_vertical"
+            android:padding="@dimen/margin_10dp">
+
+            <EditText
+                android:id="@+id/ed_reply"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/conner_gray"
+                android:hint="@string/manager_search_hint"
+                android:padding="@dimen/margin_10dp"
+                android:textColor="@color/text_main_3"
+                android:textColorHint="@color/text_main_6"
+                android:textSize="@dimen/text_15sp" />
+
+            <TextView
+                android:id="@+id/tv_send"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_5dp"
+                android:background="@drawable/miaobian_blue"
+                android:paddingBottom="@dimen/margin_8dp"
+                android:paddingLeft="@dimen/margin_15dp"
+                android:paddingRight="@dimen/margin_15dp"
+                android:paddingTop="@dimen/margin_8dp"
+                android:text="@string/sure_btn"
+                android:textColor="@color/hg_app_main_color"
+                android:textSize="@dimen/text_15sp" />
+
+        </LinearLayout>
+    </FrameLayout>
 </LinearLayout>

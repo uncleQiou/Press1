@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.GridLayoutManager;
 import android.view.ContextThemeWrapper;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
@@ -17,14 +16,11 @@ import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
-import com.orhanobut.logger.Logger;
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.base.BaseActivity;
-import com.tkbs.chem.press.bean.CreateOrderDataBean;
 import com.tkbs.chem.press.bean.HttpResponse;
 import com.tkbs.chem.press.bean.RechargeRecordDataBean;
 import com.tkbs.chem.press.net.ApiCallback;
-import com.tkbs.chem.press.view.BookBuyPopupWindow;
 
 import java.util.Calendar;
 
@@ -51,6 +47,10 @@ public class RechargeRecordActivity extends BaseActivity implements View.OnClick
     TextView tvPay;
     @BindView(R.id.img_calendar)
     ImageView imgCalendar;
+    @BindView(R.id.img_share)
+    ImageView imgShare;
+    @BindView(R.id.ll_recharge_date)
+    LinearLayout llRechargeDate;
     private Handler mHandler;
     private int page = 1;
     private MyRecordAdapter myAdapter;
@@ -59,6 +59,7 @@ public class RechargeRecordActivity extends BaseActivity implements View.OnClick
     private int mYear;
     private int mMonth;
     private int mDay;
+    private boolean noData = true;
 
     private String strDisMonth;
 
@@ -109,6 +110,7 @@ public class RechargeRecordActivity extends BaseActivity implements View.OnClick
         recycler.post(new Runnable() {
             @Override
             public void run() {
+                searchYYMM = "";
                 recycler.showSwipeRefresh();
                 getData(true);
             }
@@ -129,6 +131,14 @@ public class RechargeRecordActivity extends BaseActivity implements View.OnClick
             @Override
             public void onSuccess(HttpResponse<RechargeRecordDataBean> model) {
                 if (model.isStatus()) {
+                    // 第一次 没有记录就隐藏
+                    if (model.getData().getList().size()==0){
+                        if (noData){
+                            llRechargeDate.setVisibility(View.GONE);
+                        }
+
+                    }
+                    noData = false;
                     tvDisMonth.setText(strDisMonth);
                     String total = getResources().getString(R.string.recharge_total, model.getData().getTotalPrice());
                     tvPay.setText(total);

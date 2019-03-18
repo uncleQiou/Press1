@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -174,6 +175,8 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
         String values = getArguments().getString("111");
 //        recycler_bookshelf.getNoMoreView().setText(values);
         recycler_bookshelf.getNoMoreView().setText(R.string.no_more_data);
+        timeOrder = Config.SORT_UP;
+        changeTextColor();
     }
 
     /***
@@ -578,6 +581,7 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
                         getData(true);
                     }
                 });
+                changeTextColor();
                 break;
             case R.id.ll_sort_time:
 //                if (null == dataList) {
@@ -606,6 +610,7 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
                     timeOrder = Config.SORT_UP;
                     titleOrder = Config.SORT_NOONE;
                 }
+                changeTextColor();
                 recycler_bookshelf.post(new Runnable() {
                     @Override
                     public void run() {
@@ -659,6 +664,23 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
         }
     }
 
+
+    /**
+     * 修改排序字体颜色
+     */
+    private void changeTextColor(){
+
+        if (titleOrder == Config.SORT_NOONE){
+            // 时间排序
+            tv_sort_time.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.apply_violet));
+            tv_sort_book_name.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.text_main_6));
+        }else {
+            // 姓名排序
+            tv_sort_time.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.text_main_6));
+            tv_sort_book_name.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.apply_violet));
+        }
+
+    }
     /**
      * 我的收藏 删除
      */
@@ -939,12 +961,13 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
                     //  判断书籍是否可以下载
                     String resPath = Config.CIP_FILE_PATH + data.getGuid() + ".tkbs";
                     if (UiUtils.isExist(resPath)) {
-                        // 无需下载  TODO 显示删除
-                        tv_download.setText(R.string.have_download);
+                        // 无需下载   显示删除
+                        tv_download.setText(R.string.str_delete);
                         tv_download.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-
+                                // 无需下载   显示删除
+                                deleteSingleFile(Config.CIP_FILE_PATH + data.getGuid() + ".tkbs");
                             }
                         });
                     } else {
@@ -1009,6 +1032,33 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
 
         public void setName(String name) {
             this.name = name;
+        }
+    }
+
+    /** 删除单个文件
+     * @param filePath$Name 要删除的文件的文件名
+     * @return 单个文件删除成功返回true，否则返回false
+     */
+    private void deleteSingleFile(String filePath$Name) {
+        File file = new File(filePath$Name);
+        // 如果文件路径所对应的文件存在，并且是一个文件，则直接删除
+        if (file.exists() && file.isFile()) {
+            if (file.delete()) {
+                // 刷新界面
+                recycler_bookshelf.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        page = 1;
+                        recycler_bookshelf.showSwipeRefresh();
+                        getData(true);
+                    }
+                });
+                Log.e("--Method--", "Copy_Delete.deleteSingleFile: 删除单个文件" + filePath$Name + "成功！");
+            } else {
+                toastShow(R.string.str_delete_fail);
+            }
+        } else {
+            toastShow(R.string.str_delete_fail);
         }
     }
 
@@ -1119,12 +1169,21 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
 //                    imgRefresh.setVisibility(View.VISIBLE);
                     break;
                 case 10:
-                    showProgressDialog("loading...");
+                    showProgressDialog("正在下载...");
                     break;
                 case 100:
                     dismissProgressDialog();
                     toastShow(R.string.download_done);
                     handler.removeMessages(100);
+                    // 刷新界面
+                    recycler_bookshelf.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            page = 1;
+                            recycler_bookshelf.showSwipeRefresh();
+                            getData(true);
+                        }
+                    });
                     break;
                 default:
                     break;

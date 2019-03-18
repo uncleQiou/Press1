@@ -11,6 +11,7 @@
     <include layout="@layout/title_bar_normal" />
 
     <LinearLayout
+        android:id="@+id/ll_recharge_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_1dp"

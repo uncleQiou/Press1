@@ -4,10 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -22,6 +25,7 @@ import com.tkbs.chem.press.bean.SampleBookManageDataBean;
 import com.tkbs.chem.press.bean.ThreeClassifyDataBena;
 import com.tkbs.chem.press.net.ApiCallback;
 import com.tkbs.chem.press.util.Config;
+import com.tkbs.chem.press.util.UiUtils;
 
 import java.text.Collator;
 import java.text.RuleBasedCollator;
@@ -71,6 +75,12 @@ public class SampleBookFragment extends BaseFragment implements View.OnClickList
      * 热度排序
      */
     private int degreeOrder;
+    private TextView ed_search;
+    private TextView tv_do_search;
+    private LinearLayout ll_reply_layot;
+    private TextView tv_send;
+    private EditText ed_reply;
+    private LinearLayout ll_search_title;
 
     @Override
     protected View getPreviewLayout(LayoutInflater inflater, ViewGroup container) {
@@ -82,7 +92,18 @@ public class SampleBookFragment extends BaseFragment implements View.OnClickList
         super.onCreateViewLazy(savedInstanceState);
         setContentView(R.layout.fragment_sample_book);
         ll_search = (LinearLayout) findViewById(R.id.ll_search);
+        ed_search = (TextView) findViewById(R.id.ed_search);
+        ed_search.setOnClickListener(this);
+        tv_do_search = (TextView) findViewById(R.id.tv_do_search);
+        tv_do_search.setOnClickListener(this);
         ll_search.setOnClickListener(this);
+        ll_search_title = (LinearLayout) findViewById(R.id.ll_search_title);
+        ll_search_title.setOnClickListener(this);
+        ll_reply_layot = (LinearLayout) findViewById(R.id.ll_reply_layot);
+        ll_reply_layot.setVisibility(View.GONE);
+        tv_send = (TextView) findViewById(R.id.tv_send);
+        tv_send.setOnClickListener(this);
+        ed_reply = (EditText) findViewById(R.id.ed_reply);
         ll_sort_time = (LinearLayout) findViewById(R.id.ll_sort_time);
         ll_sort_time.setOnClickListener(this);
         ll_sort_book_name = (LinearLayout) findViewById(R.id.ll_sort_book_name);
@@ -97,7 +118,6 @@ public class SampleBookFragment extends BaseFragment implements View.OnClickList
         tv_sort_book_name = (TextView) findViewById(R.id.tv_sort_book_name);
         tv_sort_state = (TextView) findViewById(R.id.tv_sort_state);
         img_sort_state = (ImageView) findViewById(R.id.img_sort_state);
-
         mHandler = new Handler();
         myAdapter = new SampBookAdapter(getActivity());
         recycler.setSwipeRefreshColors(0xFF437845, 0xFFE44F98, 0xFF2FAC21);
@@ -128,11 +148,13 @@ public class SampleBookFragment extends BaseFragment implements View.OnClickList
             }
         });
         recycler.getNoMoreView().setText("没有更多数据了");
+        changeTextColor();
     }
 
+    private String searchKey = "";
     private void getSampleBookList(final boolean isRefresh) {
         showProgressDialog();
-        addSubscription(apiStores.SampleBookManageList(page, timeOrder, titleOrder), new ApiCallback<HttpResponse<ArrayList<SampleBookManageDataBean>>>() {
+        addSubscription(apiStores.SampleBookManageList(page, timeOrder, titleOrder,searchKey), new ApiCallback<HttpResponse<ArrayList<SampleBookManageDataBean>>>() {
             @Override
             public void onSuccess(HttpResponse<ArrayList<SampleBookManageDataBean>> model) {
                 if (model.isStatus()) {
@@ -165,6 +187,9 @@ public class SampleBookFragment extends BaseFragment implements View.OnClickList
 
             @Override
             public void onFinish() {
+                if (searchKey.length()>0){
+                    searchKey = "";
+                }
                 dismissProgressDialog();
             }
         });
@@ -208,6 +233,35 @@ public class SampleBookFragment extends BaseFragment implements View.OnClickList
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.tv_send:
+                ll_reply_layot.setVisibility(View.GONE);
+                UiUtils.hiddenKeyboard(getActivity());
+                String content = ed_reply.getText().toString().trim();
+                if (content.length() > 0) {
+                    ed_search.setText(content);
+                } else {
+                    ed_search.setText("");
+                    toastShow(R.string.please_input_content);
+                }
+                break;
+            case R.id.ll_search_title:
+                ll_reply_layot.setVisibility(View.VISIBLE);
+                // 显示键盘
+                ed_reply.setFocusable(true);
+                ed_reply.setFocusableInTouchMode(true);
+                ed_reply.requestFocus();
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.showSoftInput(ed_reply,0);
+                break;
+            case R.id.ed_search:
+                ll_reply_layot.setVisibility(View.VISIBLE);
+                // 显示键盘
+                ed_reply.setFocusable(true);
+                ed_reply.setFocusableInTouchMode(true);
+                ed_reply.requestFocus();
+                InputMethodManager imm1 = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm1.showSoftInput(ed_reply,0);
+                break;
             case R.id.ll_search:
                 getActivity().startActivity(new Intent(getActivity(), SearchActivity.class));
                 break;
@@ -238,6 +292,7 @@ public class SampleBookFragment extends BaseFragment implements View.OnClickList
                     timeOrder = Config.SORT_UP;
                     titleOrder = Config.SORT_NOONE;
                 }
+                changeTextColor();
                 recycler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -259,6 +314,7 @@ public class SampleBookFragment extends BaseFragment implements View.OnClickList
 //                recycler.getRecyclerView().scrollToPosition(0);
                 timeOrder = Config.SORT_NOONE;
                 titleOrder = Config.SORT_UP;
+                changeTextColor();
                 recycler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -279,11 +335,38 @@ public class SampleBookFragment extends BaseFragment implements View.OnClickList
                 recycler.dismissSwipeRefresh();
                 recycler.getRecyclerView().scrollToPosition(0);
                 break;
+            case R.id.tv_do_search:
+                searchKey = ed_search.getText().toString().trim();
+                recycler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        page = 1;
+                        recycler.showSwipeRefresh();
+                        getSampleBookList(true);
+                    }
+                });
+                break;
             default:
                 break;
         }
     }
 
+    /**
+     * 修改排序字体颜色
+     */
+    private void changeTextColor(){
+
+        if (titleOrder == Config.SORT_NOONE){
+            // 时间排序
+            tv_sort_time.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.apply_violet));
+            tv_sort_book_name.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.text_main_6));
+        }else {
+            // 姓名排序
+            tv_sort_time.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.text_main_6));
+            tv_sort_book_name.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.apply_violet));
+        }
+
+    }
     /**
      * 按状态进行排序
      */

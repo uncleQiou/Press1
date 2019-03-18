@@ -173,7 +173,8 @@ public interface ApiStores {
     @POST("sampleBook/querySampleBookOne/{pageNum}/10")
     Observable<HttpResponse<ArrayList<SampleBookManageDataBean>>> SampleBookManageList(@Path("pageNum") int page,
                                                                                        @Query("timeOrder") int timeOrder,
-                                                                                       @Query("titleOrder") int titleOrder);
+                                                                                       @Query("titleOrder") int titleOrder,
+                                                                                       @Query("title") String title);
 
 //    /**
 //     * 样书管理详情 废弃
@@ -203,7 +204,8 @@ public interface ApiStores {
     @POST("mmMember/queryMemberList/{pageNum}/10")
     Observable<HttpResponse<UserManageNewDataBean>> UserManageDataList(@Path("pageNum") int page,
                                                                        @Query("timeOrder") int timeOrder,
-                                                                       @Query("titleOrder") int titleOrder);
+                                                                       @Query("titleOrder") int titleOrder,
+                                                                       @Query("title") String title);
 
 //    /**
 //     * 用户管理——用户信息 废弃
@@ -367,7 +369,11 @@ public interface ApiStores {
      * @return
      */
     @POST("search/queryDocumentBySearch/{pageNum}/10")
-    Observable<HttpResponse<ArrayList<BookCityResDocument>>> getSearchList(@Path("pageNum") int pageNum, @Body RequestBody body);
+    Observable<HttpResponse<ArrayList<BookCityResDocument>>> getSearchList(@Path("pageNum") int pageNum,
+                                                                           @Body RequestBody body,
+                                                                           @Query("timeOrder") int timeOrder,
+                                                                           @Query("titleOrder") int titleOrder,
+                                                                           @Query("degreeOrder") int degreeOrder);
 
     /**
      * 搜索结果
@@ -671,6 +677,17 @@ public interface ApiStores {
      */
     @POST("order/deleteOrder/{guid}")
     Observable<HttpResponse<Object>> deleteOrder (@Path("guid") String  guid);
+
+    /**
+     * 业务员、教师查询未读消息的个数
+     */
+    @POST("message/unreadCount")
+    Observable<HttpResponse<Integer>> checkUnReadCount ();
+    /**
+     * 业务员、教师阅读消息
+     */
+    @POST("message/readed/{guid}")
+    Observable<HttpResponse<Object>> readMessage (@Path("guid") String  guid);
 
     /*************************************************************************************************************/
 

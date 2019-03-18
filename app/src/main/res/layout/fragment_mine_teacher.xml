@@ -29,7 +29,15 @@
                 android:id="@+id/tv_my_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="张晓丽"
+                android:text=""
+                android:textColor="@color/bg_main_white"
+                android:textSize="@dimen/text_18sp" />
+            <TextView
+                android:id="@+id/tv_go_login"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/login_register"
+                android:layout_marginTop="@dimen/margin_10dp"
                 android:textColor="@color/bg_main_white"
                 android:textSize="@dimen/text_18sp" />
 

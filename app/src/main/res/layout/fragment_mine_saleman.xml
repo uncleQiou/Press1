@@ -9,13 +9,25 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@mipmap/mine_tea_headbd">
-
-        <ImageView
-            android:id="@+id/img_message"
+        <RelativeLayout
+            android:id="@+id/rl_message"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:padding="@dimen/margin_15dp"
-            android:src="@mipmap/mine_btn_news" />
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/img_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/mine_btn_news" />
+            <ImageView
+                android:id="@+id/img_unread"
+                android:layout_centerInParent="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/red_point"/>
+
+        </RelativeLayout>
+
 
         <ImageView
             android:id="@+id/img_set"

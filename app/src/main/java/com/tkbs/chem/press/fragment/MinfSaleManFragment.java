@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.shizhefei.view.indicator.IndicatorViewPager;
@@ -22,6 +23,8 @@ import com.tkbs.chem.press.activity.NewsActivity;
 import com.tkbs.chem.press.activity.SalesmanPersonalCenterActivity;
 import com.tkbs.chem.press.activity.SettingActivity;
 import com.tkbs.chem.press.base.BaseFragment;
+import com.tkbs.chem.press.bean.HttpResponse;
+import com.tkbs.chem.press.net.ApiCallback;
 import com.tkbs.chem.press.util.Config;
 import com.tkbs.chem.press.util.MessageEvent;
 
@@ -43,6 +46,7 @@ public class MinfSaleManFragment extends BaseFragment implements View.OnClickLis
     private TextView tv_phone;
     private ScrollIndicatorView indicator;
     private LinearLayout ll_edit;
+    private RelativeLayout rl_message;
     private ViewPager viewPager;
     private String[] indicators;
     private IndicatorViewPager indicatorViewPager;
@@ -59,13 +63,15 @@ public class MinfSaleManFragment extends BaseFragment implements View.OnClickLis
         setContentView(R.layout.fragment_mine_saleman);
         img_message = (ImageView) findViewById(R.id.img_message);
         img_set = (ImageView) findViewById(R.id.img_set);
-        img_message.setOnClickListener(this);
+//        img_message.setOnClickListener(this);
         img_set.setOnClickListener(this);
         tv_my_name = (TextView) findViewById(R.id.tv_my_name);
         tv_phone = (TextView) findViewById(R.id.tv_phone);
         indicator = (ScrollIndicatorView) findViewById(R.id.indicator);
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         ll_edit = (LinearLayout) findViewById(R.id.ll_edit);
+        rl_message = (RelativeLayout) findViewById(R.id.rl_message);
+        rl_message.setOnClickListener(this);
         ll_edit.setOnClickListener(this);
         EventBus.getDefault().register(this);
         indicators = new String[]{getResources().getString(R.string.apply_samplebook_count),
@@ -80,6 +86,7 @@ public class MinfSaleManFragment extends BaseFragment implements View.OnClickLis
         indicatorViewPager = new IndicatorViewPager(indicator, viewPager);
         indicatorViewPager.setAdapter(new MyAdapter(getChildFragmentManager()));
         setUserData();
+        unReadMessageNum();
     }
 
     @Subscribe(threadMode = ThreadMode.MainThread)
@@ -87,7 +94,43 @@ public class MinfSaleManFragment extends BaseFragment implements View.OnClickLis
         if ("Refresh".endsWith(messageEvent.getMessage())) {
             isRefresh = true;
             setUserData();
+            unReadMessageNum();
         }
+    }
+
+    /**
+     * 查询未度消息
+     * @param
+     */
+    private void unReadMessageNum(){
+        showProgressDialog();
+        addSubscription(apiStores.checkUnReadCount(), new ApiCallback<HttpResponse<Integer>>() {
+            @Override
+            public void onSuccess(HttpResponse<Integer> model) {
+                if (model.isStatus()) {
+                    if (model.getData()>0){
+                        rl_message.setVisibility(View.VISIBLE);
+                    }else {
+                        rl_message.setVisibility(View.GONE);
+                    }
+
+                } else {
+                    toastShow(model.getErrorDescription());
+                }
+
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                toastShow(msg);
+            }
+
+            @Override
+            public void onFinish() {
+                dismissProgressDialog();
+
+            }
+        });
     }
 
     /**
@@ -106,7 +149,7 @@ public class MinfSaleManFragment extends BaseFragment implements View.OnClickLis
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.img_message:
+            case R.id.rl_message:
                 // 消息
                 getActivity().startActivity(new Intent(getActivity(), NewsActivity.class));
                 break;

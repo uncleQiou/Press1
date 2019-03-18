@@ -2,6 +2,7 @@
     <string name="app_name">化工教材</string>
     <string name="text_more">更多</string>
     <string name="text_search_hint">书名、作者、内容简介</string>
+    <string name="manager_search_hint">姓名、学校</string>
     <string name="text_bookcity_classfy">分类</string>
     <string name="home_table1">书架</string>
     <string name="home_table2">书城</string>
@@ -14,6 +15,7 @@
     <string name="str_edit">编辑</string>
     <string name="str_check_all">全选</string>
     <string name="str_delete">删除</string>
+    <string name="str_delete_fail">删除失败</string>
     <string name="bf_free_book">免费样书</string>
     <string name="bf_give_book">我的赠书</string>
     <string name="bf_buy_book">已购图书</string>
@@ -50,16 +52,16 @@
     <string name="next_step">下一步</string>
     <string name="done">完成</string>
     <string name="modify_phone_title">修改手机号</string>
-    <string name="change_password_login">切换至密码登陆</string>
-    <string name="change_phone_login">切换至手机登陆</string>
+    <string name="change_password_login">切换至密码登录</string>
+    <string name="change_phone_login">切换至手机登录</string>
     <string name="please_input_username">请输入用户名</string>
     <string name="please_input_password">请输入密码</string>
     <string name="please_input_checkcode">请输验证码</string>
     <string name="click_get">点击获取</string>
-    <string name="login">登陆</string>
+    <string name="login">登录</string>
     <string name="register_now">立即注册</string>
     <string name="register">注册</string>
-    <string name="third_party_login">第三方登陆</string>
+    <string name="third_party_login">第三方登录</string>
     <string name="str_qq">QQ</string>
     <string name="str_wechat">微信</string>
     <string name="my_custom">我的定制</string>
@@ -162,7 +164,7 @@
     <string name="book_number_str">册数</string>
     <string name="people_number">人\n数</string>
     <string name="people_number_str">人数</string>
-    <string name="apply_limit">申\n请\n上\n限</string>
+    <string name="apply_limit">上\n限</string>
     <string name="apply_limit_str">申请上限</string>
     <string name="givebiik_tj_pbar_des">赠书上限%1$d本,还剩%2$d次机会</string>
     <string name="my_account">我的账户</string>
@@ -174,7 +176,7 @@
     <string name="token_balance_noenough">余额不足</string>
     <string name="price_rmb">售价:%1$s 元</string>
     <string name="recharge_token">充值面值：%1$d CIP币</string>
-    <string name="recharge_total">支出：￥%1$d 元</string>
+    <string name="recharge_total">总计：￥%1$d 元</string>
     <string name="copyright_str">Copyright©2018 \n化学工业出版社,All Rights Reserved.</string>
     <string name="have_download">已下载</string>
     <string name="bookshelf_page">页数：%1$S 页</string>
@@ -183,5 +185,9 @@
     <string name="binding_phone">绑定手机号</string>
     <string name="input_login_msg">请输入正确信息</string>
     <string name="send_success">发送成功</string>
+    <string name="forget_password">忘记密码</string>
+    <string name="login_register">登录/注册</string>
+    <string name="tourist_login">游客登录</string>
+    <string name="sure_btn">确定</string>
 
 </resources>

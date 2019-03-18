@@ -129,7 +129,11 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
             @Override
             public void onSuccess(HttpResponse<Object> model) {
                 // 通知html5页面进行刷新 购买完成 reflushData
-                bookDetailWeb.loadUrl("javascript:reflushData()");
+                if (model.isStatus()){
+                    bookDetailWeb.loadUrl("javascript:reflushData()");
+                }else {
+                    toastShow(model.getErrorDescription());
+                }
             }
 
             @Override
@@ -491,7 +495,13 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
         @JavascriptInterface
         public void goBuyBook() {
             //   获取订单信息
-            createOrder();
+            //  用户是游客账户 去注册
+            int user_type = preference.getInt(Config.MEMBER_TYPE, 3);
+            if (user_type == 5){
+                startActivity(new Intent(BookDetailActivity.this, LoginActivity.class));
+            }else {
+                createOrder();
+            }
 
         }
 
