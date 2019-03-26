@@ -24,6 +24,8 @@
                 android:layout_centerInParent="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/margin_15dp"
+                android:paddingLeft="@dimen/margin_12dp"
                 android:src="@mipmap/red_point"/>
 
         </RelativeLayout>
@@ -55,7 +57,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/margin_5dp"
-                    android:text="张晓丽"
+                    android:text=""
                     android:textColor="@color/bg_main_white"
                     android:textSize="@dimen/text_18sp" />
 
@@ -72,7 +74,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_10dp"
                 android:drawableLeft="@mipmap/mine_itea_phone"
-                android:text="  TEL: 1881111111"
+                android:text="  "
                 android:textColor="@color/bg_main_white"
                 android:textSize="@dimen/text_15sp" />
         </LinearLayout>

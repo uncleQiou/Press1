@@ -41,6 +41,7 @@ import de.greenrobot.event.ThreadMode;
 public class MinfSaleManFragment extends BaseFragment implements View.OnClickListener {
 
     private ImageView img_message;
+    private ImageView img_unread;
     private ImageView img_set;
     private TextView tv_my_name;
     private TextView tv_phone;
@@ -62,6 +63,8 @@ public class MinfSaleManFragment extends BaseFragment implements View.OnClickLis
         super.onCreateViewLazy(savedInstanceState);
         setContentView(R.layout.fragment_mine_saleman);
         img_message = (ImageView) findViewById(R.id.img_message);
+        img_unread = (ImageView) findViewById(R.id.img_unread);
+        img_unread.setVisibility(View.GONE);
         img_set = (ImageView) findViewById(R.id.img_set);
 //        img_message.setOnClickListener(this);
         img_set.setOnClickListener(this);
@@ -109,9 +112,9 @@ public class MinfSaleManFragment extends BaseFragment implements View.OnClickLis
             public void onSuccess(HttpResponse<Integer> model) {
                 if (model.isStatus()) {
                     if (model.getData()>0){
-                        rl_message.setVisibility(View.VISIBLE);
+                        img_unread.setVisibility(View.VISIBLE);
                     }else {
-                        rl_message.setVisibility(View.GONE);
+                        img_unread.setVisibility(View.GONE);
                     }
 
                 } else {

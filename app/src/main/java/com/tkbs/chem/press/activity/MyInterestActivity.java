@@ -45,7 +45,7 @@ public class MyInterestActivity extends BaseActivity implements View.OnClickList
     @BindView(R.id.interesr_web)
     WebView interesrWeb;
     private String baseUrl = Config.API_SERVER + "hello/interest.html";
-
+    private String strInterest;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +58,7 @@ public class MyInterestActivity extends BaseActivity implements View.OnClickList
 
     @Override
     protected void initdata() {
+        strInterest = getIntent().getStringExtra("myInterst");
         initWeb();
     }
 
@@ -180,7 +181,12 @@ public class MyInterestActivity extends BaseActivity implements View.OnClickList
             Intent intent = new Intent();
             intent.putExtra("result", result);
             MyInterestActivity.this.setResult(RESULT_OK, intent);
+            strInterest = result;
             finish();
+        }
+        @JavascriptInterface
+        public String getMyInterest(){
+            return strInterest;
         }
 
 

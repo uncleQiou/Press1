@@ -168,7 +168,7 @@ public class ThreeClassificActivity extends BaseActivity implements View.OnClick
                         bookDatas.addAll(model.getData());
                         myAdapter.addAll(model.getData());
                     }
-                    if (model.getData().size() < 10) {
+                    if (model.getData().size() < 15) {
                         recycler.showNoMore();
                     }
                 } else {

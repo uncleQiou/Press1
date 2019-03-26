@@ -130,6 +130,11 @@ public class SearchResultActivity extends BaseActivity implements View.OnClickLi
         recycler.setLayoutManager(new GridLayoutManager(this, 3));
         recycler.setAdapter(mAdapter);
         mHandler = new Handler();
+        if (null != classfyguid && classfyguid.size() > 0) {
+            for (String guid : classfyguid) {
+                classfyList.add(guid);
+            }
+        }
         recycler.setRefreshAction(new Action() {
             @Override
             public void onAction() {
@@ -154,7 +159,7 @@ public class SearchResultActivity extends BaseActivity implements View.OnClickLi
             }
         });
         recycler.getNoMoreView().setText(R.string.no_more_data);
-        timeOrder = Config.SORT_UP;
+        //timeOrder = Config.SORT_UP;
         changeTextColor();
     }
 
@@ -171,11 +176,6 @@ public class SearchResultActivity extends BaseActivity implements View.OnClickLi
         final Gson gson = new Gson();
         ClassifyRequestBean requestData = new ClassifyRequestBean();
         requestData.setContent(searchKeyStr);
-        if (null != classfyguid && classfyguid.size() > 0) {
-            for (String guid : classfyguid) {
-                classfyList.add(guid);
-            }
-        }
         requestData.setCatagoryGuids(classfyList);
         String route = gson.toJson(requestData);
         Logger.e("====" + route + "===========");
@@ -199,7 +199,7 @@ public class SearchResultActivity extends BaseActivity implements View.OnClickLi
                         dataList.addAll(model.getData());
                         mAdapter.addAll(model.getData());
                     }
-                    if (model.getData().size() < 10) {
+                    if (model.getData().size() < 21) {
                         recycler.showNoMore();
                     }
                 } else {

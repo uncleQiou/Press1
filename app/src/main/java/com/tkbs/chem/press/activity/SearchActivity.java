@@ -238,7 +238,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                         dataList.addAll(model.getData());
                         searchHotAdapter.addAll(model.getData());
                     }
-                    if (model.getData().size() < 10) {
+                    if (model.getData().size() < 21) {
                         searchHotAdapter.showNoMore();
                     }
                 } else {
@@ -347,7 +347,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         idFlowlayout.setOnTagClickListener(new TagFlowLayout.OnTagClickListener() {
             @Override
             public boolean onTagClick(View view, int position, FlowLayout parent) {
-                Toast.makeText(SearchActivity.this, localLabs.get(position), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(SearchActivity.this, localLabs.get(position), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(SearchActivity.this, SearchResultActivity.class);
                 intent.putStringArrayListExtra("Classfy", classfyGuid);
                 intent.putExtra("SearchKey", localLabs.get(position));

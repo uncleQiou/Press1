@@ -166,8 +166,8 @@ public class ForgetPasswordActivity extends BaseActivity implements View.OnClick
         @JavascriptInterface
         public void toLogin() {
             //  删除个人信息
-            Intent intent = new Intent(ForgetPasswordActivity.this, LoginActivity.class);
-            startActivity(intent);
+//            Intent intent = new Intent(ForgetPasswordActivity.this, LoginActivity.class);
+//            startActivity(intent);
             finish();
         }
 

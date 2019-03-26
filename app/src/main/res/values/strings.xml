@@ -12,7 +12,8 @@
     <string name="sort_time">时间</string>
     <string name="sort_book_name">书名</string>
     <string name="sort_name">姓名</string>
-    <string name="str_edit">编辑</string>
+    <string name="str_edit">管理</string>
+    <string name="str_edit_done">完成</string>
     <string name="str_check_all">全选</string>
     <string name="str_delete">删除</string>
     <string name="str_delete_fail">删除失败</string>
@@ -181,7 +182,7 @@
     <string name="have_download">已下载</string>
     <string name="bookshelf_page">页数：%1$S 页</string>
     <string name="bookshelf_limit">截止时间：%1$S</string>
-    <string name="save_modify">保存修改</string>
+    <string name="save_modify">设置成功</string>
     <string name="binding_phone">绑定手机号</string>
     <string name="input_login_msg">请输入正确信息</string>
     <string name="send_success">发送成功</string>
@@ -189,5 +190,8 @@
     <string name="login_register">登录/注册</string>
     <string name="tourist_login">游客登录</string>
     <string name="sure_btn">确定</string>
+    <string name="cancle_btn">取消</string>
+    <string name="please_setting">请设置教师信息</string>
+    <string name="bookshelf_del_title">是否删除选中项，删除后无法找回，请慎重选择!</string>
 
 </resources>

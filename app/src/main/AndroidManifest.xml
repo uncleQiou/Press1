@@ -136,6 +136,8 @@
         <activity android:name=".activity.ForgetPasswordActivity" />
         <!--修改绑定手机号-->
         <activity android:name=".activity.ModifyPhoneWebActivity"/>
+        <!--九宫格-->
+        <activity android:name="cn.lemon.multi.ui.ViewImageActivity"/>
     </application>
 
 </manifest>

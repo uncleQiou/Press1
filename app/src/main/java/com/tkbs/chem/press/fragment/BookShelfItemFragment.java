@@ -1,6 +1,8 @@
 package com.tkbs.chem.press.fragment;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.icu.util.BuddhistCalendar;
@@ -127,7 +129,7 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
         EventBus.getDefault().register(this);
         ll_sort_edit = (LinearLayout) findViewById(R.id.ll_sort_edit);
         ll_sort_edit.setOnClickListener(this);
-        if (type == 2 || type == 4) {
+        if (type == 2 ) {
             ll_sort_edit.setVisibility(View.GONE);
         }
         ll_bottom_edit = (LinearLayout) findViewById(R.id.ll_bottom_edit);
@@ -548,6 +550,7 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
         ll_sort_time.setOnClickListener(this);
     }
 
+    private  AlertDialog.Builder alertDialog;
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -555,9 +558,11 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
                 if (editFlg) {
                     editFlg = false;
                     ll_bottom_edit.setVisibility(View.GONE);
+                    tv_sort_edit.setText(R.string.str_edit);
                 } else {
                     editFlg = true;
                     ll_bottom_edit.setVisibility(View.VISIBLE);
+                    tv_sort_edit.setText(R.string.str_edit_done);
                 }
                 bookShelfItemAdapter.notifyDataSetChanged();
                 break;
@@ -621,33 +626,22 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
                 });
                 break;
             case R.id.tv_delete:
-                switch (type) {
-                    case 0:
-                        // 免费样书 删除
-                        deleteSampleBooks();
-                        break;
-                    case 1:
-                        // 我的赠书 删除
-                        deleteGiveBooks();
-                        break;
-                    case 2:
-                        //  已购图书 没有删除接口  隐藏按钮
-//                        getBuyedBookListData(isRefresh);
-                        break;
-                    case 3:
-                        // 我的收藏 删除
-                        deleteCollectionBooks();
-                        break;
-                    case 4:
-                        // TODO 业务员 我的图书 删除应该是本地操作 等下载功能完成后 继续删除操作
-                        break;
-                    case 5:
-                        // 业务员 我的收藏 删除
-                        deleteCollectionBooks();
-                        break;
-                    default:
-                        break;
-                }
+                //  添加确认删除对话框
+                alertDialog = new AlertDialog.Builder(getActivity());
+                alertDialog.setMessage(R.string.bookshelf_del_title);
+                alertDialog.setPositiveButton(R.string.sure_btn, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        deleltBookShelf();
+                    }
+                });
+                alertDialog.setNegativeButton(R.string.cancle_btn, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                    }
+                });
+                alertDialog.show();
+
                 break;
             case R.id.ll_bottom_edit:
                 //  显示checkBox
@@ -665,6 +659,39 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
     }
 
 
+    /**
+     * 书架删除
+     */
+    private void  deleltBookShelf(){
+        switch (type) {
+            case 0:
+                // 免费样书 删除
+                deleteSampleBooks();
+                break;
+            case 1:
+                // 我的赠书 删除
+                deleteGiveBooks();
+                break;
+            case 2:
+                //  已购图书 没有删除接口  隐藏按钮
+//                        getBuyedBookListData(isRefresh);
+                break;
+            case 3:
+                // 我的收藏 删除
+                deleteCollectionBooks();
+                break;
+            case 4:
+                //  业务员 我的图书 删除应该是本地操作 等下载功能完成后 继续删除操作
+                deleteCollectionBooks();
+                break;
+            case 5:
+                // 业务员 我的收藏 删除
+                deleteCollectionBooks();
+                break;
+            default:
+                break;
+        }
+    }
     /**
      * 修改排序字体颜色
      */

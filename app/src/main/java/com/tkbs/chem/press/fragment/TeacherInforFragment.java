@@ -15,15 +15,21 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.base.BaseFragment;
 import com.tkbs.chem.press.bean.HttpResponse;
+import com.tkbs.chem.press.bean.LoginRequestBen;
+import com.tkbs.chem.press.bean.UpdateTeacherInfoBean;
 import com.tkbs.chem.press.bean.UserInfoManageDataBean;
 import com.tkbs.chem.press.bean.UserManageDataBean;
 import com.tkbs.chem.press.net.ApiCallback;
 import com.tkbs.chem.press.util.TimeUtils;
 
 import java.util.ArrayList;
+
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 
 /**
  * Created by Administrator on 2018/10/19.
@@ -111,19 +117,6 @@ public class TeacherInforFragment extends BaseFragment {
         tvSchool.addTextChangedListener(myTextWatcher);
         tvFaculty.addTextChangedListener(myTextWatcher);
 
-
-//        tvRealName.setText("张志");
-//        tvSex.setText("男");
-//        tvBirthDate.setText("2018年10月19日10:56:21");
-//        tvContactWay.setText("18804952321");
-//        tvMailbox.setText("88026667@qq.com");
-//        tvLocation.setText("北京市海淀区");
-//        tvSchool.setText("清华大学");
-//        tvFaculty.setText("土木工程系");
-//        tvTeacherJob.setText("主任");
-//        tvOfficePhone.setText("010-110110");
-//        tvTeachingCourse.setText("工程造价");
-
     }
 
     private void changeButtonState() {
@@ -133,12 +126,49 @@ public class TeacherInforFragment extends BaseFragment {
         tv_save_modify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO 还没有接口 接口完成 将按钮状态重置！！！！
-                toastShow(R.string.save_modify);
+                setTeaInfo();
+
             }
         });
     }
 
+    private void setTeaInfo(){
+        showProgressDialog();
+        UpdateTeacherInfoBean updateTeacherInfoBean = new UpdateTeacherInfoBean();
+        updateTeacherInfoBean.setGuid(guid);
+        updateTeacherInfoBean.setOrganization(tvSchool.getText().toString().trim());
+        updateTeacherInfoBean.setDepartment(tvFaculty.getText().toString().trim());
+        final Gson gson = new Gson();
+        String route = gson.toJson(updateTeacherInfoBean);
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), route);
+        addSubscription(apiStores.setTesInfo(body), new ApiCallback<HttpResponse<Object>>() {
+            @Override
+            public void onSuccess(HttpResponse<Object> model) {
+                if (model.isStatus()) {
+                    toastShow(R.string.save_modify);
+                    getUserInfo(guid);
+                    // 按钮重置
+                    tv_save_modify.setBackground(getResources().getDrawable(R.drawable.rounded_rectangle_gray));
+                    tv_save_modify.setTextColor(getResources().getColor(R.color.text_main_9));
+                    tv_save_modify.setOnClickListener(null);
+                } else {
+                    toastShow(model.getErrorDescription());
+                }
+
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                toastShow(msg);
+            }
+
+            @Override
+            public void onFinish() {
+                dismissProgressDialog();
+
+            }
+        });
+    }
     private void getUserInfo(String guid) {
         showProgressDialog();
         addSubscription(apiStores.UserDetail(guid), new ApiCallback<HttpResponse<UserInfoManageDataBean>>() {

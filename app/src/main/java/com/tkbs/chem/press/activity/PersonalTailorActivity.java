@@ -16,11 +16,13 @@ import android.widget.TextView;
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.base.BaseActivity;
 import com.tkbs.chem.press.util.Config;
+import com.tkbs.chem.press.util.MessageEvent;
 import com.tkbs.chem.press.util.UiUtils;
 import com.tkbs.chem.press.view.ReWebChomeClient;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import de.greenrobot.event.EventBus;
 
 public class PersonalTailorActivity extends BaseActivity implements View.OnClickListener, ReWebChomeClient.OpenFileChooserCallBack {
 
@@ -164,7 +166,13 @@ public class PersonalTailorActivity extends BaseActivity implements View.OnClick
 
             return user;
         }
-
+        @JavascriptInterface
+        public void settingDone(){
+            //TODO 个人定制设置完成 跳转到书城
+            EventBus.getDefault().post(new MessageEvent("Refresh"));
+            setResult(RESULT_OK);
+            finish();
+        }
 
     }
 

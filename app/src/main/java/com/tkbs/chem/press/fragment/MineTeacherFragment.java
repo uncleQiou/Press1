@@ -118,8 +118,7 @@ public class MineTeacherFragment extends BaseFragment implements View.OnClickLis
                 break;
             case R.id.ll_personal_customization:
 //                toastShow(R.string.personal_custom);
-                getActivity().startActivity(new Intent(getActivity(), PersonalTailorActivity.class));
-//                getActivity().startActivity(new Intent(getActivity(), MyCustomizedActivity.class));
+                getActivity().startActivityForResult(new Intent(getActivity(), PersonalTailorActivity.class), Config.ACCOUNT_SWITCHING);
                 break;
             case R.id.ll_my_bookshelf:
 //                toastShow(R.string.my_bookshelf);

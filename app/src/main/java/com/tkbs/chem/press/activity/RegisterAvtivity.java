@@ -148,13 +148,14 @@ public class RegisterAvtivity extends BaseActivity implements View.OnClickListen
 
     }
 
+    private String result ;
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case 0:
-                    String result = data.getStringExtra("result");
+                    result = data.getStringExtra("result");
                     registerWeb.loadUrl("javascript:getInterestList(" + result + ")");
                     Logger.e(result);
                     break;
@@ -200,7 +201,9 @@ public class RegisterAvtivity extends BaseActivity implements View.OnClickListen
 
         @JavascriptInterface
         public void MyInterest() {
-            startActivityForResult(new Intent(RegisterAvtivity.this, MyInterestActivity.class), 0);
+            Intent intent = new Intent(RegisterAvtivity.this, MyInterestActivity.class);
+            intent.putExtra("myInterst",result);
+            startActivityForResult(intent, 0);
         }
 
         @JavascriptInterface

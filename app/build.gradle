@@ -123,7 +123,11 @@ dependencies {
     compile(name: 'alipaySdk-15.5.7-20181023110917', ext: 'aar')
     //微信支付
     compile 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:1.1.6'
+    //  图书解密
     compile files('libs/BASE64.jar')
     compile files('libs/dom4j-1.6.1.jar')
     compile files('libs/jaxen-1.1.6.jar')
+    //  书城首页九宫格显示
+    compile 'cn.lemon:multiview:0.1.8'
+    compile 'cn.alien95:resthttp:1.0.5'
 }

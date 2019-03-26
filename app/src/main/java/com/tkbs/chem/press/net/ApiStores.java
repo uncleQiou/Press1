@@ -146,7 +146,7 @@ public interface ApiStores {
      * @param guid
      * @return
      */
-    @POST("resDocument/customizationFour/{guid}/{pageNum}/10")
+    @POST("resDocument/customizationFour/{guid}/{pageNum}/15")
     Observable<HttpResponse<ArrayList<ThreeClassifyDataBena>>> ThreeClassifyData(@Path("guid") String guid,
                                                                                  @Path("pageNum") int pageNum,
                                                                                  @Query("timeOrder") int timeOrder,
@@ -368,7 +368,7 @@ public interface ApiStores {
      * @param pageNum
      * @return
      */
-    @POST("search/queryDocumentBySearch/{pageNum}/10")
+    @POST("search/queryDocumentBySearch/{pageNum}/21")
     Observable<HttpResponse<ArrayList<BookCityResDocument>>> getSearchList(@Path("pageNum") int pageNum,
                                                                            @Body RequestBody body,
                                                                            @Query("timeOrder") int timeOrder,
@@ -381,7 +381,7 @@ public interface ApiStores {
      * @param pageNum
      * @return
      */
-    @POST("searchWord/{pageNum}/10")
+    @POST("searchWord/{pageNum}/21")
     Observable<HttpResponse<ArrayList<SearchHotKey>>> getSearchHotKey(@Path("pageNum") int pageNum);
 
     /**
@@ -688,6 +688,11 @@ public interface ApiStores {
      */
     @POST("message/readed/{guid}")
     Observable<HttpResponse<Object>> readMessage (@Path("guid") String  guid);
+    /**
+     * 业务员设置教师学校和院系信息
+     */
+    @POST("mmMember/updateMemberBySaleMan")
+    Observable<HttpResponse<Object>> setTesInfo (@Body RequestBody body);
 
     /*************************************************************************************************************/
 
