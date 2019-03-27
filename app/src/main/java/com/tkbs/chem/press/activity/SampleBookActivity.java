@@ -304,7 +304,7 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
                     return;
                 }
                 recycler.showSwipeRefresh();
-                imgSortTime.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down : R.mipmap.bookshelf_icon_up);
+
                 if (isAscendingOrder) {
                     isAscendingOrder = false;
                     sortByDateUp();
@@ -312,6 +312,7 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
                     isAscendingOrder = true;
                     sortByDateDown();
                 }
+                imgSortTime.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down : R.mipmap.bookshelf_icon_up);
                 myAdapter.clear();
                 myAdapter.addAll(bookList);
                 recycler.dismissSwipeRefresh();
@@ -324,6 +325,7 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
                 if (null == bookList) {
                     return;
                 }
+                imgSortTime.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down_black : R.mipmap.bookshelf_icon_up_black);
                 recycler.showSwipeRefresh();
                 sortBydEgreeDown();
                 myAdapter.clear();
@@ -338,6 +340,7 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
                 if (null == bookList) {
                     return;
                 }
+                imgSortTime.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down_black : R.mipmap.bookshelf_icon_up_black);
                 recycler.showSwipeRefresh();
                 sortByBookName();
                 myAdapter.clear();
@@ -352,6 +355,7 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
                 if (null == bookList) {
                     return;
                 }
+                imgSortTime.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_up_black : R.mipmap.bookshelf_icon_down_black);
                 recycler.showSwipeRefresh();
                 sortByState();
                 myAdapter.clear();

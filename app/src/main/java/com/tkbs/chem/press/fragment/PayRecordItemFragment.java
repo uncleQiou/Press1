@@ -235,7 +235,7 @@ public class PayRecordItemFragment extends BaseFragment implements View.OnClickL
                     return;
                 }
                 recycler_pay_record.showSwipeRefresh();
-                img_sort_time.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down : R.mipmap.bookshelf_icon_up);
+
                 if (isAscendingOrder) {
                     isAscendingOrder = false;
                     sortByDateUp();
@@ -243,6 +243,7 @@ public class PayRecordItemFragment extends BaseFragment implements View.OnClickL
                     isAscendingOrder = true;
                     sortByDateDown();
                 }
+                img_sort_time.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down : R.mipmap.bookshelf_icon_up);
                 payRecordAdapter.clear();
                 payRecordAdapter.addAll(dataList);
                 recycler_pay_record.dismissSwipeRefresh();
@@ -253,6 +254,7 @@ public class PayRecordItemFragment extends BaseFragment implements View.OnClickL
                 if (null == dataList) {
                     return;
                 }
+                img_sort_time.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down_black : R.mipmap.bookshelf_icon_up_black);
                 recycler_pay_record.showSwipeRefresh();
                 sortByBookName();
                 payRecordAdapter.clear();
@@ -265,6 +267,7 @@ public class PayRecordItemFragment extends BaseFragment implements View.OnClickL
                 if (null == dataList) {
                     return;
                 }
+                img_sort_time.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down_black : R.mipmap.bookshelf_icon_up_black);
                 recycler_pay_record.showSwipeRefresh();
                 sortBydEgreeDown();
                 payRecordAdapter.clear();

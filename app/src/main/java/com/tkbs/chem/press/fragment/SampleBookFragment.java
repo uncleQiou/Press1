@@ -282,7 +282,7 @@ public class SampleBookFragment extends BaseFragment implements View.OnClickList
 //                myAdapter.addAll(bookList);
 //                recycler.dismissSwipeRefresh();
 //                recycler.getRecyclerView().scrollToPosition(0);
-                img_sort_time.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down : R.mipmap.bookshelf_icon_up);
+
                 if (isAscendingOrder) {
                     isAscendingOrder = false;
                     timeOrder = Config.SORT_DOWN;
@@ -292,6 +292,7 @@ public class SampleBookFragment extends BaseFragment implements View.OnClickList
                     timeOrder = Config.SORT_UP;
                     titleOrder = Config.SORT_NOONE;
                 }
+                img_sort_time.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down : R.mipmap.bookshelf_icon_up);
                 changeTextColor();
                 recycler.post(new Runnable() {
                     @Override
@@ -315,6 +316,7 @@ public class SampleBookFragment extends BaseFragment implements View.OnClickList
                 timeOrder = Config.SORT_NOONE;
                 titleOrder = Config.SORT_UP;
                 changeTextColor();
+                img_sort_time.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down_black : R.mipmap.bookshelf_icon_up_black);
                 recycler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -328,6 +330,7 @@ public class SampleBookFragment extends BaseFragment implements View.OnClickList
                 if (null == bookList) {
                     return;
                 }
+                img_sort_time.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down_black : R.mipmap.bookshelf_icon_up_black);
                 recycler.showSwipeRefresh();
                 sortByState();
                 myAdapter.clear();

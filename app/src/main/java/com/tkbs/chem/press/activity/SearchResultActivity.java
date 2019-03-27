@@ -262,7 +262,7 @@ public class SearchResultActivity extends BaseActivity implements View.OnClickLi
                 }
                 break;
             case R.id.ll_sort_time:
-                imgSortTime.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down : R.mipmap.bookshelf_icon_up);
+
                 if (isAscendingOrder) {
                     isAscendingOrder = false;
                     timeOrder = Config.SORT_DOWN;
@@ -274,6 +274,7 @@ public class SearchResultActivity extends BaseActivity implements View.OnClickLi
                     titleOrder = Config.SORT_NOONE;
                     degreeOrder = Config.SORT_NOONE;
                 }
+                imgSortTime.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down : R.mipmap.bookshelf_icon_up);
                 recycler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -288,6 +289,7 @@ public class SearchResultActivity extends BaseActivity implements View.OnClickLi
                 timeOrder = Config.SORT_NOONE;
                 titleOrder = Config.SORT_UP;
                 degreeOrder = Config.SORT_NOONE;
+                imgSortTime.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down_black : R.mipmap.bookshelf_icon_up_black);
                 recycler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -302,6 +304,7 @@ public class SearchResultActivity extends BaseActivity implements View.OnClickLi
                 timeOrder = Config.SORT_NOONE;
                 titleOrder = Config.SORT_NOONE;
                 degreeOrder = Config.SORT_UP;
+                imgSortTime.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down_black : R.mipmap.bookshelf_icon_up_black);
                 recycler.post(new Runnable() {
                     @Override
                     public void run() {

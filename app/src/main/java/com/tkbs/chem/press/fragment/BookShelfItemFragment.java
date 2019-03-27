@@ -578,6 +578,7 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
 //                recycler_bookshelf.getRecyclerView().scrollToPosition(0);
                 timeOrder = Config.SORT_NOONE;
                 titleOrder = Config.SORT_UP;
+                img_sort_time.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down_black : R.mipmap.bookshelf_icon_up_black);
                 recycler_bookshelf.post(new Runnable() {
                     @Override
                     public void run() {
@@ -605,7 +606,7 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
 //                bookShelfItemAdapter.addAll(dataList);
 //                recycler_bookshelf.dismissSwipeRefresh();
 //                recycler_bookshelf.getRecyclerView().scrollToPosition(0);
-                img_sort_time.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down : R.mipmap.bookshelf_icon_up);
+
                 if (isAscendingOrder) {
                     isAscendingOrder = false;
                     timeOrder = Config.SORT_DOWN;
@@ -615,6 +616,7 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
                     timeOrder = Config.SORT_UP;
                     titleOrder = Config.SORT_NOONE;
                 }
+                img_sort_time.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down : R.mipmap.bookshelf_icon_up);
                 changeTextColor();
                 recycler_bookshelf.post(new Runnable() {
                     @Override

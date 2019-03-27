@@ -1,4 +1,4 @@
-package com.tkbs.chem.press.activity;
+package com.tkbs.chem.press.fragment;
 
 import android.content.Context;
 import android.content.Intent;
@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -14,65 +15,41 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.orhanobut.logger.Logger;
 import com.tkbs.chem.press.R;
-import com.tkbs.chem.press.base.BaseActivity;
+import com.tkbs.chem.press.activity.BookDetailActivity;
 import com.tkbs.chem.press.base.BaseApplication;
-import com.tkbs.chem.press.bean.BookCityResDocument;
+import com.tkbs.chem.press.base.BaseFragment;
 import com.tkbs.chem.press.bean.HttpResponse;
 import com.tkbs.chem.press.bean.ThreeClassifyDataBena;
 import com.tkbs.chem.press.net.ApiCallback;
 import com.tkbs.chem.press.util.Config;
 
-import java.text.Collator;
-import java.text.RuleBasedCollator;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Locale;
 
-import butterknife.BindView;
-import butterknife.OnClick;
 import cn.lemon.view.RefreshRecyclerView;
 import cn.lemon.view.adapter.Action;
 import cn.lemon.view.adapter.BaseViewHolder;
 import cn.lemon.view.adapter.RecyclerAdapter;
 
-public class ThreeClassificActivity extends BaseActivity implements View.OnClickListener {
-
-    @BindView(R.id.back)
-    ImageView back;
-    @BindView(R.id.tv_title)
-    TextView tvTitle;
-    @BindView(R.id.img_serache)
-    ImageView imgSerache;
-    @BindView(R.id.img_classification)
-    ImageView imgClassification;
-    @BindView(R.id.tv_sort_time)
-    TextView tvSortTime;
-    @BindView(R.id.img_sort_time)
-    ImageView imgSortTime;
-    @BindView(R.id.ll_sort_time)
-    LinearLayout llSortTime;
-    @BindView(R.id.tv_sort_hot)
-    TextView tvSortHot;
-    @BindView(R.id.ll_sort_hot)
-    LinearLayout llSortHot;
-    @BindView(R.id.tv_sort_book_name)
-    TextView tvSortBookName;
-    @BindView(R.id.img_sort_book_name)
-    ImageView imgSortBookName;
-    @BindView(R.id.ll_sort_book_name)
-    LinearLayout llSortBookName;
-    @BindView(R.id.img_sort_edit)
-    ImageView imgSortEdit;
-    @BindView(R.id.ll_sort_edit)
-    LinearLayout llSortEdit;
-    @BindView(R.id.ll_bookshelf_edit)
-    LinearLayout llBookshelfEdit;
-    @BindView(R.id.recycler)
-    RefreshRecyclerView recycler;
+/**
+ * 作者    qyl
+ * 时间    2019/3/26 14:34
+ * 文件    Press
+ * 描述
+ */
+public class SecondaryClassifyFragment extends BaseFragment implements View.OnClickListener{
+    private TextView tv_sort_time;
+    private ImageView img_sort_time;
+    private LinearLayout ll_sort_time;
+    private TextView tv_sort_hot;
+    private LinearLayout ll_sort_hot;
+    private TextView tv_sort_book_name;
+    private ImageView img_sort_book_name;
+    private LinearLayout ll_sort_book_name;
+    private ImageView img_sort_edit;
+    private LinearLayout ll_sort_edit;
+    private LinearLayout ll_bookshelf_edit;
+    private RefreshRecyclerView recycler;
     private int page = 1;
     private Handler mHandler;
     private MyAdapter myAdapter;
@@ -96,25 +73,35 @@ public class ThreeClassificActivity extends BaseActivity implements View.OnClick
     private int degreeOrder;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected View getPreviewLayout(LayoutInflater inflater, ViewGroup container) {
+        return inflater.inflate(R.layout.layout_preview, container, false);
     }
 
     @Override
-    protected int getLayoutId() {
-        return R.layout.activity_three_classific;
-    }
-
-    @Override
-    protected void initdata() {
-        guid = getIntent().getStringExtra("guid");
-        titleStr = getIntent().getStringExtra("title");
+    protected void onCreateViewLazy(Bundle savedInstanceState) {
+        super.onCreateViewLazy(savedInstanceState);
+        setContentView(R.layout.fragment_secondary_classify);
+        guid = getArguments().getString("Type");
+        tv_sort_time = (TextView) findViewById(R.id.tv_sort_time);
+        img_sort_time = (ImageView) findViewById(R.id.img_sort_time);
+        ll_sort_time = (LinearLayout) findViewById(R.id.ll_sort_time);
+        ll_sort_time.setOnClickListener(this);
+        tv_sort_hot = (TextView) findViewById(R.id.tv_sort_hot);
+        tv_sort_hot.setOnClickListener(this);
+        ll_sort_hot = (LinearLayout) findViewById(R.id.ll_sort_hot);
+        tv_sort_book_name = (TextView) findViewById(R.id.tv_sort_book_name);
+        tv_sort_book_name.setOnClickListener(this);
+        img_sort_book_name = (ImageView) findViewById(R.id.img_sort_book_name);
+        ll_sort_book_name = (LinearLayout) findViewById(R.id.ll_sort_book_name);
+        img_sort_edit = (ImageView) findViewById(R.id.img_sort_edit);
+        img_sort_edit.setOnClickListener(this);
+        ll_sort_edit = (LinearLayout) findViewById(R.id.ll_sort_edit);
+        ll_bookshelf_edit = (LinearLayout) findViewById(R.id.ll_bookshelf_edit);
         mHandler = new Handler();
-        timeOrder = Config.SORT_NOONE;
-        myAdapter = new MyAdapter(this);
+        myAdapter = new MyAdapter(getActivity());
         recycler = (RefreshRecyclerView) findViewById(R.id.recycler);
         recycler.setSwipeRefreshColors(0xFF437845, 0xFFE44F98, 0xFF2FAC21);
-        recycler.setLayoutManager(new GridLayoutManager(this, 3));
+        recycler.setLayoutManager(new GridLayoutManager(getActivity(), 3));
         recycler.setAdapter(myAdapter);
         recycler.setRefreshAction(new Action() {
             @Override
@@ -135,7 +122,6 @@ public class ThreeClassificActivity extends BaseActivity implements View.OnClick
         recycler.post(new Runnable() {
             @Override
             public void run() {
-                page = 1;
                 recycler.showSwipeRefresh();
                 getClassifyData(true);
             }
@@ -143,11 +129,6 @@ public class ThreeClassificActivity extends BaseActivity implements View.OnClick
         recycler.getNoMoreView().setText("没有更多数据了");
         timeOrder = Config.SORT_UP;
         changeTextColor();
-    }
-
-    @Override
-    protected void initTitle() {
-        tvTitle.setText(titleStr);
     }
 
     private void getClassifyData(final boolean isRefresh) {
@@ -191,60 +172,30 @@ public class ThreeClassificActivity extends BaseActivity implements View.OnClick
 
     }
 
-    @OnClick({R.id.back, R.id.img_sort_edit, R.id.img_serache, R.id.img_classification,
-            R.id.ll_sort_time, R.id.tv_sort_hot, R.id.tv_sort_book_name})
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.back:
-                finish();
-                break;
-            case R.id.img_classification:
-                startActivityForResult(new Intent(ThreeClassificActivity.this, SearchClassifyActivity.class), 0);
-                break;
-            case R.id.img_serache:
-                startActivity(new Intent(ThreeClassificActivity.this, SearchActivity.class));
-                break;
             case R.id.img_sort_edit:
                 if (1 == disType) {
                     disType = 2;
-                    imgSortEdit.setImageResource(R.mipmap.customized_btn_list);
-//                    myAdapter = new MyAdapter(this);
+                    img_sort_edit.setImageResource(R.mipmap.customized_btn_list);
                     myAdapter.clear();
                     myAdapter.addAll(bookDatas);
-                    recycler.setLayoutManager(new GridLayoutManager(this, 3));
+                    recycler.setLayoutManager(new GridLayoutManager(getActivity(), 3));
                     recycler.setAdapter(myAdapter);
                     recycler.getNoMoreView().setText("没有更多数据了");
                 } else {
                     disType = 1;
-                    imgSortEdit.setImageResource(R.mipmap.customized_btn_list_switching);
-//                    myAdapter = new MyAdapter(this);
+                    img_sort_edit.setImageResource(R.mipmap.customized_btn_list_switching);
                     myAdapter.clear();
                     myAdapter.addAll(bookDatas);
-                    recycler.setLayoutManager(new GridLayoutManager(this, 1));
+                    recycler.setLayoutManager(new GridLayoutManager(getActivity(), 1));
                     recycler.setAdapter(myAdapter);
                     recycler.getNoMoreView().setText("没有更多数据了");
                 }
                 break;
             case R.id.ll_sort_time:
-//                if (null == bookDatas) {
-//                    return;
-//                }
-//                recycler.showSwipeRefresh();
-//                imgSortTime.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down : R.mipmap.bookshelf_icon_up);
-//                if (isAscendingOrder) {
-//                    isAscendingOrder = false;
-//                    sortByDateUp();
-//                } else {
-//                    isAscendingOrder = true;
-//                    sortByDateDown();
-//                }
-//                myAdapter.clear();
-//                myAdapter.addAll(bookDatas);
-//                recycler.dismissSwipeRefresh();
-//                recycler.getRecyclerView().scrollToPosition(0);
-
-                imgSortTime.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down : R.mipmap.bookshelf_icon_up);
                 if (isAscendingOrder) {
                     isAscendingOrder = false;
                     timeOrder = Config.SORT_DOWN;
@@ -256,6 +207,7 @@ public class ThreeClassificActivity extends BaseActivity implements View.OnClick
                     titleOrder = Config.SORT_NOONE;
                     degreeOrder = Config.SORT_NOONE;
                 }
+                img_sort_time.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down : R.mipmap.bookshelf_icon_up);
                 recycler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -267,19 +219,10 @@ public class ThreeClassificActivity extends BaseActivity implements View.OnClick
                 changeTextColor();
                 break;
             case R.id.tv_sort_book_name:
-//                if (null == bookDatas) {
-//                    return;
-//                }
-//                recycler.showSwipeRefresh();
-//                sortByBookName();
-//                myAdapter.clear();
-//                myAdapter.addAll(bookDatas);
-//                recycler.dismissSwipeRefresh();
-//                recycler.getRecyclerView().scrollToPosition(0);
                 timeOrder = Config.SORT_NOONE;
                 titleOrder = Config.SORT_UP;
                 degreeOrder = Config.SORT_NOONE;
-                imgSortTime.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down_black : R.mipmap.bookshelf_icon_up_black);
+                img_sort_time.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down_black : R.mipmap.bookshelf_icon_up_black);
                 recycler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -291,19 +234,10 @@ public class ThreeClassificActivity extends BaseActivity implements View.OnClick
                 changeTextColor();
                 break;
             case R.id.tv_sort_hot:
-//                if (null == bookDatas) {
-//                    return;
-//                }
-//                recycler.showSwipeRefresh();
-//                sortBydEgreeDown();
-//                myAdapter.clear();
-//                myAdapter.addAll(bookDatas);
-//                recycler.dismissSwipeRefresh();
-//                recycler.getRecyclerView().scrollToPosition(0);
                 timeOrder = Config.SORT_NOONE;
                 titleOrder = Config.SORT_NOONE;
                 degreeOrder = Config.SORT_UP;
-                imgSortTime.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down_black : R.mipmap.bookshelf_icon_up_black);
+                img_sort_time.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down_black : R.mipmap.bookshelf_icon_up_black);
                 recycler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -322,144 +256,31 @@ public class ThreeClassificActivity extends BaseActivity implements View.OnClick
     /**
      * 修改排序字体颜色
      */
-    private void changeTextColor(){
+    private void changeTextColor() {
 
         // 时间排序
-        if (timeOrder == Config.SORT_NOONE){
+        if (timeOrder == Config.SORT_NOONE) {
 
-            tvSortTime.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.text_main_6));
-        }else {
-            tvSortTime.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.apply_violet));
+            tv_sort_time.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.text_main_6));
+        } else {
+            tv_sort_time.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.apply_violet));
 
         }
         // 姓名排序
-        if (titleOrder == Config.SORT_NOONE){
+        if (titleOrder == Config.SORT_NOONE) {
 
-            tvSortBookName.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.text_main_6));
-        }else {
-            tvSortBookName.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.apply_violet));
+            tv_sort_book_name.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.text_main_6));
+        } else {
+            tv_sort_book_name.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.apply_violet));
         }
-        if (degreeOrder == Config.SORT_NOONE){
+        if (degreeOrder == Config.SORT_NOONE) {
 
-            tvSortHot.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.text_main_6));
-        }else {
-            tvSortHot.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.apply_violet));
+            tv_sort_hot.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.text_main_6));
+        } else {
+            tv_sort_hot.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.apply_violet));
 
         }
 
-
-    }
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            switch (requestCode) {
-                case 0:
-                    //  将获取的结果 发送给 搜索接口
-                    String result = data.getStringExtra("result");
-                    Logger.e(result);
-                    Intent intent = new Intent(ThreeClassificActivity.this, SearchActivity.class);
-                    intent.putExtra("Classy", result);
-                    startActivity(intent);
-//                    finish();
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-
-    /**
-     * 按书名排序
-     */
-    private void sortByBookName() {
-        final RuleBasedCollator collator = (RuleBasedCollator) Collator.getInstance(Locale.CHINA);
-        Collections.sort(bookDatas, new Comparator<ThreeClassifyDataBena>() {
-            @Override
-            public int compare(ThreeClassifyDataBena bookShelfItemData, ThreeClassifyDataBena t1) {
-                return collator.compare(bookShelfItemData.getTitle(), t1.getTitle()) < 0 ? -1 : 1;
-            }
-        });
-
-    }
-
-    /**
-     * 按时间排序 升序
-     */
-    private void sortByDateUp() {
-        Collections.sort(bookDatas, new Comparator<ThreeClassifyDataBena>() {
-            @Override
-            public int compare(ThreeClassifyDataBena o1, ThreeClassifyDataBena o2) {
-                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                try {
-//                    Date dt1 = format.parse(o1.getPublish_time());
-//                    Date dt2 = format.parse(o2.getPublish_time());
-                    if (o1.getPublishTime() > o2.getPublishTime()) {
-                        return 1;
-                    } else if (o1.getPublishTime() < o2.getPublishTime()) {
-                        return -1;
-                    } else {
-                        return 0;
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                return 0;
-            }
-        });
-
-    }
-
-    /**
-     * 按时间排序 降序
-     */
-    private void sortByDateDown() {
-        Collections.sort(bookDatas, new Comparator<ThreeClassifyDataBena>() {
-            @Override
-            public int compare(ThreeClassifyDataBena o1, ThreeClassifyDataBena o2) {
-                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                try {
-//                    Date dt1 = format.parse(o1.getPublishTime());
-//                    Date dt2 = format.parse(o2.getPublish_time());
-                    if (o1.getPublishTime() > o2.getPublishTime()) {
-                        return -1;
-                    } else if (o1.getPublishTime() < o2.getPublishTime()) {
-                        return 1;
-                    } else {
-                        return 0;
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                return 0;
-            }
-        });
-
-    }
-
-    /**
-     * 按热度 降序
-     */
-    private void sortBydEgreeDown() {
-        Collections.sort(bookDatas, new Comparator<ThreeClassifyDataBena>() {
-            @Override
-            public int compare(ThreeClassifyDataBena o1, ThreeClassifyDataBena o2) {
-
-                try {
-
-                    if (o1.getDegree() > o2.getDegree()) {
-                        return -1;
-                    } else if (o1.getDegree() < o2.getDegree()) {
-                        return 1;
-                    } else {
-                        return 0;
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                return 0;
-            }
-        });
 
     }
 
@@ -557,7 +378,7 @@ public class ThreeClassificActivity extends BaseActivity implements View.OnClick
                 cb_select_item.setVisibility(View.GONE);
                 tv_book_page.setText("￥" + data.getPrice());
                 tv_book_endtime.setText(data.getAuthor());
-                Glide.with(ThreeClassificActivity.this).load(data.getCover())
+                Glide.with(getActivity()).load(data.getCover())
                         .apply(BaseApplication.options)
                         .into(bookshelf_cover);
 

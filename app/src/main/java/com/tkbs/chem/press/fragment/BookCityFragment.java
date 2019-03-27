@@ -31,6 +31,7 @@ import com.shizhefei.view.indicator.slidebar.ColorBar;
 import com.shizhefei.view.indicator.transition.OnTransitionTextListener;
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.activity.SecondaryClassificationActivity;
+import com.tkbs.chem.press.activity.SecondaryClassifyActivity;
 import com.tkbs.chem.press.activity.ThreeClassificActivity;
 import com.tkbs.chem.press.adapter.BookCityBookItemAdapter;
 import com.tkbs.chem.press.adapter.BookCityItemAdapter;
@@ -419,6 +420,20 @@ public class BookCityFragment extends BaseFragment implements View.OnClickListen
                         intent1.putExtra("title", data.getResCatagory().getTitle());
                         getActivity().startActivity(intent1);
                     }
+                    // TODO  二级分类点击进入不同页面
+//                    int subexists = data.getResultDataList().get(fragment_bookcity_indicator.getCurrentItem()).getResCatagory().getSubexists();
+//                    if (subexists == 1) {
+//                        Intent intent = new Intent(getActivity(), SecondaryClassificationActivity.class);
+//                        intent.putExtra("guid", data.getResCatagory().getGuid());
+//                        intent.putExtra("title", data.getResCatagory().getTitle());
+//                        intent.putExtra("index",fragment_bookcity_indicator.getCurrentItem());
+//                        getActivity().startActivity(intent);
+//                    } else {
+//                        Intent intent1 = new Intent(getActivity(), SecondaryClassifyActivity.class);
+//                        intent1.putExtra("guid", data.getResCatagory().getGuid());
+//                        intent1.putExtra("title", data.getResCatagory().getTitle());
+//                        getActivity().startActivity(intent1);
+//                    }
 
                 }
             });
