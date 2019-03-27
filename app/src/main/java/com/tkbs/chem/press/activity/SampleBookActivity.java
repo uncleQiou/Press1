@@ -312,7 +312,6 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
                     isAscendingOrder = true;
                     sortByDateDown();
                 }
-                imgSortTime.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down : R.mipmap.bookshelf_icon_up);
                 myAdapter.clear();
                 myAdapter.addAll(bookList);
                 recycler.dismissSwipeRefresh();
@@ -325,7 +324,6 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
                 if (null == bookList) {
                     return;
                 }
-                imgSortTime.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down_black : R.mipmap.bookshelf_icon_up_black);
                 recycler.showSwipeRefresh();
                 sortBydEgreeDown();
                 myAdapter.clear();
@@ -340,7 +338,6 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
                 if (null == bookList) {
                     return;
                 }
-                imgSortTime.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down_black : R.mipmap.bookshelf_icon_up_black);
                 recycler.showSwipeRefresh();
                 sortByBookName();
                 myAdapter.clear();
@@ -397,12 +394,14 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
 
         if (flg == 0){
             // 时间排序
+            imgSortTime.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down : R.mipmap.bookshelf_icon_up);
             setTextColor(tvSortTime,1);
             setTextColor(tvSortHot,0);
             setTextColor(tvSortBookName,0);
             setTextColor(tvSortState,0);
         }else if (flg == 1){
             // 姓名排序
+            imgSortTime.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down_black : R.mipmap.bookshelf_icon_up_black);
             setTextColor(tvSortTime,0);
             setTextColor(tvSortHot,1);
             setTextColor(tvSortBookName,0);
@@ -414,7 +413,7 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
             setTextColor(tvSortBookName,1);
             setTextColor(tvSortState,0);
         }else if (flg == 3){
-
+            imgSortTime.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down_black : R.mipmap.bookshelf_icon_up_black);
             setTextColor(tvSortTime,0);
             setTextColor(tvSortHot,0);
             setTextColor(tvSortBookName,0);

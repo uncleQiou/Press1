@@ -227,24 +227,6 @@ public class ThreeClassificActivity extends BaseActivity implements View.OnClick
                 }
                 break;
             case R.id.ll_sort_time:
-//                if (null == bookDatas) {
-//                    return;
-//                }
-//                recycler.showSwipeRefresh();
-//                imgSortTime.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down : R.mipmap.bookshelf_icon_up);
-//                if (isAscendingOrder) {
-//                    isAscendingOrder = false;
-//                    sortByDateUp();
-//                } else {
-//                    isAscendingOrder = true;
-//                    sortByDateDown();
-//                }
-//                myAdapter.clear();
-//                myAdapter.addAll(bookDatas);
-//                recycler.dismissSwipeRefresh();
-//                recycler.getRecyclerView().scrollToPosition(0);
-
-                imgSortTime.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down : R.mipmap.bookshelf_icon_up);
                 if (isAscendingOrder) {
                     isAscendingOrder = false;
                     timeOrder = Config.SORT_DOWN;
@@ -267,19 +249,10 @@ public class ThreeClassificActivity extends BaseActivity implements View.OnClick
                 changeTextColor();
                 break;
             case R.id.tv_sort_book_name:
-//                if (null == bookDatas) {
-//                    return;
-//                }
-//                recycler.showSwipeRefresh();
-//                sortByBookName();
-//                myAdapter.clear();
-//                myAdapter.addAll(bookDatas);
-//                recycler.dismissSwipeRefresh();
-//                recycler.getRecyclerView().scrollToPosition(0);
+//
                 timeOrder = Config.SORT_NOONE;
                 titleOrder = Config.SORT_UP;
                 degreeOrder = Config.SORT_NOONE;
-                imgSortTime.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down_black : R.mipmap.bookshelf_icon_up_black);
                 recycler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -326,23 +299,26 @@ public class ThreeClassificActivity extends BaseActivity implements View.OnClick
 
         // 时间排序
         if (timeOrder == Config.SORT_NOONE){
-
+            imgSortTime.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down : R.mipmap.bookshelf_icon_up);
             tvSortTime.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.text_main_6));
         }else {
+            imgSortTime.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down : R.mipmap.bookshelf_icon_up);
             tvSortTime.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.apply_violet));
 
         }
         // 姓名排序
         if (titleOrder == Config.SORT_NOONE){
-
+            imgSortTime.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down_black : R.mipmap.bookshelf_icon_up_black);
             tvSortBookName.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.text_main_6));
         }else {
+            imgSortTime.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down_black : R.mipmap.bookshelf_icon_up_black);
             tvSortBookName.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.apply_violet));
         }
         if (degreeOrder == Config.SORT_NOONE){
-
+            imgSortTime.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down_black : R.mipmap.bookshelf_icon_up_black);
             tvSortHot.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.text_main_6));
         }else {
+            imgSortTime.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down_black : R.mipmap.bookshelf_icon_up_black);
             tvSortHot.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.apply_violet));
 
         }

@@ -6,6 +6,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.webkit.JavascriptInterface;
 import android.webkit.ValueCallback;
 import android.webkit.WebSettings;
@@ -64,6 +66,7 @@ public class ModifyPhoneWebActivity extends BaseActivity implements View.OnClick
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.back:
+                webView.loadUrl("javascript:disSmsInterval()");
                 finish();
                 break;
             default:
@@ -136,6 +139,36 @@ public class ModifyPhoneWebActivity extends BaseActivity implements View.OnClick
     public void openFileChooserCallBack(ValueCallback<Uri> uploadMsg, String acceptType) {
 
     }
+
+    @Override
+    public void onBackPressed() {
+        webView.loadUrl("javascript:disSmsInterval()");
+        super.onBackPressed();
+    }
+
+    @Override
+    protected synchronized void onDestroy() {
+        webView.loadUrl("javascript:disSmsInterval()");
+        if (webView != null) {
+            ViewParent parent = webView.getParent();
+            if (parent != null) {
+                ((ViewGroup) parent).removeView(webView);
+            }
+            //退出时调用此方法，移除绑定的服务，否则某些特定系统会报错
+            webView.stopLoading();
+            webView.getSettings().setJavaScriptEnabled(false);
+            webView.clearHistory();
+            webView.clearView();
+            webView.removeAllViews();
+            try {
+                webView.destroy();
+            } catch (Throwable ex) {
+                ex.printStackTrace();
+            }
+        }
+        super.onDestroy();
+    }
+
 
     private class ModifyPhoneInterface {
 

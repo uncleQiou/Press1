@@ -243,7 +243,6 @@ public class PayRecordItemFragment extends BaseFragment implements View.OnClickL
                     isAscendingOrder = true;
                     sortByDateDown();
                 }
-                img_sort_time.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down : R.mipmap.bookshelf_icon_up);
                 payRecordAdapter.clear();
                 payRecordAdapter.addAll(dataList);
                 recycler_pay_record.dismissSwipeRefresh();
@@ -267,7 +266,6 @@ public class PayRecordItemFragment extends BaseFragment implements View.OnClickL
                 if (null == dataList) {
                     return;
                 }
-                img_sort_time.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down_black : R.mipmap.bookshelf_icon_up_black);
                 recycler_pay_record.showSwipeRefresh();
                 sortBydEgreeDown();
                 payRecordAdapter.clear();
@@ -288,6 +286,7 @@ public class PayRecordItemFragment extends BaseFragment implements View.OnClickL
 
         if (flg == 0){
             // 时间排序
+            img_sort_time.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down : R.mipmap.bookshelf_icon_up);
             setTextColor(tv_sort_time,1);
             setTextColor(tv_sort_book_name,0);
             setTextColor(tv_sort_hot,0);
@@ -296,11 +295,13 @@ public class PayRecordItemFragment extends BaseFragment implements View.OnClickL
             setTextColor(tv_sort_time,0);
             setTextColor(tv_sort_book_name,1);
             setTextColor(tv_sort_hot,0);
+            img_sort_time.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down_black : R.mipmap.bookshelf_icon_up_black);
         }else if (flg == 2){
 
             setTextColor(tv_sort_time,0);
             setTextColor(tv_sort_book_name,0);
             setTextColor(tv_sort_hot,1);
+            img_sort_time.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down_black : R.mipmap.bookshelf_icon_up_black);
         }
 
     }

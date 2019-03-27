@@ -292,7 +292,6 @@ public class SampleBookFragment extends BaseFragment implements View.OnClickList
                     timeOrder = Config.SORT_UP;
                     titleOrder = Config.SORT_NOONE;
                 }
-                img_sort_time.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down : R.mipmap.bookshelf_icon_up);
                 changeTextColor();
                 recycler.post(new Runnable() {
                     @Override
@@ -316,7 +315,6 @@ public class SampleBookFragment extends BaseFragment implements View.OnClickList
                 timeOrder = Config.SORT_NOONE;
                 titleOrder = Config.SORT_UP;
                 changeTextColor();
-                img_sort_time.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down_black : R.mipmap.bookshelf_icon_up_black);
                 recycler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -361,10 +359,12 @@ public class SampleBookFragment extends BaseFragment implements View.OnClickList
 
         if (titleOrder == Config.SORT_NOONE){
             // 时间排序
+            img_sort_time.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down : R.mipmap.bookshelf_icon_up);
             tv_sort_time.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.apply_violet));
             tv_sort_book_name.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.text_main_6));
         }else {
             // 姓名排序
+            img_sort_time.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down_black : R.mipmap.bookshelf_icon_up_black);
             tv_sort_time.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.text_main_6));
             tv_sort_book_name.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.apply_violet));
         }

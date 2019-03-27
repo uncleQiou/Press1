@@ -7,6 +7,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.webkit.JavascriptInterface;
 import android.webkit.ValueCallback;
 import android.webkit.WebSettings;
@@ -73,6 +75,7 @@ public class RegisterAvtivity extends BaseActivity implements View.OnClickListen
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.back:
+                registerWeb.loadUrl("javascript:disSmsInterval()");
                 finish();
                 break;
             default:
@@ -94,7 +97,7 @@ public class RegisterAvtivity extends BaseActivity implements View.OnClickListen
         setting.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
         setting.setLoadWithOverviewMode(true);
         setting.setSaveFormData(true);
-        setting.setDomStorageEnabled(true);
+        setting.setDomStorageEnabled(false);
         setting.setJavaScriptCanOpenWindowsAutomatically(true);
         setting.setSupportMultipleWindows(true);
         registerWeb.addJavascriptInterface(new RegisterInterface(), "TKBS");
@@ -148,7 +151,8 @@ public class RegisterAvtivity extends BaseActivity implements View.OnClickListen
 
     }
 
-    private String result ;
+    private String result;
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -163,6 +167,45 @@ public class RegisterAvtivity extends BaseActivity implements View.OnClickListen
                     break;
             }
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    public void onBackPressed() {
+        registerWeb.loadUrl("javascript:disSmsInterval()");
+        super.onBackPressed();
+    }
+
+    @Override
+    protected synchronized void onDestroy() {
+        registerWeb.loadUrl("javascript:disSmsInterval()");
+        if (registerWeb != null) {
+            ViewParent parent = registerWeb.getParent();
+            if (parent != null) {
+                ((ViewGroup) parent).removeView(registerWeb);
+            }
+            //退出时调用此方法，移除绑定的服务，否则某些特定系统会报错
+            registerWeb.stopLoading();
+            registerWeb.getSettings().setJavaScriptEnabled(false);
+            registerWeb.clearHistory();
+            registerWeb.clearView();
+            registerWeb.removeAllViews();
+            try {
+                registerWeb.destroy();
+            } catch (Throwable ex) {
+                ex.printStackTrace();
+            }
+        }
+        super.onDestroy();
     }
 
     private class RegisterInterface {
@@ -202,7 +245,7 @@ public class RegisterAvtivity extends BaseActivity implements View.OnClickListen
         @JavascriptInterface
         public void MyInterest() {
             Intent intent = new Intent(RegisterAvtivity.this, MyInterestActivity.class);
-            intent.putExtra("myInterst",result);
+            intent.putExtra("myInterst", result);
             startActivityForResult(intent, 0);
         }
 

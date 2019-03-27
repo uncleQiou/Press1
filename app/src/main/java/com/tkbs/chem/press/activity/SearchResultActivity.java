@@ -181,7 +181,7 @@ public class SearchResultActivity extends BaseActivity implements View.OnClickLi
         Logger.e("====" + route + "===========");
         RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), route);
         showProgressDialog();
-        addSubscription(apiStores.getSearchList(page, body,timeOrder, titleOrder, degreeOrder), new ApiCallback<HttpResponse<ArrayList<BookCityResDocument>>>() {
+        addSubscription(apiStores.getSearchList(page, body, timeOrder, titleOrder, degreeOrder), new ApiCallback<HttpResponse<ArrayList<BookCityResDocument>>>() {
             @Override
             public void onSuccess(HttpResponse<ArrayList<BookCityResDocument>> model) {
                 if (model.isStatus()) {
@@ -274,7 +274,6 @@ public class SearchResultActivity extends BaseActivity implements View.OnClickLi
                     titleOrder = Config.SORT_NOONE;
                     degreeOrder = Config.SORT_NOONE;
                 }
-                imgSortTime.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down : R.mipmap.bookshelf_icon_up);
                 recycler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -289,7 +288,6 @@ public class SearchResultActivity extends BaseActivity implements View.OnClickLi
                 timeOrder = Config.SORT_NOONE;
                 titleOrder = Config.SORT_UP;
                 degreeOrder = Config.SORT_NOONE;
-                imgSortTime.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down_black : R.mipmap.bookshelf_icon_up_black);
                 recycler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -323,33 +321,37 @@ public class SearchResultActivity extends BaseActivity implements View.OnClickLi
     /**
      * 修改排序字体颜色
      */
-    private void changeTextColor(){
+    private void changeTextColor() {
 
         // 时间排序
-        if (timeOrder == Config.SORT_NOONE){
-
-            tvSortTime.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.text_main_6));
-        }else {
-            tvSortTime.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.apply_violet));
+        if (timeOrder == Config.SORT_NOONE) {
+            imgSortTime.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down : R.mipmap.bookshelf_icon_up);
+            tvSortTime.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.text_main_6));
+        } else {
+            imgSortTime.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down : R.mipmap.bookshelf_icon_up);
+            tvSortTime.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.apply_violet));
 
         }
         // 姓名排序
-        if (titleOrder == Config.SORT_NOONE){
-
-            tvSortBookName.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.text_main_6));
-        }else {
-            tvSortBookName.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.apply_violet));
+        if (titleOrder == Config.SORT_NOONE) {
+            imgSortTime.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down_black : R.mipmap.bookshelf_icon_up_black);
+            tvSortBookName.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.text_main_6));
+        } else {
+            imgSortTime.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down_black : R.mipmap.bookshelf_icon_up_black);
+            tvSortBookName.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.apply_violet));
         }
-        if (degreeOrder == Config.SORT_NOONE){
-
-            tvSortHot.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.text_main_6));
-        }else {
-            tvSortHot.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.apply_violet));
+        if (degreeOrder == Config.SORT_NOONE) {
+            imgSortTime.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down_black : R.mipmap.bookshelf_icon_up_black);
+            tvSortHot.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.text_main_6));
+        } else {
+            imgSortTime.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down_black : R.mipmap.bookshelf_icon_up_black);
+            tvSortHot.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.apply_violet));
 
         }
 
 
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

@@ -7,6 +7,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.webkit.JavascriptInterface;
 import android.webkit.ValueCallback;
 import android.webkit.WebSettings;
@@ -77,6 +79,7 @@ public class ThreePartBindingActivity extends BaseActivity implements View.OnCli
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.back:
+                bindingWeb.loadUrl("javascript:disSmsInterval()");
                 finish();
                 break;
             default:
@@ -147,6 +150,34 @@ public class ThreePartBindingActivity extends BaseActivity implements View.OnCli
         bindingWeb.loadUrl(baseUrl);
     }
 
+    @Override
+    public void onBackPressed() {
+        bindingWeb.loadUrl("javascript:disSmsInterval()");
+        super.onBackPressed();
+    }
+
+    @Override
+    protected synchronized void onDestroy() {
+        bindingWeb.loadUrl("javascript:disSmsInterval()");
+        if (bindingWeb != null) {
+            ViewParent parent = bindingWeb.getParent();
+            if (parent != null) {
+                ((ViewGroup) parent).removeView(bindingWeb);
+            }
+            //退出时调用此方法，移除绑定的服务，否则某些特定系统会报错
+            bindingWeb.stopLoading();
+            bindingWeb.getSettings().setJavaScriptEnabled(false);
+            bindingWeb.clearHistory();
+            bindingWeb.clearView();
+            bindingWeb.removeAllViews();
+            try {
+                bindingWeb.destroy();
+            } catch (Throwable ex) {
+                ex.printStackTrace();
+            }
+        }
+        super.onDestroy();
+    }
     @Override
     public void openFileChooserCallBack(ValueCallback<Uri> uploadMsg, String acceptType) {
 

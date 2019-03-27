@@ -207,7 +207,6 @@ public class SecondaryClassifyFragment extends BaseFragment implements View.OnCl
                     titleOrder = Config.SORT_NOONE;
                     degreeOrder = Config.SORT_NOONE;
                 }
-                img_sort_time.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down : R.mipmap.bookshelf_icon_up);
                 recycler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -222,7 +221,6 @@ public class SecondaryClassifyFragment extends BaseFragment implements View.OnCl
                 timeOrder = Config.SORT_NOONE;
                 titleOrder = Config.SORT_UP;
                 degreeOrder = Config.SORT_NOONE;
-                img_sort_time.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down_black : R.mipmap.bookshelf_icon_up_black);
                 recycler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -260,23 +258,26 @@ public class SecondaryClassifyFragment extends BaseFragment implements View.OnCl
 
         // 时间排序
         if (timeOrder == Config.SORT_NOONE) {
-
+            img_sort_time.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down : R.mipmap.bookshelf_icon_up);
             tv_sort_time.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.text_main_6));
         } else {
+            img_sort_time.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down : R.mipmap.bookshelf_icon_up);
             tv_sort_time.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.apply_violet));
 
         }
         // 姓名排序
         if (titleOrder == Config.SORT_NOONE) {
-
+            img_sort_time.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down_black : R.mipmap.bookshelf_icon_up_black);
             tv_sort_book_name.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.text_main_6));
         } else {
+            img_sort_time.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down_black : R.mipmap.bookshelf_icon_up_black);
             tv_sort_book_name.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.apply_violet));
         }
         if (degreeOrder == Config.SORT_NOONE) {
-
+            img_sort_time.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down_black : R.mipmap.bookshelf_icon_up_black);
             tv_sort_hot.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.text_main_6));
         } else {
+            img_sort_time.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down_black : R.mipmap.bookshelf_icon_up_black);
             tv_sort_hot.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.apply_violet));
 
         }
