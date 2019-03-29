@@ -343,7 +343,7 @@ public class BookCityFragment extends BaseFragment implements View.OnClickListen
         Log.i("tag", "你点了第" + position + "张轮播图");
         String linkUrl = bannerData.get(position).getLink_url();
 //        String linkUrl = "http://192.168.1.105:8281/app/hello/change_password.html";
-        if (linkUrl.length()>0){
+        if (null != linkUrl && linkUrl.length()>0){
             Intent intent = new Intent(getActivity(), BannerWebActivity.class);
             intent.putExtra("link_url",linkUrl);
             intent.putExtra("titleStr",bannerData.get(position).getTitle());
@@ -405,6 +405,8 @@ public class BookCityFragment extends BaseFragment implements View.OnClickListen
             fragment_bookcity_indicator.setOnTransitionListener
                     (new OnTransitionTextListener().setColor(getResources().getColor(R.color.tab_main_text_2), Color.GRAY));
             fragment_bookcity_viewPager.setOffscreenPageLimit(4);
+            // 设置默认选中
+            fragment_bookcity_indicator.setCurrentItem(0);
             //  设置三级分类  indicators
             BookCityIndicatorAdapter bookCityIndicatorAdapter = new BookCityIndicatorAdapter();
             List<BookCityResultDataList> resultDataLists = data.getResultDataList();

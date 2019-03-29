@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.orhanobut.logger.Logger;
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.base.BaseActivity;
 import com.tkbs.chem.press.bean.HttpResponse;
@@ -92,8 +93,7 @@ public class MyAccountActivity extends BaseActivity implements View.OnClickListe
             case R.id.tv_recharge:
                 int user_type = preference.getInt(Config.MEMBER_TYPE, 3);
                 if (user_type == 5){
-                    startActivity(new Intent(MyAccountActivity.this, LoginActivity.class));
-                    finish();
+                    startActivityForResult(new Intent(MyAccountActivity.this, LoginActivity.class),Config.ACCOUNT_SWITCHING);
                 } else {
                     startActivity(new Intent(MyAccountActivity.this, RechargeActivity.class));
                     finish();
@@ -103,5 +103,21 @@ public class MyAccountActivity extends BaseActivity implements View.OnClickListe
                 break;
         }
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+
+                case Config.ACCOUNT_SWITCHING:
+                    setResult(RESULT_OK);
+                    finish();
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 }

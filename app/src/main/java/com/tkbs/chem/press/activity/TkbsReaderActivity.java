@@ -18,9 +18,9 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.bumptech.glide.load.Encoder;
 import com.orhanobut.logger.Logger;
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.base.BaseActivity;
@@ -44,7 +44,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class TkbsReaderActivity extends BaseActivity implements View.OnClickListener, ReWebChomeClient.OpenFileChooserCallBack {
+public class TkbsReaderActivity extends BaseActivity implements View.OnClickListener,
+        ReWebChomeClient.OpenFileChooserCallBack, SeekBar.OnSeekBarChangeListener {
 
     @BindView(R.id.tkbs_read_web)
     WebView tkbsReadWeb;
@@ -58,6 +59,8 @@ public class TkbsReaderActivity extends BaseActivity implements View.OnClickList
     TextView tvDownload;
     @BindView(R.id.tv_page_num)
     TextView tvPageNum;
+    @BindView(R.id.seek_book)
+    SeekBar seekBook;
     private String err_url;
     private int progressNum;
     private String bookId;
@@ -67,6 +70,7 @@ public class TkbsReaderActivity extends BaseActivity implements View.OnClickList
     private int readHistory = 1;
     private boolean isReadAll;
     private String filePath;
+    private int seekIndex;
     /**
      * handler处理消息机制
      */
@@ -122,14 +126,12 @@ public class TkbsReaderActivity extends BaseActivity implements View.OnClickList
         }
         // 阅读页面 隐藏下载
         tvDownload.setVisibility(View.GONE);
-//        imgBack.getBackground().setAlpha(100);
         imgBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 TkbsReaderActivity.this.finish();
             }
         });
-//        imgToc.getBackground().setAlpha(100);
         imgToc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -141,6 +143,11 @@ public class TkbsReaderActivity extends BaseActivity implements View.OnClickList
             }
         });
         tvPageNum.setText("0/0");
+        // 未联调  隐藏先
+        seekBook.setVisibility(View.GONE);
+        seekBook.setMax(100);
+        seekBook.setProgress(1);
+        seekBook.setOnSeekBarChangeListener(this);
         initWeb();
 //        rlDialog.setOnClickListener(this);
     }
@@ -210,6 +217,29 @@ public class TkbsReaderActivity extends BaseActivity implements View.OnClickList
             }
         });
 
+    }
+
+    /**
+     * 数值改变
+     */
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        // 记录当前滑动的值
+        seekIndex = progress;
+    }
+    /**
+     * 开始拖动
+     */
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+        seekIndex = seekBar.getProgress();
+    }
+    /**
+     * 停止拖动
+     */
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+        // TODO 通知h5页面进行刷新 需要html5 提供一个js方法 用来通知滑动的页数
     }
 
     /**
@@ -523,11 +553,12 @@ public class TkbsReaderActivity extends BaseActivity implements View.OnClickList
 
         @JavascriptInterface
         public void showPage(final int currentpage, final int totalPage) {
-//            Logger.e(currentpage + "/" + totalPage);
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     tvPageNum.setText(currentpage + "/" + totalPage);
+                    seekBook.setMax(totalPage);
+                    seekBook.setProgress(currentpage);
                 }
             });
 
@@ -563,7 +594,7 @@ public class TkbsReaderActivity extends BaseActivity implements View.OnClickList
 //            String result = new String(UiUtils.readTkbs(guid, pageNum));
 //            return result;
 
-            return Base64.encodeToString(UiUtils.readTkbs(guid, pageNum),0);
+            return Base64.encodeToString(UiUtils.readTkbs(guid, pageNum), 0);
 
 //            return UiUtils.readTkbs(guid, pageNum);
         }

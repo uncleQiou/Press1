@@ -10,6 +10,7 @@ import com.mob.MobSDK;
 import com.mob.pushsdk.MobPush;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
+import com.tencent.bugly.crashreport.CrashReport;
 import com.tkbs.chem.press.BuildConfig;
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.util.SPManagement;
@@ -56,6 +57,8 @@ public class BaseApplication extends Application {
         if(BuildConfig.DEBUG){
             RestHttp.setDebug(true,"network");
         }
+        // 腾讯 bugly
+        CrashReport.initCrashReport(getApplicationContext(), "05144663eb", false);
 
     }
 

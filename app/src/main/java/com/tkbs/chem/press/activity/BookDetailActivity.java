@@ -499,6 +499,7 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
             int user_type = preference.getInt(Config.MEMBER_TYPE, 3);
             if (user_type == 5){
                 startActivity(new Intent(BookDetailActivity.this, LoginActivity.class));
+                finish();
             }else {
                 createOrder();
             }

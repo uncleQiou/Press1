@@ -128,11 +128,14 @@ public class SecondaryClassifyFragment extends BaseFragment implements View.OnCl
         });
         recycler.getNoMoreView().setText("没有更多数据了");
         timeOrder = Config.SORT_UP;
+        img_sort_time.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down : R.mipmap.bookshelf_icon_up);
         changeTextColor();
     }
 
     private void getClassifyData(final boolean isRefresh) {
-        showProgressDialog();
+        if (null != getActivity()){
+            showProgressDialog();
+        }
         addSubscription(apiStores.ThreeClassifyData(guid, page, timeOrder, titleOrder, degreeOrder), new ApiCallback<HttpResponse<ArrayList<ThreeClassifyDataBena>>>() {
             @Override
             public void onSuccess(HttpResponse<ArrayList<ThreeClassifyDataBena>> model) {
@@ -215,6 +218,7 @@ public class SecondaryClassifyFragment extends BaseFragment implements View.OnCl
                         getClassifyData(true);
                     }
                 });
+                img_sort_time.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down : R.mipmap.bookshelf_icon_up);
                 changeTextColor();
                 break;
             case R.id.tv_sort_book_name:
@@ -229,6 +233,7 @@ public class SecondaryClassifyFragment extends BaseFragment implements View.OnCl
                         getClassifyData(true);
                     }
                 });
+                img_sort_time.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down_black : R.mipmap.bookshelf_icon_up_black);
                 changeTextColor();
                 break;
             case R.id.tv_sort_hot:
@@ -244,6 +249,7 @@ public class SecondaryClassifyFragment extends BaseFragment implements View.OnCl
                         getClassifyData(true);
                     }
                 });
+                img_sort_time.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down_black : R.mipmap.bookshelf_icon_up_black);
                 changeTextColor();
                 break;
             default:
@@ -258,26 +264,20 @@ public class SecondaryClassifyFragment extends BaseFragment implements View.OnCl
 
         // 时间排序
         if (timeOrder == Config.SORT_NOONE) {
-            img_sort_time.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down : R.mipmap.bookshelf_icon_up);
             tv_sort_time.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.text_main_6));
         } else {
-            img_sort_time.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down : R.mipmap.bookshelf_icon_up);
             tv_sort_time.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.apply_violet));
 
         }
         // 姓名排序
         if (titleOrder == Config.SORT_NOONE) {
-            img_sort_time.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down_black : R.mipmap.bookshelf_icon_up_black);
             tv_sort_book_name.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.text_main_6));
         } else {
-            img_sort_time.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down_black : R.mipmap.bookshelf_icon_up_black);
             tv_sort_book_name.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.apply_violet));
         }
         if (degreeOrder == Config.SORT_NOONE) {
-            img_sort_time.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down_black : R.mipmap.bookshelf_icon_up_black);
             tv_sort_hot.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.text_main_6));
         } else {
-            img_sort_time.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down_black : R.mipmap.bookshelf_icon_up_black);
             tv_sort_hot.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.apply_violet));
 
         }

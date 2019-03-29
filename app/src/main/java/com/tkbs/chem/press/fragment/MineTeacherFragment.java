@@ -111,7 +111,7 @@ public class MineTeacherFragment extends BaseFragment implements View.OnClickLis
                 getActivity().startActivity(new Intent(getActivity(), MyApplyActivity.class));
                 break;
             case R.id.ll_my_account:
-                getActivity().startActivity(new Intent(getActivity(), MyAccountActivity.class));
+                getActivity().startActivityForResult(new Intent(getActivity(), MyAccountActivity.class), Config.ACCOUNT_SWITCHING);
                 break;
             case R.id.ll_my_opinion:
                 getActivity().startActivity(new Intent(getActivity(), MyOpinionActivity.class));

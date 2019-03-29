@@ -119,6 +119,25 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         }
     };
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case Config.THREE_PART_LOGIN:
+                    setResult(RESULT_OK);
+                    finish();
+                    break;
+                case Config.REGISTER_CODE:
+                    setResult(RESULT_OK);
+                    finish();
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -330,9 +349,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
                 break;
             case R.id.btn_register:
-                toastShow(R.string.register_now);
-//                startActivity(new Intent(LoginActivity.this, ChangePasswordActivity.class));
-                startActivity(new Intent(LoginActivity.this, RegisterAvtivity.class));
+//                toastShow(R.string.register_now);
+                startActivityForResult(new Intent(LoginActivity.this, RegisterAvtivity.class),Config.REGISTER_CODE);
                 break;
             case R.id.ll_qq_login:
                 toastShow(R.string.str_qq);
@@ -341,11 +359,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 bingType = "qq";
                 break;
             case R.id.ll_wechat_login:
-                toastShow(R.string.str_wechat);
-//                showShare();
+//                toastShow(R.string.str_wechat);
                 bingType = "wechat";
                 weChatLogin();
-//                loginWeChat("oClK75sXKa5gGQtwc0w9p9AWNR_E");
                 break;
             case R.id.tourist_login:
                 // 游客登录
@@ -676,7 +692,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                         Intent intent = new Intent(LoginActivity.this, ThreePartBindingActivity.class);
                         intent.putExtra("USERID", otherUserId);
                         intent.putExtra("BINGTYPE", bingType);
-                        startActivity(intent);
+                        startActivityForResult(intent,Config.THREE_PART_LOGIN);
 //                    finish();
                         toastShow(model.getErrorDescription());
                     } else {

@@ -130,4 +130,8 @@ dependencies {
     //  书城首页九宫格显示
     compile 'cn.lemon:multiview:0.1.8'
     compile 'cn.alien95:resthttp:1.0.5'
+    //其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如2.2.0
+    // tencent bugly
+    compile 'com.tencent.bugly:crashreport:latest.release'
+
 }

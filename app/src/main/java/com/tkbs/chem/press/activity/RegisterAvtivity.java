@@ -278,7 +278,7 @@ public class RegisterAvtivity extends BaseActivity implements View.OnClickListen
                         edit.commit();
                         //  refresh MainActivity
                         EventBus.getDefault().post(new MessageEvent("Refresh"));
-                        startActivity(new Intent(RegisterAvtivity.this, MainActivity.class));
+                        setResult(RESULT_OK);
                         finish();
                     } else {
                         toastShow(model.getErrorDescription());

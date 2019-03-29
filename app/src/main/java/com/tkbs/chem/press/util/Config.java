@@ -65,6 +65,14 @@ public class Config {
      * 账户切换
      */
     public static final int ACCOUNT_SWITCHING = 1990;
+    /***
+     * 三方登录
+     */
+    public static final int THREE_PART_LOGIN = 1991;
+    /***
+     * 注册
+     */
+    public static final int REGISTER_CODE = 1992;
 
     /**
      * 文件下载目标路径

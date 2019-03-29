@@ -80,7 +80,7 @@ public class ThreePartBindingActivity extends BaseActivity implements View.OnCli
         switch (view.getId()) {
             case R.id.back:
                 bindingWeb.loadUrl("javascript:disSmsInterval()");
-                finish();
+               finish();
                 break;
             default:
                 break;
@@ -272,7 +272,7 @@ public class ThreePartBindingActivity extends BaseActivity implements View.OnCli
                         edit.commit();
                         //  refresh MainActivity
                         EventBus.getDefault().post(new MessageEvent("Refresh"));
-                        startActivity(new Intent(ThreePartBindingActivity.this, MainActivity.class));
+                        setResult(RESULT_OK);
                         finish();
                     } else {
                         toastShow(model.getErrorDescription());

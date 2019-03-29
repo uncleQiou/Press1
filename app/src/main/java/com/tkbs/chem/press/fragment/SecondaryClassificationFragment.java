@@ -86,7 +86,7 @@ public class SecondaryClassificationFragment extends BaseFragment {
     }
 
     private void getClassifyData(final boolean isRefresh) {
-        showProgressDialog();
+//        showProgressDialog();
         addSubscription(apiStores.SecondClassifyData(guid, page), new ApiCallback<HttpResponse<ArrayList<SecondClassifyDataBean>>>() {
             @Override
             public void onSuccess(HttpResponse<ArrayList<SecondClassifyDataBean>> model) {

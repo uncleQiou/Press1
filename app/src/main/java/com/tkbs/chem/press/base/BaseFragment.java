@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import com.shizhefei.fragment.LazyFragment;
+import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.net.ApiStores;
 import com.tkbs.chem.press.net.AppClient;
 
