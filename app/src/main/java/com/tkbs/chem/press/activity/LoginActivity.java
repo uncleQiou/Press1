@@ -378,7 +378,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
      */
     private void obtainPhoneCode() {
         showProgressDialog();
-        addSubscription(apiStores.obtainPhoneCode(edUsername.getText().toString().trim()), new ApiCallback<HttpResponse<PhoneCodeBean>>() {
+        addSubscription(apiStores.obtainPhoneCode(edUsername.getText().toString().trim(),
+                UiUtils.getid(this)), new ApiCallback<HttpResponse<PhoneCodeBean>>() {
             @Override
             public void onSuccess(HttpResponse<PhoneCodeBean> model) {
                 if (model.isStatus()) {
@@ -590,6 +591,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         loginByPhoneRequestBen.setPhone(edUsername.getText().toString().trim());
         loginByPhoneRequestBen.setMsgNum(edPassword.getText().toString().trim());
         loginByPhoneRequestBen.setHash(phoneCodeData.getHash());
+        loginByPhoneRequestBen.setTamp(phoneCodeData.getTamp());
         loginByPhoneRequestBen.setTamp(phoneCodeData.getTamp());
         final Gson gson = new Gson();
         String route = gson.toJson(loginByPhoneRequestBen);

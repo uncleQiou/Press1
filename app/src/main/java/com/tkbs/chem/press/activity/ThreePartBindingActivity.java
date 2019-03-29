@@ -189,7 +189,7 @@ public class ThreePartBindingActivity extends BaseActivity implements View.OnCli
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case 0:
-                    String result = data.getStringExtra("result");
+                    result = data.getStringExtra("result");
                     bindingWeb.loadUrl("javascript:getInterestList(" + result + ")");
                     Logger.e(result);
                     break;
@@ -198,6 +198,7 @@ public class ThreePartBindingActivity extends BaseActivity implements View.OnCli
             }
         }
     }
+    private String result;
 
     private class RegisterInterface {
 
@@ -226,6 +227,13 @@ public class ThreePartBindingActivity extends BaseActivity implements View.OnCli
                     preference.getString("PASSWORD", "") + "," + UiUtils.getid(ThreePartBindingActivity.this);
 
             return user;
+        }
+
+        @JavascriptInterface
+        public void MyInterest() {
+            Intent intent = new Intent(ThreePartBindingActivity.this, MyInterestActivity.class);
+            intent.putExtra("myInterst", result);
+            startActivityForResult(intent, 0);
         }
 
         @JavascriptInterface

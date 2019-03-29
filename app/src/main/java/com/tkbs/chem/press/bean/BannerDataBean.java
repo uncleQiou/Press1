@@ -14,8 +14,17 @@ public class BannerDataBean {
 
     private String file_path;
     private String guid;
+    private String link_url;
     private int id;
     private String title;
+
+    public String getLink_url() {
+        return link_url;
+    }
+
+    public void setLink_url(String link_url) {
+        this.link_url = link_url;
+    }
 
     public String getFile_path() {
         return file_path;

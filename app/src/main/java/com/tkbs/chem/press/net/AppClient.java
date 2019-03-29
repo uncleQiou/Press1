@@ -41,7 +41,7 @@ public class AppClient {
                                     ";nonce=" + nonce + ";accessKey=" +
                                     AAHelper.CalculatePKey(
                                             BaseApplication.preferences.getString(
-                                                    "PASSWORD", ""), nonce))
+                                                    "PASSWORD", ""), nonce)/*+";equipment="+UiUtils.getid(BaseApplication.getContext())*/)
                             .build();
                     return chain.proceed(authorised);
                 }

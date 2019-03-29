@@ -666,7 +666,8 @@ public interface ApiStores {
      * 获取手机验证码
      */
     @POST("login/loginToSendSms")
-    Observable<HttpResponse<PhoneCodeBean>> obtainPhoneCode (@Query("phone") String  phone);
+    Observable<HttpResponse<PhoneCodeBean>> obtainPhoneCode (@Query("phone") String  phone,
+                                                             @Query("equipment") String  equipment);
     /**
      * 获取分享內容
      */

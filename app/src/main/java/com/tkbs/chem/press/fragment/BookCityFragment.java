@@ -30,6 +30,7 @@ import com.shizhefei.view.indicator.ScrollIndicatorView;
 import com.shizhefei.view.indicator.slidebar.ColorBar;
 import com.shizhefei.view.indicator.transition.OnTransitionTextListener;
 import com.tkbs.chem.press.R;
+import com.tkbs.chem.press.activity.BannerWebActivity;
 import com.tkbs.chem.press.activity.SecondaryClassificationActivity;
 import com.tkbs.chem.press.activity.SecondaryClassifyActivity;
 import com.tkbs.chem.press.activity.ThreeClassificActivity;
@@ -96,6 +97,7 @@ public class BookCityFragment extends BaseFragment implements View.OnClickListen
         add("5");
     }};
 
+    private ArrayList<BannerDataBean> bannerData;
     private ArrayList<BookCityDataBean> bookCityData;
 
     int spanCount = 2;
@@ -306,6 +308,7 @@ public class BookCityFragment extends BaseFragment implements View.OnClickListen
             @Override
             public void onSuccess(HttpResponse<ArrayList<BannerDataBean>> model) {
                 if (model.isStatus()) {
+                    bannerData = model.getData();
                     list_path = new ArrayList<String>();
                     list_title = new ArrayList<String>();
                     for (int i = 0; i < model.data.size(); i++) {
@@ -338,6 +341,15 @@ public class BookCityFragment extends BaseFragment implements View.OnClickListen
     @Override
     public void OnBannerClick(int position) {
         Log.i("tag", "你点了第" + position + "张轮播图");
+        String linkUrl = bannerData.get(position).getLink_url();
+//        String linkUrl = "http://192.168.1.105:8281/app/hello/change_password.html";
+        if (linkUrl.length()>0){
+            Intent intent = new Intent(getActivity(), BannerWebActivity.class);
+            intent.putExtra("link_url",linkUrl);
+            intent.putExtra("titleStr",bannerData.get(position).getTitle());
+            getActivity().startActivity(intent);
+
+        }
     }
 
 
@@ -406,34 +418,35 @@ public class BookCityFragment extends BaseFragment implements View.OnClickListen
             ll_book_city_more.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    int subexists = data.getResCatagory().getSubexists();
+                    int subexistsOne = data.getResCatagory().getSubexists();
                     //  分类是否含有子节点 有：二级页面 无：三级页面
-                    if (subexists == 1) {
-                        Intent intent = new Intent(getActivity(), SecondaryClassificationActivity.class);
-                        intent.putExtra("guid", data.getResCatagory().getGuid());
-                        intent.putExtra("title", data.getResCatagory().getTitle());
-                        intent.putExtra("index",fragment_bookcity_indicator.getCurrentItem());
-                        getActivity().startActivity(intent);
+                    if (subexistsOne == 1) {
+//                        Intent intent = new Intent(getActivity(), SecondaryClassificationActivity.class);
+//                        intent.putExtra("guid", data.getResCatagory().getGuid());
+//                        intent.putExtra("title", data.getResCatagory().getTitle());
+//                        intent.putExtra("index",fragment_bookcity_indicator.getCurrentItem());
+//                        getActivity().startActivity(intent);
+                        // TODO  二级分类点击进入不同页面
+                        int subexists = data.getResultDataList().get(fragment_bookcity_indicator.getCurrentItem()).getResCatagory().getSubexists();
+                        if (subexists == 1) {
+                            Intent intent = new Intent(getActivity(), SecondaryClassificationActivity.class);
+                            intent.putExtra("guid", data.getResCatagory().getGuid());
+                            intent.putExtra("title", data.getResCatagory().getTitle());
+                            intent.putExtra("index",fragment_bookcity_indicator.getCurrentItem());
+                            getActivity().startActivity(intent);
+                        } else {
+                            Intent intent1 = new Intent(getActivity(), SecondaryClassifyActivity.class);
+                            intent1.putExtra("guid", data.getResCatagory().getGuid());
+                            intent1.putExtra("title", data.getResCatagory().getTitle());
+                            intent1.putExtra("index",fragment_bookcity_indicator.getCurrentItem());
+                            getActivity().startActivity(intent1);
+                        }
                     } else {
                         Intent intent1 = new Intent(getActivity(), ThreeClassificActivity.class);
                         intent1.putExtra("guid", data.getResCatagory().getGuid());
                         intent1.putExtra("title", data.getResCatagory().getTitle());
                         getActivity().startActivity(intent1);
                     }
-                    // TODO  二级分类点击进入不同页面
-//                    int subexists = data.getResultDataList().get(fragment_bookcity_indicator.getCurrentItem()).getResCatagory().getSubexists();
-//                    if (subexists == 1) {
-//                        Intent intent = new Intent(getActivity(), SecondaryClassificationActivity.class);
-//                        intent.putExtra("guid", data.getResCatagory().getGuid());
-//                        intent.putExtra("title", data.getResCatagory().getTitle());
-//                        intent.putExtra("index",fragment_bookcity_indicator.getCurrentItem());
-//                        getActivity().startActivity(intent);
-//                    } else {
-//                        Intent intent1 = new Intent(getActivity(), SecondaryClassifyActivity.class);
-//                        intent1.putExtra("guid", data.getResCatagory().getGuid());
-//                        intent1.putExtra("title", data.getResCatagory().getTitle());
-//                        getActivity().startActivity(intent1);
-//                    }
 
                 }
             });
