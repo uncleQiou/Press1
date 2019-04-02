@@ -144,7 +144,7 @@ public class TkbsReaderActivity extends BaseActivity implements View.OnClickList
         });
         tvPageNum.setText("0/0");
         // 未联调  隐藏先
-        seekBook.setVisibility(View.GONE);
+//        seekBook.setVisibility(View.GONE);
         seekBook.setMax(100);
         seekBook.setProgress(1);
         seekBook.setOnSeekBarChangeListener(this);
@@ -239,7 +239,8 @@ public class TkbsReaderActivity extends BaseActivity implements View.OnClickList
      */
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
-        // TODO 通知h5页面进行刷新 需要html5 提供一个js方法 用来通知滑动的页数
+        //  通知h5页面进行刷新 需要html5 提供一个js方法 用来通知滑动的页数
+        tkbsReadWeb.loadUrl("javascript:getCataLog(" + seekBar.getProgress() + ")");
     }
 
     /**
@@ -423,7 +424,7 @@ public class TkbsReaderActivity extends BaseActivity implements View.OnClickList
                 showProgressDialog();
                 err_url = url;
                 imgRefresh.setVisibility(View.GONE);
-                handler.sendEmptyMessage(1000);
+                handler.sendEmptyMessageDelayed(1000,60000);
             }
 
             @Override

@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.orhanobut.logger.Logger;
 import com.shizhefei.fragment.LazyFragment;
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.activity.BookDetailActivity;
@@ -90,7 +91,7 @@ public class DiscoverFragment extends BaseFragment {
         if ("Refresh".endsWith(messageEvent.getMessage())) {
             if (this.isVisible()) {
                 recycler_discover.showSwipeRefresh();
-                getData(true);
+                getMessageData(true);
             }
         }
     }
@@ -117,6 +118,7 @@ public class DiscoverFragment extends BaseFragment {
                 } else {
                     recycler_discover.dismissSwipeRefresh();
                     toastShow(model.getErrorDescription());
+                    Logger.e("getMessageData");
                 }
 
             }

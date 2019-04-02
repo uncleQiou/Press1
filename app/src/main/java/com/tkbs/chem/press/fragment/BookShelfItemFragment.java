@@ -277,6 +277,7 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
                 } else {
                     recycler_bookshelf.dismissSwipeRefresh();
                     toastShow(model.getErrorDescription());
+                    Logger.e("getSampleBookListData");
                 }
 
             }
@@ -323,6 +324,7 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
                 } else {
                     recycler_bookshelf.dismissSwipeRefresh();
                     toastShow(model.getErrorDescription());
+                    Logger.e("getCollectionBookListData");
                 }
 
             }
@@ -369,6 +371,7 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
                 } else {
                     recycler_bookshelf.dismissSwipeRefresh();
                     toastShow(model.getErrorDescription());
+                    Logger.e("getBuyedBookListData");
                 }
 
             }
@@ -415,6 +418,7 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
                 } else {
                     recycler_bookshelf.dismissSwipeRefresh();
                     toastShow(model.getErrorDescription());
+                    Logger.e("getGiveBookListData");
                 }
 
             }

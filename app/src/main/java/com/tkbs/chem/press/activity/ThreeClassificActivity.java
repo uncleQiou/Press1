@@ -78,7 +78,7 @@ public class ThreeClassificActivity extends BaseActivity implements View.OnClick
     private MyAdapter myAdapter;
     private String guid;
     private String titleStr;
-    private int disType = 2;
+    private int disType = 1;
     // 升序
     private boolean isAscendingOrder = true;
     private ArrayList<ThreeClassifyDataBena> bookDatas;
@@ -94,6 +94,8 @@ public class ThreeClassificActivity extends BaseActivity implements View.OnClick
      * 热度排序
      */
     private int degreeOrder;
+
+    private boolean noMoreData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,7 +116,7 @@ public class ThreeClassificActivity extends BaseActivity implements View.OnClick
         myAdapter = new MyAdapter(this);
         recycler = (RefreshRecyclerView) findViewById(R.id.recycler);
         recycler.setSwipeRefreshColors(0xFF437845, 0xFFE44F98, 0xFF2FAC21);
-        recycler.setLayoutManager(new GridLayoutManager(this, 3));
+        recycler.setLayoutManager(new GridLayoutManager(this, 1));
         recycler.setAdapter(myAdapter);
         recycler.setRefreshAction(new Action() {
             @Override
@@ -171,6 +173,7 @@ public class ThreeClassificActivity extends BaseActivity implements View.OnClick
                     }
                     if (model.getData().size() < 15) {
                         recycler.showNoMore();
+                        noMoreData = true;
                     }
                 } else {
                     recycler.dismissSwipeRefresh();
@@ -215,7 +218,25 @@ public class ThreeClassificActivity extends BaseActivity implements View.OnClick
                     myAdapter.addAll(bookDatas);
                     recycler.setLayoutManager(new GridLayoutManager(this, 3));
                     recycler.setAdapter(myAdapter);
-                    recycler.getNoMoreView().setText("没有更多数据了");
+                    recycler.setRefreshAction(new Action() {
+                        @Override
+                        public void onAction() {
+                            page = 1;
+                            getClassifyData(true);
+                        }
+                    });
+                    recycler.setLoadMoreAction(new Action() {
+                        @Override
+                        public void onAction() {
+                            page++;
+                            getClassifyData(false);
+
+                        }
+                    });
+                    if (noMoreData) {
+                        recycler.showNoMore();
+                    }
+                    recycler.getNoMoreView().setText(R.string.no_more_data);
                 } else {
                     disType = 1;
                     imgSortEdit.setImageResource(R.mipmap.customized_btn_list_switching);
@@ -224,7 +245,25 @@ public class ThreeClassificActivity extends BaseActivity implements View.OnClick
                     myAdapter.addAll(bookDatas);
                     recycler.setLayoutManager(new GridLayoutManager(this, 1));
                     recycler.setAdapter(myAdapter);
-                    recycler.getNoMoreView().setText("没有更多数据了");
+                    recycler.setRefreshAction(new Action() {
+                        @Override
+                        public void onAction() {
+                            page = 1;
+                            getClassifyData(true);
+                        }
+                    });
+                    recycler.setLoadMoreAction(new Action() {
+                        @Override
+                        public void onAction() {
+                            page++;
+                            getClassifyData(false);
+
+                        }
+                    });
+                    if (noMoreData) {
+                        recycler.showNoMore();
+                    }
+                    recycler.getNoMoreView().setText(R.string.no_more_data);
                 }
                 break;
             case R.id.ll_sort_time:
@@ -299,30 +338,31 @@ public class ThreeClassificActivity extends BaseActivity implements View.OnClick
     /**
      * 修改排序字体颜色
      */
-    private void changeTextColor(){
+    private void changeTextColor() {
 
         // 时间排序
-        if (timeOrder == Config.SORT_NOONE){
-            tvSortTime.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.text_main_6));
-        }else {
-            tvSortTime.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.apply_violet));
+        if (timeOrder == Config.SORT_NOONE) {
+            tvSortTime.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.text_main_6));
+        } else {
+            tvSortTime.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.apply_violet));
 
         }
         // 姓名排序
-        if (titleOrder == Config.SORT_NOONE){
-            tvSortBookName.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.text_main_6));
-        }else {
-            tvSortBookName.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.apply_violet));
+        if (titleOrder == Config.SORT_NOONE) {
+            tvSortBookName.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.text_main_6));
+        } else {
+            tvSortBookName.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.apply_violet));
         }
-        if (degreeOrder == Config.SORT_NOONE){
-            tvSortHot.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.text_main_6));
-        }else {
-            tvSortHot.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.apply_violet));
+        if (degreeOrder == Config.SORT_NOONE) {
+            tvSortHot.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.text_main_6));
+        } else {
+            tvSortHot.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.apply_violet));
 
         }
 
 
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

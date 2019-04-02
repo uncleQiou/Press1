@@ -252,7 +252,8 @@ public class GiveBookStatisticsFragment extends BaseFragment implements View.OnC
         int surplus = pgCount - pgCurrent;
         String text = String.format(getResources().getString(R.string.givebiik_tj_pbar_des),
                 pgCount, surplus);
-        int index = text.indexOf(String.valueOf(surplus));
+        String strPlus = "剩" + surplus;
+        int index = text.indexOf(String.valueOf(strPlus)) + 1;
         // 设置文字局部变色
         SpannableStringBuilder style = new SpannableStringBuilder(text);
         style.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.hg_app_main_color)),

@@ -207,8 +207,8 @@ public class SplashActivity extends BaseActivity {
      * 游客免登陆
      */
     private void NoLanding() {
-        // TODO 再申请一次权限
-        showProgressDialog();
+        //  再申请一次权限 不用显示进度条 登录成功自然进入主界面
+//        showProgressDialog();
         addSubscription(apiStores.NoLanding(UiUtils.getid(SplashActivity.this)),
                 new ApiCallback<HttpResponse<UserBean>>() {
                     @Override
@@ -239,7 +239,7 @@ public class SplashActivity extends BaseActivity {
 
                     @Override
                     public void onFinish() {
-                        dismissProgressDialog();
+//                        dismissProgressDialog();
                     }
                 });
     }

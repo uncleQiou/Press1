@@ -3,6 +3,7 @@ package com.tkbs.chem.press.activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -93,9 +94,16 @@ public class BannerWebActivity extends BaseActivity implements View.OnClickListe
         setting.setUseWideViewPort(false);
         setting.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
         setting.setLoadWithOverviewMode(true);
+        //解决图片不显示
+        setting.setBlockNetworkImage(false);
         setting.setSaveFormData(true);
         setting.setDomStorageEnabled(true);
         setting.setJavaScriptCanOpenWindowsAutomatically(true);
+        // 从Android5.0开始，WebView默认不支持同时加载Https和Http混合模式。
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            setting.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+
+        }
         setting.setSupportMultipleWindows(true);
         webView.addJavascriptInterface(new ChangePasswordInterface(), "TKBS");
         /*****************************************************************
@@ -176,6 +184,7 @@ public class BannerWebActivity extends BaseActivity implements View.OnClickListe
         }
         super.onDestroy();
     }
+
     private class ChangePasswordInterface {
 
         ChangePasswordInterface() {

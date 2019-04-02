@@ -85,7 +85,7 @@ public class SearchResultActivity extends BaseActivity implements View.OnClickLi
     private SerachResultAdapter mAdapter;
     private int page = 1;
     private Handler mHandler;
-    private int disType = 2;
+    private int disType = 1;
     private List<String> books = Arrays.asList("书籍1书籍1书籍1书籍1书籍1书籍1书籍1书籍1书籍1书籍1书籍1书籍1", "书籍2", "书籍3", "书籍4书籍4书籍4书籍4书籍4书籍4书籍4书籍4书籍4书籍4", "书籍5", "书籍6", "书籍7书籍7书籍7书籍7书籍7书籍7书籍7书籍7书籍7书籍7书籍7", "书籍8", "书籍9");
 
     private ArrayList<String> classfyguid = new ArrayList<>();
@@ -109,6 +109,8 @@ public class SearchResultActivity extends BaseActivity implements View.OnClickLi
      */
     private int degreeOrder;
 
+    private boolean noMoreData;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -127,7 +129,7 @@ public class SearchResultActivity extends BaseActivity implements View.OnClickLi
         timeOrder = Config.SORT_NOONE;
         mAdapter = new SerachResultAdapter(this);
         recycler.setSwipeRefreshColors(0xFF437845, 0xFFE44F98, 0xFF2FAC21);
-        recycler.setLayoutManager(new GridLayoutManager(this, 3));
+        recycler.setLayoutManager(new GridLayoutManager(this, 1));
         recycler.setAdapter(mAdapter);
         mHandler = new Handler();
         if (null != classfyguid && classfyguid.size() > 0) {
@@ -202,6 +204,7 @@ public class SearchResultActivity extends BaseActivity implements View.OnClickLi
                     }
                     if (model.getData().size() < 21) {
                         recycler.showNoMore();
+                        noMoreData = true;
                     }
                 } else {
                     recycler.dismissSwipeRefresh();
@@ -250,7 +253,25 @@ public class SearchResultActivity extends BaseActivity implements View.OnClickLi
                     mAdapter.addAll(dataList);
                     recycler.setLayoutManager(new GridLayoutManager(this, 3));
                     recycler.setAdapter(mAdapter);
-                    recycler.showNoMore();
+                    recycler.setRefreshAction(new Action() {
+                        @Override
+                        public void onAction() {
+                            page = 1;
+                            getSearchedData(true);
+                        }
+                    });
+                    recycler.setLoadMoreAction(new Action() {
+                        @Override
+                        public void onAction() {
+                            page++;
+                            getSearchedData(false);
+
+                        }
+                    });
+                    if (noMoreData) {
+                        recycler.showNoMore();
+                    }
+                    recycler.getNoMoreView().setText(R.string.no_more_data);
                 } else {
                     disType = 1;
                     imgSortEdit.setImageResource(R.mipmap.customized_btn_list);
@@ -259,7 +280,25 @@ public class SearchResultActivity extends BaseActivity implements View.OnClickLi
                     mAdapter.addAll(dataList);
                     recycler.setLayoutManager(new GridLayoutManager(this, 1));
                     recycler.setAdapter(mAdapter);
-                    recycler.showNoMore();
+                    recycler.setRefreshAction(new Action() {
+                        @Override
+                        public void onAction() {
+                            page = 1;
+                            getSearchedData(true);
+                        }
+                    });
+                    recycler.setLoadMoreAction(new Action() {
+                        @Override
+                        public void onAction() {
+                            page++;
+                            getSearchedData(false);
+
+                        }
+                    });
+                    if (noMoreData) {
+                        recycler.showNoMore();
+                    }
+                    recycler.getNoMoreView().setText(R.string.no_more_data);
                 }
                 break;
             case R.id.ll_sort_time:
@@ -506,6 +545,7 @@ public class SearchResultActivity extends BaseActivity implements View.OnClickLi
             @Override
             public void setData(BookCityResDocument data) {
                 super.setData(data);
+                tv_book_name.setMaxLines(2);
                 tv_book_name.setText(data.getTitle());
                 Glide.with(context).load(data.getCover())
                         .apply(BaseApplication.options)

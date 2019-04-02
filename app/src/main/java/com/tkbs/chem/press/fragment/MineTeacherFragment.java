@@ -102,7 +102,7 @@ public class MineTeacherFragment extends BaseFragment implements View.OnClickLis
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.ll_personal_information:
-                toastShow(R.string.personal_information);
+//                toastShow(R.string.personal_information);
 //                getActivity().startActivity(new Intent(getActivity(), ChartDemoActivity.class));
                 getActivity().startActivity(new Intent(getActivity(), TeaPersonalCenterActivity.class));
                 break;

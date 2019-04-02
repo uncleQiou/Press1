@@ -82,7 +82,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginRight="@dimen/margin_10dp"
             android:padding="@dimen/margin_5dp"
-            android:src="@mipmap/customized_btn_list_switching" />
+            android:src="@mipmap/customized_btn_list" />
 
     </LinearLayout>
 </LinearLayout>

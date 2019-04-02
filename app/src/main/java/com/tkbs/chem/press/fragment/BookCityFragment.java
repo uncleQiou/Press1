@@ -320,6 +320,7 @@ public class BookCityFragment extends BaseFragment implements View.OnClickListen
                     setBanner(list_path, list_title);
                     getBookCityData(isRefresh);
                 } else {
+                    Logger.e("getBannerData");
                     toastShow(model.getErrorDescription());
                 }
 
@@ -497,6 +498,8 @@ public class BookCityFragment extends BaseFragment implements View.OnClickListen
                 convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.tab_top, container, false);
             }
             TextView textView = (TextView) convertView;
+            textView.setSingleLine();
+            textView.setHorizontallyScrolling(true);
             textView.setText(indicatorList.get(position).getResCatagory().getTitle());
 
             int witdh = getTextWidth(textView);

@@ -37,7 +37,7 @@ import cn.lemon.view.adapter.RecyclerAdapter;
  * 文件    Press
  * 描述
  */
-public class SecondaryClassifyFragment extends BaseFragment implements View.OnClickListener{
+public class SecondaryClassifyFragment extends BaseFragment implements View.OnClickListener {
     private TextView tv_sort_time;
     private ImageView img_sort_time;
     private LinearLayout ll_sort_time;
@@ -55,7 +55,7 @@ public class SecondaryClassifyFragment extends BaseFragment implements View.OnCl
     private MyAdapter myAdapter;
     private String guid;
     private String titleStr;
-    private int disType = 2;
+    private int disType = 1;
     // 升序
     private boolean isAscendingOrder = true;
     private ArrayList<ThreeClassifyDataBena> bookDatas;
@@ -71,6 +71,8 @@ public class SecondaryClassifyFragment extends BaseFragment implements View.OnCl
      * 热度排序
      */
     private int degreeOrder;
+
+    private boolean noMoreData;
 
     @Override
     protected View getPreviewLayout(LayoutInflater inflater, ViewGroup container) {
@@ -101,7 +103,7 @@ public class SecondaryClassifyFragment extends BaseFragment implements View.OnCl
         myAdapter = new MyAdapter(getActivity());
         recycler = (RefreshRecyclerView) findViewById(R.id.recycler);
         recycler.setSwipeRefreshColors(0xFF437845, 0xFFE44F98, 0xFF2FAC21);
-        recycler.setLayoutManager(new GridLayoutManager(getActivity(), 3));
+        recycler.setLayoutManager(new GridLayoutManager(getActivity(), 1));
         recycler.setAdapter(myAdapter);
         recycler.setRefreshAction(new Action() {
             @Override
@@ -126,14 +128,14 @@ public class SecondaryClassifyFragment extends BaseFragment implements View.OnCl
                 getClassifyData(true);
             }
         });
-        recycler.getNoMoreView().setText("没有更多数据了");
+        recycler.getNoMoreView().setText(R.string.no_more_data);
         timeOrder = Config.SORT_UP;
         img_sort_time.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down : R.mipmap.bookshelf_icon_up);
         changeTextColor();
     }
 
     private void getClassifyData(final boolean isRefresh) {
-        if (null != getActivity()){
+        if (null != getActivity()) {
             showProgressDialog();
         }
         addSubscription(apiStores.ThreeClassifyData(guid, page, timeOrder, titleOrder, degreeOrder), new ApiCallback<HttpResponse<ArrayList<ThreeClassifyDataBena>>>() {
@@ -154,6 +156,7 @@ public class SecondaryClassifyFragment extends BaseFragment implements View.OnCl
                     }
                     if (model.getData().size() < 15) {
                         recycler.showNoMore();
+                        noMoreData = true;
                     }
                 } else {
                     recycler.dismissSwipeRefresh();
@@ -187,7 +190,25 @@ public class SecondaryClassifyFragment extends BaseFragment implements View.OnCl
                     myAdapter.addAll(bookDatas);
                     recycler.setLayoutManager(new GridLayoutManager(getActivity(), 3));
                     recycler.setAdapter(myAdapter);
-                    recycler.getNoMoreView().setText("没有更多数据了");
+                    recycler.setRefreshAction(new Action() {
+                        @Override
+                        public void onAction() {
+                            page = 1;
+                            getClassifyData(true);
+                        }
+                    });
+                    recycler.setLoadMoreAction(new Action() {
+                        @Override
+                        public void onAction() {
+                            page++;
+                            getClassifyData(false);
+
+                        }
+                    });
+                    if (noMoreData) {
+                        recycler.showNoMore();
+                    }
+                    recycler.getNoMoreView().setText(R.string.no_more_data);
                 } else {
                     disType = 1;
                     img_sort_edit.setImageResource(R.mipmap.customized_btn_list_switching);
@@ -195,7 +216,25 @@ public class SecondaryClassifyFragment extends BaseFragment implements View.OnCl
                     myAdapter.addAll(bookDatas);
                     recycler.setLayoutManager(new GridLayoutManager(getActivity(), 1));
                     recycler.setAdapter(myAdapter);
-                    recycler.getNoMoreView().setText("没有更多数据了");
+                    recycler.setRefreshAction(new Action() {
+                        @Override
+                        public void onAction() {
+                            page = 1;
+                            getClassifyData(true);
+                        }
+                    });
+                    recycler.setLoadMoreAction(new Action() {
+                        @Override
+                        public void onAction() {
+                            page++;
+                            getClassifyData(false);
+
+                        }
+                    });
+                    if (noMoreData) {
+                        recycler.showNoMore();
+                    }
+                    recycler.getNoMoreView().setText(R.string.no_more_data);
                 }
                 break;
             case R.id.ll_sort_time:
