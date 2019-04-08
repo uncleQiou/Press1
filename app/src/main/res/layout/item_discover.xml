@@ -27,8 +27,8 @@
                 android:id="@+id/img_unread"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:padding="@dimen/margin_10dp"
+                android:paddingLeft="@dimen/margin_10dp"
+                android:paddingTop="@dimen/margin_15dp"
                 android:src="@mipmap/red_point"/>
             <TextView
                 android:id="@+id/tv_message_content"

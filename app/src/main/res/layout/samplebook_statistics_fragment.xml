@@ -290,10 +290,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/margin_10dp"
-                android:layout_weight="1"
                 android:singleLine="true"
                 android:textColor="@color/text_main_3"
                 android:textSize="@dimen/text_16sp" />
+            <TextView
+                android:id="@+id/tv_tj_change"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_10dp"
+                android:layout_weight="1"
+                android:singleLine="true"
+                android:text="@string/check_change"
+                android:textColor="@color/text_main_3"
+                android:textSize="@dimen/text_11sp" />
 
             <ImageView
                 android:layout_width="@dimen/margin_15dp"

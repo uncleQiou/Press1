@@ -16,9 +16,12 @@ import com.orhanobut.logger.Logger;
 import com.shizhefei.fragment.LazyFragment;
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.activity.BookDetailActivity;
+import com.tkbs.chem.press.activity.SampleBookActivity;
+import com.tkbs.chem.press.activity.UserManageActivity;
 import com.tkbs.chem.press.base.BaseFragment;
 import com.tkbs.chem.press.bean.HttpResponse;
 import com.tkbs.chem.press.bean.MessageBean;
+import com.tkbs.chem.press.bean.MessageUserBean;
 import com.tkbs.chem.press.bean.MyApplyDataBean;
 import com.tkbs.chem.press.net.ApiCallback;
 import com.tkbs.chem.press.util.MessageEvent;
@@ -269,23 +272,47 @@ public class DiscoverFragment extends BaseFragment {
                 //1不跳 2-5都是详情页 6用户管理-用户详情页 7样书管理-当前用户的审批页 8 图书想去 9 不跳
                 readMessage(data.getGuid());
                 img_unread.setVisibility(View.GONE);
+//                int messageType = data.getMessageType();
+//                if (messageType > 1 && messageType < 6) {
+//                    // 跳转图书详情
+//                    Intent intent = new Intent(getActivity(), BookDetailActivity.class);
+//                    intent.putExtra("guid", data.getRelationGuid());
+//                    context.startActivity(intent);
+//                } else if (messageType == 8){
+//                    // 跳转图书详情
+//                    Intent intent = new Intent(getActivity(), BookDetailActivity.class);
+//                    intent.putExtra("guid", data.getRelationGuid());
+//                    context.startActivity(intent);
+//                }else if (messageType == 6) {
+//                    // 6用户管理-用户详情页
+//                } else if (messageType == 7) {
+//                    // 7样书管理-当前用户的审批页
+//                } else {
+//                    // 不跳转
+//                }
+                //1、手动发布 2、自动发布 3、审批通过 4、审批未通过 5、赠书 6、注册 7、申请样书 8、资源消息 9、资源消息- 无资源链接
+                //1不跳 2-5都是详情页 6用户管理-用户详情页 7样书管理-当前用户的审批页
                 int messageType = data.getMessageType();
                 if (messageType > 1 && messageType < 6) {
                     // 跳转图书详情
                     Intent intent = new Intent(getActivity(), BookDetailActivity.class);
                     intent.putExtra("guid", data.getRelationGuid());
                     context.startActivity(intent);
-                } else if (messageType == 8){
+                }else if (messageType == 8){
                     // 跳转图书详情
                     Intent intent = new Intent(getActivity(), BookDetailActivity.class);
                     intent.putExtra("guid", data.getRelationGuid());
                     context.startActivity(intent);
-                }else if (messageType == 6) {
-                    // 6用户管理-用户详情页
-                } else if (messageType == 7) {
-                    // 7样书管理-当前用户的审批页
-                } else {
-                    // 不跳转
+                } else if (messageType == 1){
+
+                } else if(messageType == 6){
+                    //6用户管理-用户详情页
+
+                    getUserData(data.getRelationGuid(), messageType);
+
+                }else if(messageType == 7){
+                    //7样书管理-当前用户的审批页
+                    getUserData(data.getRelationGuid(), messageType);
                 }
 
             }
@@ -293,6 +320,48 @@ public class DiscoverFragment extends BaseFragment {
 
         }
 
+
+    }
+
+    private void getUserData(final String userGuid, final int messageType) {
+        showProgressDialog();
+        addSubscription(apiStores.getMessageUserData(userGuid), new ApiCallback<HttpResponse<MessageUserBean>>() {
+            @Override
+            public void onSuccess(HttpResponse<MessageUserBean> model) {
+                if (model.isStatus()) {
+                    if (messageType == 6) {
+                        Intent intent = new Intent(getActivity(), UserManageActivity.class);
+                        intent.putExtra("guid", userGuid);
+                        intent.putExtra("name", model.getData().getRealName());
+                        intent.putExtra("date", model.getData().getDate());
+                        intent.putExtra("state", model.getData().getState());
+                        getActivity().startActivity(intent);
+                    } else if (7 == messageType) {
+                        Intent intent = new Intent(getActivity(), SampleBookActivity.class);
+                        intent.putExtra("guid", userGuid);
+                        intent.putExtra("name", model.getData().getRealName());
+                        intent.putExtra("job", model.getData().getJob());
+                        getActivity().startActivity(intent);
+                    }
+
+                } else {
+                    toastShow(model.getErrorDescription());
+                }
+
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                toastShow(msg);
+            }
+
+            @Override
+            public void onFinish() {
+                recycler_discover.dismissSwipeRefresh();
+                dismissProgressDialog();
+
+            }
+        });
 
     }
 

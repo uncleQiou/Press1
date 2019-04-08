@@ -78,6 +78,7 @@
     <string name="publish_opinion_title">您有什么问题或者建议想对我们说？</string>
     <string name="publish_opinion_hint">您的宝贵意见，就是我们进步的源泉</string>
     <string name="one_key_approve">一键审批</string>
+    <string name="message_manage">消息管理</string>
     <string name="sample_book_manage">样书管理</string>
     <string name="user_manage">用户管理</string>
     <string name="opinion_manage">意见管理</string>
@@ -193,5 +194,6 @@
     <string name="cancle_btn">取消</string>
     <string name="please_setting">请设置教师信息</string>
     <string name="bookshelf_del_title">是否删除选中项，删除后无法找回，请慎重选择!</string>
+    <string name="check_change">(点击切换学校)</string>
 
 </resources>

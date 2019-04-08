@@ -56,6 +56,20 @@ public class SalesmanManageFragment extends BaseFragment {
         }
     }
 
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (hidden) {
+            // 不在最前端显示 相当于调用了onPause();
+
+        } else {
+            // 在最前端显示 相当于调用了onResume();
+            indicatorViewPager.setCurrentItem(0,true);
+//            indicatorViewPager.setAdapter(new MyMangerAdapter(getChildFragmentManager()));
+
+        }
+    }
+
     private class MyMangerAdapter extends IndicatorViewPager.IndicatorFragmentPagerAdapter {
 
         public MyMangerAdapter(FragmentManager fragmentManager) {
@@ -64,7 +78,7 @@ public class SalesmanManageFragment extends BaseFragment {
 
         @Override
         public int getCount() {
-            return 3;
+            return 4;
         }
 
         @Override
@@ -75,10 +89,12 @@ public class SalesmanManageFragment extends BaseFragment {
             }
             TextView textView = (TextView) convertView;
             if (position == 0) {
-                textView.setText(R.string.sample_book_manage);
+                textView.setText(R.string.message_manage);
             } else if (position == 1) {
-                textView.setText(R.string.user_manage);
+                textView.setText(R.string.sample_book_manage);
             } else if (position == 2) {
+                textView.setText(R.string.user_manage);
+            } else if (position == 3) {
                 textView.setText(R.string.opinion_manage);
             }
             return convertView;
@@ -86,7 +102,16 @@ public class SalesmanManageFragment extends BaseFragment {
 
         @Override
         public Fragment getFragmentForPage(int position) {
+
             if (0 == position) {
+
+                DiscoverFragment discoverFragment = new DiscoverFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("111", "这是第==" + position);
+                bundle.putInt("Type", position);
+                discoverFragment.setArguments(bundle);
+                return discoverFragment;
+            } else if (1 == position) {
 
                 SampleBookFragment sampleBookFragment = new SampleBookFragment();
                 Bundle bundle = new Bundle();
@@ -94,7 +119,7 @@ public class SalesmanManageFragment extends BaseFragment {
                 bundle.putInt("Type", position);
                 sampleBookFragment.setArguments(bundle);
                 return sampleBookFragment;
-            } else if (1 == position) {
+            } else if (2 == position) {
 
                 UserManageFragment userManageFragment = new UserManageFragment();
                 Bundle bundle = new Bundle();
@@ -102,7 +127,7 @@ public class SalesmanManageFragment extends BaseFragment {
                 bundle.putInt("Type", position);
                 userManageFragment.setArguments(bundle);
                 return userManageFragment;
-            } else if (2 == position) {
+            } else if (3 == position) {
 
                 OpinionManageFragment opinionManageFragment = new OpinionManageFragment();
                 Bundle bundle = new Bundle();

@@ -75,6 +75,8 @@ public class MinfSaleManFragment extends BaseFragment implements View.OnClickLis
         ll_edit = (LinearLayout) findViewById(R.id.ll_edit);
         rl_message = (RelativeLayout) findViewById(R.id.rl_message);
         rl_message.setOnClickListener(this);
+        // 消息合并至管理页面 未读消息提示 同教师
+        rl_message.setVisibility(View.GONE);
         ll_edit.setOnClickListener(this);
         EventBus.getDefault().register(this);
         indicators = new String[]{getResources().getString(R.string.apply_samplebook_count),

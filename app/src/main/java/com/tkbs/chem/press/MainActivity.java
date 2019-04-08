@@ -129,7 +129,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
         getWebPath();
         initTabs();
-        if (null == badge1){
+        if (null == badge1) {
             badge1 = new BadgeView(this, btn3);
         }
         MobPush.addPushReceiver(new MobPushReceiver() {
@@ -137,12 +137,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             public void onCustomMessageReceive(Context context, MobPushCustomMessage message) {
                 //接收自定义消息
                 //显示红点 透传消息
-                if (user_type != 2) {
-                    String userGuid = preference.getString(Config.GUID,"");
-                    if (message.getContent().equals(userGuid)){
-                        remind(1);
-                    }
+//                if (user_type != 2) {
+                String userGuid = preference.getString(Config.GUID, "");
+                if (message.getContent().equals(userGuid)) {
+                    remind(1);
                 }
+//                }
             }
 
             @Override
@@ -176,19 +176,20 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     /**
      * 查询未度消息
+     *
      * @param
      */
-    private void unReadMessageNum(){
+    private void unReadMessageNum() {
         showProgressDialog();
         addSubscription(apiStores.checkUnReadCount(), new ApiCallback<HttpResponse<Integer>>() {
             @Override
             public void onSuccess(HttpResponse<Integer> model) {
                 if (model.isStatus()) {
-                    if (user_type != 2){
-                        remind(model.getData());
-                    }else {
-                        remind(0);
-                    }
+//                    if (user_type != 2){
+                    remind(model.getData());
+//                    }else {
+//                        remind(0);
+//                    }
 
                 } else {
                     toastShow(model.getErrorDescription());
@@ -273,13 +274,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     public void setIndexSelected(int index) {
-        if (user_type != 2){
-            if (index == 2){
-                remind(0);
-            }else {
-                unReadMessageNum();
-            }
+//        if (user_type != 2) {
+        if (index == 2) {
+            remind(0);
+        } else {
+            unReadMessageNum();
         }
+//        }
         if (mIndex == index) {
             return;
         }
@@ -486,11 +487,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private BadgeView badge1;
+
     private void remind(int flg) {
         //BadgeView的具体使用
 //        BadgeView badge1 = new BadgeView(this, view);
         // 创建一个BadgeView对象，view为你需要显示提醒的控件
-        badge1.setText(flg+"");
+        badge1.setText(flg + "");
         // 需要显示的提醒类容
         badge1.setBadgePosition(BadgeView.POSITION_TOP_RIGHT);
         // 显示的位置.右上角,BadgeView.POSITION_BOTTOM_LEFT,下左，还有其他几个属性
@@ -510,9 +512,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         //badge1.show();
         // 只有显示
         // badge1.hide();//影藏显示
-        if (flg > 0){
+        if (flg > 0) {
             badge1.show();
-        }else {
+        } else {
             badge1.hide();
         }
     }

@@ -495,7 +495,7 @@ public class BookCityFragment extends BaseFragment implements View.OnClickListen
         @Override
         public View getViewForTab(int position, View convertView, ViewGroup container) {
             if (convertView == null) {
-                convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.tab_top, container, false);
+                convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.tab_top_bookcity, container, false);
             }
             TextView textView = (TextView) convertView;
             textView.setSingleLine();
@@ -503,10 +503,11 @@ public class BookCityFragment extends BaseFragment implements View.OnClickListen
             textView.setText(indicatorList.get(position).getResCatagory().getTitle());
 
             int witdh = getTextWidth(textView);
-            int padding = UiUtils.dipToPix(getApplicationContext(), 8);
+            int padding = UiUtils.dipToPix(getApplicationContext(), 20);
             //因为wrap的布局 字体大小变化会导致textView大小变化产生抖动，这里通过设置textView宽度就避免抖动现象
             //1.3f是根据上面字体大小变化的倍数1.3f设置
             textView.setWidth((int) (witdh * 1.3f) + padding);
+//            Logger.e(textView.getWidth()+"");
 
             return convertView;
         }

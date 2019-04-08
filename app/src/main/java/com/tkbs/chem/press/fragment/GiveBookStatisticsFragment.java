@@ -84,6 +84,7 @@ public class GiveBookStatisticsFragment extends BaseFragment implements View.OnC
     private TextView tv_pb_des;
 
     private TextView tv_tj_chool;
+    private TextView tv_tj_change;
 
     /**
      * 时间
@@ -224,7 +225,9 @@ public class GiveBookStatisticsFragment extends BaseFragment implements View.OnC
         // 学校选择
         tv_tj_chool = (TextView) findViewById(R.id.tv_tj_chool);
         tv_tj_chool.setOnClickListener(this);
-        tv_tj_chool.setOnClickListener(this);
+        // 切换
+        tv_tj_change = (TextView) findViewById(R.id.tv_tj_change);
+        tv_tj_change.setOnClickListener(this);
         // 时间统计
         tj_time_book = (RadioButton) findViewById(R.id.tj_time_book);
         tj_time_book.setOnClickListener(this);
@@ -489,6 +492,9 @@ public class GiveBookStatisticsFragment extends BaseFragment implements View.OnC
                 break;
 
             case R.id.tv_tj_chool:
+                showDialog();
+                break;
+            case R.id.tv_tj_change:
                 showDialog();
                 break;
             // 时间
