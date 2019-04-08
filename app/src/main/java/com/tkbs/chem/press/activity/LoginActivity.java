@@ -142,12 +142,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case 1: {
+                case 1:
                     String uId = (String) msg.obj;
                     Logger.e("UID:" + uId);
                     loginWeChat(uId);
                     break;
-                }
+
                 case 2:
                     if (timeCutDown == 0) {
                         if (null != tvGetCode) {
@@ -265,6 +265,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     }
                 });
     }
+
     /**
      * 游客免登陆
      */
@@ -307,7 +308,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     }
 
     @OnClick({R.id.img_change, R.id.tv_get_code, R.id.btn_login, R.id.btn_register,
-            R.id.ll_qq_login, R.id.ll_wechat_login, R.id.btn_forget_ps,R.id.tourist_login})
+            R.id.ll_qq_login, R.id.ll_wechat_login, R.id.btn_forget_ps, R.id.tourist_login})
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -350,13 +351,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 break;
             case R.id.btn_register:
 //                toastShow(R.string.register_now);
-                startActivityForResult(new Intent(LoginActivity.this, RegisterAvtivity.class),Config.REGISTER_CODE);
+                startActivityForResult(new Intent(LoginActivity.this, RegisterAvtivity.class), Config.REGISTER_CODE);
                 break;
             case R.id.ll_qq_login:
-                toastShow(R.string.str_qq);
-                Platform plat = ShareSDK.getPlatform(QQ.NAME);
-                plat.showUser(null);
+//                toastShow(R.string.str_qq);
                 bingType = "qq";
+                qqLogin();
                 break;
             case R.id.ll_wechat_login:
 //                toastShow(R.string.str_wechat);
@@ -423,7 +423,42 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
      * 微信三方登陆
      */
     private void weChatLogin() {
+        //SDK登录+标签必须设置成true
+        ShareSDK.setEnableAuthTag(true);
         Platform wechat = ShareSDK.getPlatform(Wechat.NAME);
+        wechat.setPlatformActionListener(new PlatformActionListener() {
+            @Override
+            public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
+
+                // 用户 Userid 请求服务器 成功 直接登陆 不成功 注册
+//                loginWeChat(platform.getDb().getUserId());
+                Message msg = new Message();
+                msg.what = 1;
+                msg.obj = platform.getDb().getUserId();
+                mHandler.sendMessage(msg);
+
+            }
+
+            @Override
+            public void onError(Platform platform, int i, Throwable throwable) {
+                Logger.e("失败");
+            }
+
+            @Override
+            public void onCancel(Platform platform, int i) {
+                Logger.e("用户取消");
+            }
+        });
+        wechat.authorize();
+    }
+
+    /**
+     * QQ 三方登陆
+     */
+    private void qqLogin() {
+        //SDK登录+标签必须设置成true
+        ShareSDK.setEnableAuthTag(true);
+        Platform wechat = ShareSDK.getPlatform(QQ.NAME);
         wechat.setPlatformActionListener(new PlatformActionListener() {
             @Override
             public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
@@ -692,7 +727,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                         Intent intent = new Intent(LoginActivity.this, ThreePartBindingActivity.class);
                         intent.putExtra("USERID", otherUserId);
                         intent.putExtra("BINGTYPE", bingType);
-                        startActivityForResult(intent,Config.THREE_PART_LOGIN);
+                        startActivityForResult(intent, Config.THREE_PART_LOGIN);
 //                    finish();
                         toastShow(model.getErrorDescription());
                     } else {

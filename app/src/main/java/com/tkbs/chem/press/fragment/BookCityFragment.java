@@ -7,14 +7,11 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +21,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.orhanobut.logger.Logger;
-import com.shizhefei.fragment.LazyFragment;
 import com.shizhefei.view.indicator.IndicatorViewPager;
 import com.shizhefei.view.indicator.ScrollIndicatorView;
 import com.shizhefei.view.indicator.slidebar.ColorBar;
@@ -34,7 +30,6 @@ import com.tkbs.chem.press.activity.BannerWebActivity;
 import com.tkbs.chem.press.activity.SecondaryClassificationActivity;
 import com.tkbs.chem.press.activity.SecondaryClassifyActivity;
 import com.tkbs.chem.press.activity.ThreeClassificActivity;
-import com.tkbs.chem.press.adapter.BookCityBookItemAdapter;
 import com.tkbs.chem.press.adapter.BookCityItemAdapter;
 import com.tkbs.chem.press.base.BaseApplication;
 import com.tkbs.chem.press.base.BaseFragment;
@@ -56,7 +51,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import cn.lemon.multi.MultiView;
 import cn.lemon.view.RefreshRecyclerView;
 import cn.lemon.view.adapter.Action;
 import cn.lemon.view.adapter.BaseViewHolder;
@@ -530,31 +524,13 @@ public class BookCityFragment extends BaseFragment implements View.OnClickListen
 
             RecyclerView recyclerView = (RecyclerView) convertView;
             recyclerView.setLayoutManager(layoutManage);
-            recyclerView.addItemDecoration(new GridSpacingItemDecoration(spanCount, spacing, includeEdge));
+            // 第三个item 向下偏移
+//            recyclerView.addItemDecoration(new GridSpacingItemDecoration(spanCount, spacing, includeEdge));
             //   设置三级书籍 九本
             recyclerView.setNestedScrollingEnabled(false);
             BookCityItemAdapter bookCityItemAdapter = new BookCityItemAdapter(getActivity(), indicatorList.get(position).getResDocuments());
             recyclerView.setAdapter(bookCityItemAdapter);
-            // TODO 重新获取数据
-//            convertView = new MultiView(container.getContext());
-//            MultiView multiView = (MultiView) convertView;
-//            multiView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-//            List<String> data = new ArrayList<>();
-//            data.add("http://i02.pictn.sogoucdn.com/73a90748d5e19769");
-//            data.add("http://i01.pictn.sogoucdn.com/e19188bbc3966d6f");
-//            data.add("http://i02.pictn.sogoucdn.com/85db79c962886004");
-//            data.add("http://i01.pictn.sogoucdn.com/f44c1591194be8b9");
-//            data.add("http://img2.imgtn.bdimg.com/it/u=3575775403,687747571&fm=26&gp=0.jpg");
-//            data.add("http://img0.imgtn.bdimg.com/it/u=2757846774,1857562432&fm=26&gp=0.jpg");
-//            data.add("http://img4.imgtn.bdimg.com/it/u=2772663946,3929024218&fm=26&gp=0.jpg");
-//            data.add("http://img5.imgtn.bdimg.com/it/u=1535234590,1047972145&fm=26&gp=0.jpg");
-//            data.add("http://img1.imgtn.bdimg.com/it/u=1181679303,474549214&fm=26&gp=0.jpg");
-//            //设置图片资源
-//            multiView.setImages(data);
-//            BookCityBookItemAdapter mAdapter = new BookCityBookItemAdapter(getActivity());
-//            multiView.setAdapter(mAdapter);
-//            mAdapter.addAll(indicatorList.get(position).getResDocuments());
             return convertView;
         }
 

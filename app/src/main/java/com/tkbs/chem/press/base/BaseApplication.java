@@ -11,11 +11,8 @@ import com.mob.pushsdk.MobPush;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
 import com.tencent.bugly.crashreport.CrashReport;
-import com.tkbs.chem.press.BuildConfig;
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.util.SPManagement;
-
-import cn.alien95.resthttp.request.RestHttp;
 
 
 /**
@@ -52,11 +49,11 @@ public class BaseApplication extends Application {
         preferences = getSharedPreferences("press", MODE_PRIVATE);
         Logger.addLogAdapter(new AndroidLogAdapter());
         SPManagement.init(this);
-        // 9宫格
-        RestHttp.initialize(this);
-        if(BuildConfig.DEBUG){
-            RestHttp.setDebug(true,"network");
-        }
+//        // 9宫格
+//        RestHttp.initialize(this);
+//        if(BuildConfig.DEBUG){
+//            RestHttp.setDebug(true,"network");
+//        }
         // 腾讯 bugly
         CrashReport.initCrashReport(getApplicationContext(), "05144663eb", false);
 

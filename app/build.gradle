@@ -60,8 +60,8 @@ android {
                 }
                 QQ {
                     sortId 3
-                    appId "100371282"
-                    appKey "aed9b0303e3ed1e27bae87c33761161d"
+                    appId "1107907405"
+                    appKey "MUN0YYnsHAeeaW9w"
                     shareByAppClient true
                 }
                 SinaWeibo {
@@ -127,9 +127,6 @@ dependencies {
     compile files('libs/BASE64.jar')
     compile files('libs/dom4j-1.6.1.jar')
     compile files('libs/jaxen-1.1.6.jar')
-    //  书城首页九宫格显示
-    compile 'cn.lemon:multiview:0.1.8'
-    compile 'cn.alien95:resthttp:1.0.5'
     //其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如2.2.0
     // tencent bugly
     compile 'com.tencent.bugly:crashreport:latest.release'
