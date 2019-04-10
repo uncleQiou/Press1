@@ -165,7 +165,7 @@ public class SampleBookStatisticsFragment extends BaseFragment implements View.O
                         showBarChart(barChart_school, tjSchData, liftDownConner, barChartColor);
                         // 教师
                         tv_tj_chool.setText(SchoolNameData.get(0));
-                        showBarChart(barChart_teacher, tjTeaData, liftDownConner, barChartColor);
+                        showTeaBarChart(barChart_teacher, tjTeaData, liftDownConner, barChartColor);
 
                     }
                 }
@@ -359,7 +359,7 @@ public class SampleBookStatisticsFragment extends BaseFragment implements View.O
                         }
                         int barChartColor = getResources().getColor(R.color.chart_line_value);
                         // 教师
-                        showBarChart(barChart_teacher, tjTeaData, liftDownConner, barChartColor);
+                        showTeaBarChart(barChart_teacher, tjTeaData, liftDownConner, barChartColor);
 
                     }
                 }
@@ -444,6 +444,32 @@ public class SampleBookStatisticsFragment extends BaseFragment implements View.O
         data.setBarWidth(0.5f);
         barChart.clear();
         barChart.setData(data);
+        barChart.setVisibleXRangeMaximum(4);
+        barChart.setHighlightPerDragEnabled(false);
+        barChart.notifyDataSetChanged();
+    }
+    public void showTeaBarChart(BarChart barChart, List<StatisticsCoordinateDataBean> dateValueList, String name, int color) {
+        ArrayList<BarEntry> entries = new ArrayList<>();
+        for (int i = 0; i < dateValueList.size(); i++) {
+            /**
+             * 此处还可传入Drawable对象 BarEntry(float x, float y, Drawable icon)
+             * 即可设置柱状图顶部的 icon展示
+             */
+            BarEntry barEntry = new BarEntry(i, (float) dateValueList.get(i).getCount());
+            entries.add(barEntry);
+        }
+        // 每一个BarDataSet代表一类柱状图
+        BarDataSet barDataSet = new BarDataSet(entries, name);
+        initBarDataSet(barDataSet, color);
+
+
+        BarData data = new BarData(barDataSet);
+        //单条柱状图宽度
+        data.setBarWidth(0.5f);
+        barChart.clear();
+        barChart.setData(data);
+//        barChart.setVisibleXRangeMaximum(4);
+        barChart.setHighlightPerDragEnabled(false);
         barChart.notifyDataSetChanged();
     }
 
@@ -558,7 +584,14 @@ public class SampleBookStatisticsFragment extends BaseFragment implements View.O
         barChart.setScaleYEnabled(false);
 //        barChart.setScaleEnabled(false);
 //        //禁止所有事件
-//        barChart.setTouchEnabled(true);
+//        barChart.setTouchEnabled(false);
+        barChart.setPinchZoom(true);
+        // 取消点击高亮
+        barChart.setHighlightPerTapEnabled(false);
+        // 设置数据后才可以
+//        barChart.setVisibleXRangeMaximum(4);
+        //设置为true时允许高亮显示拖动结束的对象在缩放到最下时。默认：true
+        barChart.setHighlightFullBarEnabled(false);
 
 
     }
@@ -746,6 +779,8 @@ public class SampleBookStatisticsFragment extends BaseFragment implements View.O
         BarData data = new BarData(dataSets);
         barChart_teacher.clear();
         barChart_teacher.setData(data);
+//        barChart_teacher.setVisibleXRangeMaximum(4);
+        barChart_teacher.setHighlightPerDragEnabled(false);
         barChart_teacher.notifyDataSetChanged();
     }
 
