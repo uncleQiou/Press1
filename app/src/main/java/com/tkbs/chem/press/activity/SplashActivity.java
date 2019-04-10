@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.provider.Settings;
 import android.view.View;
 
+import com.orhanobut.logger.Logger;
 import com.tkbs.chem.press.MainActivity;
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.base.BaseActivity;

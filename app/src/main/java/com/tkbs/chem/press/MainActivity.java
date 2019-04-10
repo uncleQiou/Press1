@@ -180,7 +180,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
      * @param
      */
     private void unReadMessageNum() {
-        showProgressDialog();
         addSubscription(apiStores.checkUnReadCount(), new ApiCallback<HttpResponse<Integer>>() {
             @Override
             public void onSuccess(HttpResponse<Integer> model) {
@@ -204,7 +203,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
             @Override
             public void onFinish() {
-                dismissProgressDialog();
 
             }
         });
@@ -418,7 +416,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
      * 检查用户是否是黑名单用户
      */
     private void checkBlackUser() {
-        showProgressDialog();
         addSubscription(apiStores.updateUserInfo(), new ApiCallback<HttpResponse<UserBean>>() {
             @Override
             public void onSuccess(HttpResponse<UserBean> model) {
@@ -455,13 +452,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
             @Override
             public void onFinish() {
-                dismissProgressDialog();
             }
         });
     }
 
     private void getWebPath() {
-        showProgressDialog();
         addSubscription(apiStores.GetWebPath(), new ApiCallback<HttpResponse<String>>() {
             @Override
             public void onSuccess(HttpResponse<String> model) {
@@ -470,6 +465,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     Logger.e("imagePath == " + BaseApplication.imgBasePath);
                 } else {
                     toastShow(model.getErrorDescription());
+                    Logger.e("getWebPath");
                 }
 
             }
@@ -481,7 +477,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
             @Override
             public void onFinish() {
-                dismissProgressDialog();
             }
         });
     }

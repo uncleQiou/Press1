@@ -204,7 +204,6 @@ public class BookCityFragment extends BaseFragment implements View.OnClickListen
      * 获取书城首页数据
      */
     private void getBookCityData(final boolean isRefresh) {
-        showProgressDialog();
         addSubscription(apiStores.BookCityData(), new ApiCallback<HttpResponse<ArrayList<BookCityDataBean>>>() {
             @Override
             public void onSuccess(HttpResponse<ArrayList<BookCityDataBean>> model) {
@@ -239,7 +238,6 @@ public class BookCityFragment extends BaseFragment implements View.OnClickListen
             @Override
             public void onFinish() {
                 mRecyclerView.dismissSwipeRefresh();
-                dismissProgressDialog();
 
             }
         });
@@ -297,7 +295,6 @@ public class BookCityFragment extends BaseFragment implements View.OnClickListen
      * 获取BannerData
      */
     private void getBannerData(final boolean isRefresh) {
-        showProgressDialog();
         addSubscription(apiStores.BannerData(), new ApiCallback<HttpResponse<ArrayList<BannerDataBean>>>() {
             @Override
             public void onSuccess(HttpResponse<ArrayList<BannerDataBean>> model) {
@@ -328,7 +325,6 @@ public class BookCityFragment extends BaseFragment implements View.OnClickListen
 
             @Override
             public void onFinish() {
-                dismissProgressDialog();
             }
         });
     }

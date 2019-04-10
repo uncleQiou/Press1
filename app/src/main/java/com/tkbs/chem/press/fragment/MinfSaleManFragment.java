@@ -108,7 +108,6 @@ public class MinfSaleManFragment extends BaseFragment implements View.OnClickLis
      * @param
      */
     private void unReadMessageNum(){
-        showProgressDialog();
         addSubscription(apiStores.checkUnReadCount(), new ApiCallback<HttpResponse<Integer>>() {
             @Override
             public void onSuccess(HttpResponse<Integer> model) {
@@ -132,7 +131,6 @@ public class MinfSaleManFragment extends BaseFragment implements View.OnClickLis
 
             @Override
             public void onFinish() {
-                dismissProgressDialog();
 
             }
         });

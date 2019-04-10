@@ -253,7 +253,6 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
      * 默认 时间 正序
      */
     private void getSampleBookListData(final boolean isRefresh) {
-        showProgressDialog();
 
         addSubscription(apiStores.getSampleBookList(page, timeOrder, titleOrder), new ApiCallback<HttpResponse<ArrayList<SampleBookItemDataBean>>>() {
             @Override
@@ -290,7 +289,6 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
             @Override
             public void onFinish() {
                 recycler_bookshelf.dismissSwipeRefresh();
-                dismissProgressDialog();
 
             }
         });
@@ -301,7 +299,6 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
      * 我的收藏
      */
     private void getCollectionBookListData(final boolean isRefresh) {
-        showProgressDialog();
         addSubscription(apiStores.getCollectionBookList(page, timeOrder, titleOrder), new ApiCallback<HttpResponse<ArrayList<SampleBookItemDataBean>>>() {
             @Override
             public void onSuccess(HttpResponse<ArrayList<SampleBookItemDataBean>> model) {
@@ -337,7 +334,6 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
             @Override
             public void onFinish() {
                 recycler_bookshelf.dismissSwipeRefresh();
-                dismissProgressDialog();
 
             }
         });
@@ -348,7 +344,6 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
      * 我购买的
      */
     private void getBuyedBookListData(final boolean isRefresh) {
-        showProgressDialog();
         addSubscription(apiStores.getBuyedBookList(page, timeOrder, titleOrder, degreeOrder), new ApiCallback<HttpResponse<ArrayList<SampleBookItemDataBean>>>() {
             @Override
             public void onSuccess(HttpResponse<ArrayList<SampleBookItemDataBean>> model) {
@@ -384,7 +379,6 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
             @Override
             public void onFinish() {
                 recycler_bookshelf.dismissSwipeRefresh();
-                dismissProgressDialog();
 
             }
         });
@@ -395,7 +389,6 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
      * 我的赠书
      */
     private void getGiveBookListData(final boolean isRefresh) {
-        showProgressDialog();
         addSubscription(apiStores.getGiveBookList(page, timeOrder, titleOrder), new ApiCallback<HttpResponse<ArrayList<SampleBookItemDataBean>>>() {
             @Override
             public void onSuccess(HttpResponse<ArrayList<SampleBookItemDataBean>> model) {
@@ -431,7 +424,6 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
             @Override
             public void onFinish() {
                 recycler_bookshelf.dismissSwipeRefresh();
-                dismissProgressDialog();
 
             }
         });

@@ -138,7 +138,7 @@
         <!-- 修改绑定手机号 -->
         <activity android:name=".activity.ModifyPhoneWebActivity" />
         <!-- 九宫格 -->
-        <activity android:name="cn.lemon.multi.ui.ViewImageActivity" />
+       <!-- <activity android:name="cn.lemon.multi.ui.ViewImageActivity" />-->
         <!-- 只有二级分类 没有三级分类 直接显示分类下的内容 -->
         <activity android:name=".activity.SecondaryClassifyActivity" />
         <!--banner图 跳转-->

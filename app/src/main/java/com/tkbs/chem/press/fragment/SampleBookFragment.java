@@ -153,7 +153,6 @@ public class SampleBookFragment extends BaseFragment implements View.OnClickList
 
     private String searchKey = "";
     private void getSampleBookList(final boolean isRefresh) {
-        showProgressDialog();
         addSubscription(apiStores.SampleBookManageList(page, timeOrder, titleOrder,searchKey), new ApiCallback<HttpResponse<ArrayList<SampleBookManageDataBean>>>() {
             @Override
             public void onSuccess(HttpResponse<ArrayList<SampleBookManageDataBean>> model) {
@@ -190,7 +189,6 @@ public class SampleBookFragment extends BaseFragment implements View.OnClickList
                 if (searchKey.length()>0){
                     searchKey = "";
                 }
-                dismissProgressDialog();
             }
         });
 

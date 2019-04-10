@@ -105,7 +105,6 @@ public class OpinionManageFragment extends BaseFragment implements View.OnClickL
      * @param isRefresh
      */
     private void getSOpinionManagesData(final boolean isRefresh) {
-        showProgressDialog();
         addSubscription(apiStores.saleManOpinionManage(page), new ApiCallback<HttpResponse<ArrayList<OpinionManageBean>>>() {
             @Override
             public void onSuccess(HttpResponse<ArrayList<OpinionManageBean>> model) {
@@ -138,7 +137,6 @@ public class OpinionManageFragment extends BaseFragment implements View.OnClickL
             @Override
             public void onFinish() {
                 recycler.dismissSwipeRefresh();
-                dismissProgressDialog();
 
             }
         });

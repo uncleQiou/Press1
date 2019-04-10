@@ -100,7 +100,6 @@ public class DiscoverFragment extends BaseFragment {
     }
 
     private void getMessageData(final boolean isRefresh) {
-        showProgressDialog();
         addSubscription(apiStores.getMessageData(page), new ApiCallback<HttpResponse<ArrayList<MessageBean>>>() {
             @Override
             public void onSuccess(HttpResponse<ArrayList<MessageBean>> model) {
@@ -134,7 +133,6 @@ public class DiscoverFragment extends BaseFragment {
             @Override
             public void onFinish() {
                 recycler_discover.dismissSwipeRefresh();
-                dismissProgressDialog();
 
             }
         });

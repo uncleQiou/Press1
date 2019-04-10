@@ -166,7 +166,6 @@ public class UserManageFragment extends BaseFragment implements View.OnClickList
     private String searchKey = "";
 
     private void getUserList(final boolean isRefresh) {
-        showProgressDialog();
         addSubscription(apiStores.UserManageDataList(page, timeOrder, titleOrder, searchKey), new ApiCallback<HttpResponse<UserManageNewDataBean>>() {
             @Override
             public void onSuccess(HttpResponse<UserManageNewDataBean> model) {
@@ -195,7 +194,6 @@ public class UserManageFragment extends BaseFragment implements View.OnClickList
 
             @Override
             public void onFailure(String msg) {
-                dismissProgressDialog();
                 toastShow(msg);
             }
 
@@ -204,7 +202,6 @@ public class UserManageFragment extends BaseFragment implements View.OnClickList
                 if (searchKey.length() > 0) {
                     searchKey = "";
                 }
-                dismissProgressDialog();
             }
         });
 

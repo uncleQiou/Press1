@@ -555,7 +555,7 @@ public class SampleBookStatisticsFragment extends BaseFragment implements View.O
 //        barChart.setDragEnabled(true);
 //        //X轴或Y轴禁止缩放
 //        barChart.setScaleXEnabled(false);
-//        barChart.setScaleYEnabled(false);
+        barChart.setScaleYEnabled(false);
 //        barChart.setScaleEnabled(false);
 //        //禁止所有事件
 //        barChart.setTouchEnabled(true);
@@ -571,7 +571,6 @@ public class SampleBookStatisticsFragment extends BaseFragment implements View.O
                 rbtn_tab_yy.setTextColor(getResources().getColor(R.color.white));
                 rbtn_tab_mm.setTextColor(getResources().getColor(R.color.text_main_3));
                 rbtn_tab_dd.setTextColor(getResources().getColor(R.color.text_main_3));
-                //toastShow(rbtn_tab_yy.getText().toString());
                 dateType = 1;
                 getTimeData();
                 break;
@@ -581,7 +580,6 @@ public class SampleBookStatisticsFragment extends BaseFragment implements View.O
                 rbtn_tab_mm.setTextColor(getResources().getColor(R.color.white));
                 rbtn_tab_yy.setTextColor(getResources().getColor(R.color.text_main_3));
                 rbtn_tab_dd.setTextColor(getResources().getColor(R.color.text_main_3));
-                //toastShow(rbtn_tab_mm.getText().toString());
                 dateType = 2;
                 getTimeData();
                 break;
@@ -591,7 +589,6 @@ public class SampleBookStatisticsFragment extends BaseFragment implements View.O
                 rbtn_tab_dd.setTextColor(getResources().getColor(R.color.white));
                 rbtn_tab_mm.setTextColor(getResources().getColor(R.color.text_main_3));
                 rbtn_tab_yy.setTextColor(getResources().getColor(R.color.text_main_3));
-                //toastShow(rbtn_tab_dd.getText().toString());
                 dateType = 3;
                 getTimeData();
                 break;
@@ -606,7 +603,6 @@ public class SampleBookStatisticsFragment extends BaseFragment implements View.O
                 // 册书
                 tj_time_book.setTextColor(getResources().getColor(R.color.white));
                 tj_time_people.setTextColor(getResources().getColor(R.color.text_main_3));
-                //toastShow(tj_time_book.getText().toString());
                 statisticsTimeType = 2;
                 getTimeData();
                 break;
@@ -614,7 +610,6 @@ public class SampleBookStatisticsFragment extends BaseFragment implements View.O
                 // 人数
                 tj_time_people.setTextColor(getResources().getColor(R.color.white));
                 tj_time_book.setTextColor(getResources().getColor(R.color.text_main_3));
-                //toastShow(tj_time_people.getText().toString());
                 statisticsTimeType = 1;
                 getTimeData();
                 break;
@@ -623,7 +618,6 @@ public class SampleBookStatisticsFragment extends BaseFragment implements View.O
                 //册书
                 tj_school_book.setTextColor(getResources().getColor(R.color.white));
                 tj_school_people.setTextColor(getResources().getColor(R.color.text_main_3));
-                //toastShow(tj_school_book.getText().toString());
                 statisticsSchType = 2;
                 getSchoolData();
                 break;
@@ -631,7 +625,6 @@ public class SampleBookStatisticsFragment extends BaseFragment implements View.O
                 // 人数
                 tj_school_people.setTextColor(getResources().getColor(R.color.white));
                 tj_school_book.setTextColor(getResources().getColor(R.color.text_main_3));
-                //toastShow(tj_school_people.getText().toString());
                 statisticsSchType = 1;
                 getSchoolData();
                 break;
@@ -639,14 +632,12 @@ public class SampleBookStatisticsFragment extends BaseFragment implements View.O
             case R.id.tj_teacher_book:
                 tj_teacher_book.setTextColor(getResources().getColor(R.color.white));
                 tj_teacher_limit.setTextColor(getResources().getColor(R.color.text_main_3));
-                //toastShow(tj_teacher_book.getText().toString());
                 statisticsTeaType = 1;
                 getTeaData();
                 break;
             case R.id.tj_teacher_limit:
                 tj_teacher_limit.setTextColor(getResources().getColor(R.color.white));
                 tj_teacher_book.setTextColor(getResources().getColor(R.color.text_main_3));
-                //toastShow(tj_teacher_limit.getText().toString());
                 statisticsTeaType = 2;
                 getTeaData();
                 break;
