@@ -82,6 +82,15 @@ public interface ApiStores {
      */
     @POST("login/toLoginByWechat")
     Observable<HttpResponse<UserBean>> loginByWechat(@Query("wxUserId") String wxUserId);
+    /**
+     * 三方登陆
+     * QQ
+     *
+     * @param wxUserId
+     * @return
+     */
+    @POST("login/toLoginByQQ")
+    Observable<HttpResponse<UserBean>> loginByQQ(@Query("qqUserId") String wxUserId);
 
     /**
      * 三方登陆

@@ -304,9 +304,7 @@ public class BookCityFragment extends BaseFragment implements View.OnClickListen
                     list_title = new ArrayList<String>();
                     for (int i = 0; i < model.data.size(); i++) {
                         list_title.add("");
-//                        list_title.add(model.data.get(i).getTitle());
                         list_path.add(BaseApplication.imgBasePath + model.data.get(i).getFile_path());
-//                        list_path.add(UiUtils.ImageMachining(model.data.get(i).getFile_path()));
                     }
                     setBanner(list_path, list_title);
                     getBookCityData(isRefresh);
@@ -339,7 +337,6 @@ public class BookCityFragment extends BaseFragment implements View.OnClickListen
             intent.putExtra("link_url",linkUrl);
             intent.putExtra("titleStr",bannerData.get(position).getTitle());
             getActivity().startActivity(intent);
-
         }
     }
 
@@ -493,7 +490,7 @@ public class BookCityFragment extends BaseFragment implements View.OnClickListen
             textView.setText(indicatorList.get(position).getResCatagory().getTitle());
 
             int witdh = getTextWidth(textView);
-            int padding = UiUtils.dipToPix(getApplicationContext(), 20);
+            int padding = UiUtils.dipToPix(getApplicationContext(), 30);
             //因为wrap的布局 字体大小变化会导致textView大小变化产生抖动，这里通过设置textView宽度就避免抖动现象
             //1.3f是根据上面字体大小变化的倍数1.3f设置
             textView.setWidth((int) (witdh * 1.3f) + padding);

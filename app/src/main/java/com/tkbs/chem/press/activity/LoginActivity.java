@@ -145,7 +145,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 case 1:
                     String uId = (String) msg.obj;
                     Logger.e("UID:" + uId);
-                    loginWeChat(uId);
+                    if (bingType.equals("qq")){
+                        loginWeQQ(uId);
+                    }else {
+                        loginWeChat(uId);
+                    }
                     break;
 
                 case 2:
@@ -750,6 +754,66 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             }
         });
     }
+    /**
+     * QQ三方登陆
+     */
 
+    private void loginWeQQ(final String qqUserId) {
+        otherUserId = qqUserId;
+        Logger.e("userID:" + otherUserId);
+        showProgressDialog();
+        addSubscription(apiStores.loginByQQ(qqUserId), new ApiCallback<HttpResponse<UserBean>>() {
+            @Override
+            public void onSuccess(HttpResponse<UserBean> model) {
+                //用户 Userid 请求服务器 成功 直接登陆 不成功 注册
+                if (model.isStatus()) {
+                    Logger.e("已有账号");
+                    UserBean user = model.getData();
+                    SharedPreferences.Editor edit = BaseApplication.preferences.edit();
+                    edit.putString(Config.LOGIN_NAME, user.getLogin_name());
+                    edit.putString(Config.GUID, user.getGuid());
+                    edit.putString(Config.PASSWORD, user.getPASSWORD());
+                    edit.putString(Config.NICK_NAME, user.getNick_name());
+                    edit.putString(Config.REAL_NAME, user.getReal_name());
+                    edit.putString(Config.WORKPHONE, user.getWorkphone());
+                    edit.putString(Config.PHONE, user.getPhone());
+                    edit.putInt(Config.MEMBER_TYPE, user.getMember_type());
+                    edit.putInt(Config.MEMBER_STATE, user.getState());
+                    edit.commit();
+                    //  refresh MainActivity
+                    EventBus.getDefault().post(new MessageEvent("Refresh"));
+//                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                    setResult(RESULT_OK);
+                    finish();
+                } else {
+                    // 调用注册页面 刷新登陆 6005 黑名单
+                    if (model.getErrorCode() == 6012) {
+                        Logger.e("需要注册");
+                        Intent intent = new Intent(LoginActivity.this, ThreePartBindingActivity.class);
+                        intent.putExtra("USERID", otherUserId);
+                        intent.putExtra("BINGTYPE", bingType);
+                        startActivityForResult(intent, Config.THREE_PART_LOGIN);
+//                    finish();
+                        toastShow(model.getErrorDescription());
+                    } else {
+                        toastShow(model.getErrorDescription());
+
+                    }
+
+                }
+
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                toastShow(msg);
+            }
+
+            @Override
+            public void onFinish() {
+                dismissProgressDialog();
+            }
+        });
+    }
 
 }

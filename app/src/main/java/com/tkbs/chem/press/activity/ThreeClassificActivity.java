@@ -541,24 +541,22 @@ public class ThreeClassificActivity extends BaseActivity implements View.OnClick
 
         class MyCustomItemHolder extends BaseViewHolder<ThreeClassifyDataBena> {
 
-            private CheckBox cb_select_item;
             private TextView tv_book_name;
-            private TextView tv_book_page;
+            private TextView tv_book_author;
             private TextView tv_book_endtime;
-            private TextView tv_buy_time;
+            private TextView tv_book_price;
             private ImageView bookshelf_cover;
 
             public MyCustomItemHolder(ViewGroup parent) {
-                super(parent, R.layout.item_bookshelf);
+                super(parent, R.layout.item_booklist);
             }
 
             @Override
             public void onInitializeView() {
                 super.onInitializeView();
-                cb_select_item = findViewById(R.id.cb_select_item);
                 tv_book_name = findViewById(R.id.tv_book_name);
-                tv_book_page = findViewById(R.id.tv_book_page);
-                tv_buy_time = findViewById(R.id.tv_buy_time);
+                tv_book_author = findViewById(R.id.tv_book_author);
+                tv_book_price = findViewById(R.id.tv_book_price);
                 tv_book_endtime = findViewById(R.id.tv_book_endtime);
                 bookshelf_cover = findViewById(R.id.bookshelf_cover);
             }
@@ -567,10 +565,9 @@ public class ThreeClassificActivity extends BaseActivity implements View.OnClick
             public void setData(ThreeClassifyDataBena data) {
                 super.setData(data);
                 tv_book_name.setText(data.getTitle());
-                tv_buy_time.setVisibility(View.GONE);
-                cb_select_item.setVisibility(View.GONE);
-                tv_book_page.setText("￥" + data.getPrice());
-                tv_book_endtime.setText(data.getAuthor());
+                tv_book_price.setText("￥" + data.getPrice());
+                tv_book_author.setText(data.getAuthor());
+                tv_book_endtime.setText(String.format(getResources().getString(R.string.book_publish_time), data.getPublishTime()));
                 Glide.with(ThreeClassificActivity.this).load(data.getCover())
                         .apply(BaseApplication.options)
                         .into(bookshelf_cover);
