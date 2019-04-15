@@ -129,7 +129,7 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
         EventBus.getDefault().register(this);
         ll_sort_edit = (LinearLayout) findViewById(R.id.ll_sort_edit);
         ll_sort_edit.setOnClickListener(this);
-        if (type == 2 ) {
+        if (type == 2) {
             ll_sort_edit.setVisibility(View.GONE);
         }
         ll_bottom_edit = (LinearLayout) findViewById(R.id.ll_bottom_edit);
@@ -234,7 +234,7 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
                 getData(true);
             }
 
-        }else if ("RefreshBookShelf".endsWith(messageEvent.getMessage())){
+        } else if ("RefreshBookShelf".endsWith(messageEvent.getMessage())) {
             recycler_bookshelf.post(new Runnable() {
                 @Override
                 public void run() {
@@ -546,11 +546,17 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
         ll_sort_time.setOnClickListener(this);
     }
 
-    private  AlertDialog.Builder alertDialog;
+    private AlertDialog.Builder alertDialog;
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.ll_sort_edit:
+                //  无数据不显示编辑
+                if (dataList.size() == 0) {
+                    toastShow(R.string.no_edit_data);
+                    return;
+                }
                 if (editFlg) {
                     editFlg = false;
                     ll_bottom_edit.setVisibility(View.GONE);
@@ -563,15 +569,6 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
                 bookShelfItemAdapter.notifyDataSetChanged();
                 break;
             case R.id.tv_sort_book_name:
-//                if (null == dataList) {
-//                    return;
-//                }
-//                recycler_bookshelf.showSwipeRefresh();
-//                sortByBookName();
-//                bookShelfItemAdapter.clear();
-//                bookShelfItemAdapter.addAll(dataList);
-//                recycler_bookshelf.dismissSwipeRefresh();
-//                recycler_bookshelf.getRecyclerView().scrollToPosition(0);
                 timeOrder = Config.SORT_NOONE;
                 titleOrder = Config.SORT_UP;
                 recycler_bookshelf.post(new Runnable() {
@@ -585,23 +582,6 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
                 changeTextColor();
                 break;
             case R.id.ll_sort_time:
-//                if (null == dataList) {
-//                    return;
-//                }
-//                recycler_bookshelf.showSwipeRefresh();
-//                img_sort_time.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down : R.mipmap.bookshelf_icon_up);
-//                if (isAscendingOrder) {
-//                    isAscendingOrder = false;
-//                    sortByDateUp();
-//                } else {
-//                    isAscendingOrder = true;
-//                    sortByDateDown();
-//                }
-//                bookShelfItemAdapter.clear();
-//                bookShelfItemAdapter.addAll(dataList);
-//                recycler_bookshelf.dismissSwipeRefresh();
-//                recycler_bookshelf.getRecyclerView().scrollToPosition(0);
-
                 if (isAscendingOrder) {
                     isAscendingOrder = false;
                     timeOrder = Config.SORT_DOWN;
@@ -659,7 +639,7 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
     /**
      * 书架删除
      */
-    private void  deleltBookShelf(){
+    private void deleltBookShelf() {
         switch (type) {
             case 0:
                 // 免费样书 删除
@@ -689,24 +669,26 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
                 break;
         }
     }
+
     /**
      * 修改排序字体颜色
      */
-    private void changeTextColor(){
+    private void changeTextColor() {
 
-        if (titleOrder == Config.SORT_NOONE){
+        if (titleOrder == Config.SORT_NOONE) {
             // 时间排序
             img_sort_time.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down : R.mipmap.bookshelf_icon_up);
-            tv_sort_time.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.apply_violet));
-            tv_sort_book_name.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.text_main_6));
-        }else {
+            tv_sort_time.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.apply_violet));
+            tv_sort_book_name.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.text_main_6));
+        } else {
             // 姓名排序
             img_sort_time.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down_black : R.mipmap.bookshelf_icon_up_black);
-            tv_sort_time.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.text_main_6));
-            tv_sort_book_name.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.apply_violet));
+            tv_sort_time.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.text_main_6));
+            tv_sort_book_name.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.apply_violet));
         }
 
     }
+
     /**
      * 我的收藏 删除
      */
@@ -1061,7 +1043,9 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
         }
     }
 
-    /** 删除单个文件
+    /**
+     * 删除单个文件
+     *
      * @param filePath$Name 要删除的文件的文件名
      * @return 单个文件删除成功返回true，否则返回false
      */

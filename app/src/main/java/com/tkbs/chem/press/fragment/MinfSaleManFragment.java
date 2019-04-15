@@ -18,7 +18,6 @@ import com.shizhefei.view.indicator.ScrollIndicatorView;
 import com.shizhefei.view.indicator.slidebar.ColorBar;
 import com.shizhefei.view.indicator.transition.OnTransitionTextListener;
 import com.tkbs.chem.press.R;
-import com.tkbs.chem.press.activity.ChartDemoActivity;
 import com.tkbs.chem.press.activity.NewsActivity;
 import com.tkbs.chem.press.activity.SalesmanPersonalCenterActivity;
 import com.tkbs.chem.press.activity.SettingActivity;

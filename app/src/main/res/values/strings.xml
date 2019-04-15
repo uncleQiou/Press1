@@ -196,5 +196,5 @@
     <string name="bookshelf_del_title">是否删除选中项，删除后无法找回，请慎重选择!</string>
     <string name="check_change">(点击切换学校)</string>
     <string name="book_publish_time">出版时间：%1$S</string>
-
+    <string name="no_edit_data">暂无可管理数据</string>
 </resources>
