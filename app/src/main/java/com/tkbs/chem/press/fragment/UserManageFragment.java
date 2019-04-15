@@ -262,7 +262,7 @@ public class UserManageFragment extends BaseFragment implements View.OnClickList
                 ed_reply.setFocusableInTouchMode(true);
                 ed_reply.requestFocus();
                 InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.showSoftInput(ed_reply,0);
+                imm.showSoftInput(ed_reply, 0);
                 break;
             case R.id.ed_search:
                 ll_reply_layot.setVisibility(View.VISIBLE);
@@ -271,7 +271,7 @@ public class UserManageFragment extends BaseFragment implements View.OnClickList
                 ed_reply.setFocusableInTouchMode(true);
                 ed_reply.requestFocus();
                 InputMethodManager imm1 = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm1.showSoftInput(ed_reply,0);
+                imm1.showSoftInput(ed_reply, 0);
                 break;
             case R.id.ll_search:
                 getActivity().startActivity(new Intent(getActivity(), SearchActivity.class));

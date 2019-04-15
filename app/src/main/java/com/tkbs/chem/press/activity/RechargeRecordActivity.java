@@ -132,8 +132,8 @@ public class RechargeRecordActivity extends BaseActivity implements View.OnClick
             public void onSuccess(HttpResponse<RechargeRecordDataBean> model) {
                 if (model.isStatus()) {
                     // 第一次 没有记录就隐藏
-                    if (model.getData().getList().size()==0){
-                        if (noData){
+                    if (model.getData().getList().size() == 0) {
+                        if (noData) {
                             llRechargeDate.setVisibility(View.GONE);
                         }
 

@@ -77,7 +77,7 @@ public class FragmentBookPurchaseList extends BaseFragment {
 
     private void getGiveBookList(final boolean isRefresh) {
         showProgressDialog();
-        addSubscription(apiStores.GiveBookList(guid,page), new ApiCallback<HttpResponse<ArrayList<GiveBookListBean>>>() {
+        addSubscription(apiStores.GiveBookList(guid, page), new ApiCallback<HttpResponse<ArrayList<GiveBookListBean>>>() {
             @Override
             public void onSuccess(HttpResponse<ArrayList<GiveBookListBean>> model) {
                 if (model.isStatus()) {

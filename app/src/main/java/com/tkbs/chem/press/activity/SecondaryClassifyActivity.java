@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class SecondaryClassifyActivity extends BaseActivity implements View.OnClickListener{
+public class SecondaryClassifyActivity extends BaseActivity implements View.OnClickListener {
 
     @BindView(R.id.back)
     ImageView back;
@@ -48,7 +48,7 @@ public class SecondaryClassifyActivity extends BaseActivity implements View.OnCl
     private String guid = "";
     private String titleStr = "";
     private ArrayList<BookCityResCatagory> indicatorData;
-    private  int currentItemIndex;
+    private int currentItemIndex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +67,7 @@ public class SecondaryClassifyActivity extends BaseActivity implements View.OnCl
         // 获取indicator数据
         guid = getIntent().getStringExtra("guid");
         titleStr = getIntent().getStringExtra("title");
-        currentItemIndex = getIntent().getIntExtra("index",0);
+        currentItemIndex = getIntent().getIntExtra("index", 0);
         getIndicatorData();
         viewIndicator.setScrollBar(new ColorBar(getApplicationContext(), getResources().getColor(R.color.hg_app_main_color), 2));
         viewIndicator.setOnTransitionListener(
@@ -84,7 +84,7 @@ public class SecondaryClassifyActivity extends BaseActivity implements View.OnCl
                 if (model.isStatus()) {
                     indicatorData = model.getData();
                     indicatorViewPager.setAdapter(new MyAdapter(getSupportFragmentManager()));
-                    indicatorViewPager.setCurrentItem(currentItemIndex,true);
+                    indicatorViewPager.setCurrentItem(currentItemIndex, true);
 
                 } else {
                     toastShow(model.getErrorDescription());

@@ -1,11 +1,9 @@
 package com.tkbs.chem.press.activity;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +18,6 @@ import android.widget.TextView;
 
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.base.BaseActivity;
-import com.tkbs.chem.press.util.Config;
 import com.tkbs.chem.press.util.UiUtils;
 import com.tkbs.chem.press.view.ReWebChomeClient;
 

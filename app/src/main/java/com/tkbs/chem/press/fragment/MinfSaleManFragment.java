@@ -104,16 +104,17 @@ public class MinfSaleManFragment extends BaseFragment implements View.OnClickLis
 
     /**
      * 查询未度消息
+     *
      * @param
      */
-    private void unReadMessageNum(){
+    private void unReadMessageNum() {
         addSubscription(apiStores.checkUnReadCount(), new ApiCallback<HttpResponse<Integer>>() {
             @Override
             public void onSuccess(HttpResponse<Integer> model) {
                 if (model.isStatus()) {
-                    if (model.getData()>0){
+                    if (model.getData() > 0) {
                         img_unread.setVisibility(View.VISIBLE);
-                    }else {
+                    } else {
                         img_unread.setVisibility(View.GONE);
                     }
 

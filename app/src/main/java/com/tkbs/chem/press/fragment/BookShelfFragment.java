@@ -45,9 +45,9 @@ public class BookShelfFragment extends BaseFragment {
         setContentView(R.layout.fragment_book_shelf);
         bookSelfIndicator = (ScrollIndicatorView) findViewById(R.id.book_shelf_indicator);
         bookShelfViewPager = (ViewPager) findViewById(R.id.book_shelf_viewPager);
-        if (user_type == 2){
+        if (user_type == 2) {
             bookSelfIndicator.setVisibility(View.GONE);
-        }else {
+        } else {
             bookSelfIndicator.setVisibility(View.VISIBLE);
         }
         float unSelectSize = 12;
@@ -66,7 +66,6 @@ public class BookShelfFragment extends BaseFragment {
                 EventBus.getDefault().post(new MessageEvent("RefreshBookShelf"));
             }
         });
-
 
 
     }

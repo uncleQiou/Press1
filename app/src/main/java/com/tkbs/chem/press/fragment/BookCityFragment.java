@@ -332,10 +332,10 @@ public class BookCityFragment extends BaseFragment implements View.OnClickListen
         Log.i("tag", "你点了第" + position + "张轮播图");
         String linkUrl = bannerData.get(position).getLink_url();
 //        String linkUrl = "http://192.168.1.105:8281/app/hello/change_password.html";
-        if (null != linkUrl && linkUrl.length()>0){
+        if (null != linkUrl && linkUrl.length() > 0) {
             Intent intent = new Intent(getActivity(), BannerWebActivity.class);
-            intent.putExtra("link_url",linkUrl);
-            intent.putExtra("titleStr",bannerData.get(position).getTitle());
+            intent.putExtra("link_url", linkUrl);
+            intent.putExtra("titleStr", bannerData.get(position).getTitle());
             getActivity().startActivity(intent);
         }
     }
@@ -422,13 +422,13 @@ public class BookCityFragment extends BaseFragment implements View.OnClickListen
                             Intent intent = new Intent(getActivity(), SecondaryClassificationActivity.class);
                             intent.putExtra("guid", data.getResCatagory().getGuid());
                             intent.putExtra("title", data.getResCatagory().getTitle());
-                            intent.putExtra("index",fragment_bookcity_indicator.getCurrentItem());
+                            intent.putExtra("index", fragment_bookcity_indicator.getCurrentItem());
                             getActivity().startActivity(intent);
                         } else {
                             Intent intent1 = new Intent(getActivity(), SecondaryClassifyActivity.class);
                             intent1.putExtra("guid", data.getResCatagory().getGuid());
                             intent1.putExtra("title", data.getResCatagory().getTitle());
-                            intent1.putExtra("index",fragment_bookcity_indicator.getCurrentItem());
+                            intent1.putExtra("index", fragment_bookcity_indicator.getCurrentItem());
                             getActivity().startActivity(intent1);
                         }
                     } else {

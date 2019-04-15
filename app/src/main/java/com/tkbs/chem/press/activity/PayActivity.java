@@ -256,6 +256,7 @@ public class PayActivity extends BaseActivity implements View.OnClickListener, C
         }
 
     }
+
     @Subscribe(threadMode = ThreadMode.MainThread)
     public void wxpayresult(Integer progress) {
         if (progress == 0) {//支付成功
@@ -267,6 +268,7 @@ public class PayActivity extends BaseActivity implements View.OnClickListener, C
             toastShow("pay fail ");
         }
     }
+
     /**
      * 支付宝支付
      */

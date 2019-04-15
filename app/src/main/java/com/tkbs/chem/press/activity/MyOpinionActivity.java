@@ -319,7 +319,7 @@ public class MyOpinionActivity extends BaseActivity implements View.OnClickListe
             public void setData(final OpinionManageBean data) {
                 super.setData(data);
                 tv_opinion_who.setText(data.getCreateUser());
-                tv_opinion_content.setText("    "+data.getContent());
+                tv_opinion_content.setText("    " + data.getContent());
                 tv_opinion_title.setText(data.getCreateDate());
                 tv_reply.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -332,7 +332,7 @@ public class MyOpinionActivity extends BaseActivity implements View.OnClickListe
                         edReply.setFocusableInTouchMode(true);
                         edReply.requestFocus();
                         InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.showSoftInput(edReply,0);
+                        imm.showSoftInput(edReply, 0);
                     }
                 });
 

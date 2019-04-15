@@ -20,7 +20,6 @@ import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.base.BaseActivity;
 import com.tkbs.chem.press.bean.CreateOrderDataBean;
 import com.tkbs.chem.press.bean.HttpResponse;
-import com.tkbs.chem.press.bean.PhoneCodeBean;
 import com.tkbs.chem.press.bean.ShareDataBean;
 import com.tkbs.chem.press.net.ApiCallback;
 import com.tkbs.chem.press.util.Config;
@@ -129,9 +128,9 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
             @Override
             public void onSuccess(HttpResponse<Object> model) {
                 // 通知html5页面进行刷新 购买完成 reflushData
-                if (model.isStatus()){
+                if (model.isStatus()) {
                     bookDetailWeb.loadUrl("javascript:reflushData()");
-                }else {
+                } else {
                     toastShow(model.getErrorDescription());
                 }
             }
@@ -273,10 +272,12 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
                 break;
         }
     }
+
     /**
      * 获取分享分享数据
      */
     private ShareDataBean shareData = new ShareDataBean();
+
     private void obtainPhoneCode() {
         showProgressDialog();
         addSubscription(apiStores.ObtainShareData(guid), new ApiCallback<HttpResponse<ShareDataBean>>() {
@@ -497,10 +498,10 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
             //   获取订单信息
             //  用户是游客账户 去注册
             int user_type = preference.getInt(Config.MEMBER_TYPE, 3);
-            if (user_type == 5){
+            if (user_type == 5) {
                 startActivity(new Intent(BookDetailActivity.this, LoginActivity.class));
                 finish();
-            }else {
+            } else {
                 createOrder();
             }
 

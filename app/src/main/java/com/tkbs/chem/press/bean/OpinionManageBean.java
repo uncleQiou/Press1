@@ -18,7 +18,7 @@ public class OpinionManageBean {
      * opinionDtoList : [{"createDate":"2018-11-29 10:47:38","createUser":"","content":"您放心。我们会改进的","type":1,"opinionDtoList":[]}]
      */
 
-    private int opinionId ;
+    private int opinionId;
     private String createDate;
     private String createUser;
     private String content;

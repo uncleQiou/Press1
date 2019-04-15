@@ -186,9 +186,9 @@ public class RechargeActivity extends BaseActivity implements View.OnClickListen
             case R.id.tv_recharge:
                 //  用户是游客账户 去注册
                 int user_type = preference.getInt(Config.MEMBER_TYPE, 3);
-                if (user_type == 5){
+                if (user_type == 5) {
                     startActivity(new Intent(RechargeActivity.this, LoginActivity.class));
-                }else {
+                } else {
                     if (paytype.equals("2")) {
                         // 支付宝支付
                         toastShow("支付宝支付");

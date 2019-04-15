@@ -1,6 +1,5 @@
 package com.tkbs.chem.press.activity;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -23,7 +22,7 @@ import com.tkbs.chem.press.view.ReWebChomeClient;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class ForgetPasswordActivity extends BaseActivity implements View.OnClickListener, ReWebChomeClient.OpenFileChooserCallBack{
+public class ForgetPasswordActivity extends BaseActivity implements View.OnClickListener, ReWebChomeClient.OpenFileChooserCallBack {
 
     @BindView(R.id.back)
     ImageView back;
@@ -56,6 +55,7 @@ public class ForgetPasswordActivity extends BaseActivity implements View.OnClick
     protected void initTitle() {
         title.setText(R.string.forget_password);
     }
+
     @OnClick({R.id.back})
     @Override
     public void onClick(View view) {
@@ -67,6 +67,7 @@ public class ForgetPasswordActivity extends BaseActivity implements View.OnClick
                 break;
         }
     }
+
     private void initWeb() {
         WebSettings setting = webView.getSettings();
         //允许加载javascript
@@ -129,6 +130,7 @@ public class ForgetPasswordActivity extends BaseActivity implements View.OnClick
 
         webView.loadUrl(baseUrl);
     }
+
     @Override
     public void openFileChooserCallBack(ValueCallback<Uri> uploadMsg, String acceptType) {
 

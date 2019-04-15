@@ -50,7 +50,7 @@ public class UserManageNewDataBean {
 
 
     //private boolean giveBookBtnPermission;
-   // private List<UserManageDataBean> list;
+    // private List<UserManageDataBean> list;
 
 
 }

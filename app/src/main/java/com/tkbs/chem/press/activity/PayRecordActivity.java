@@ -115,7 +115,7 @@ public class PayRecordActivity extends BaseActivity implements View.OnClickListe
         public Fragment getFragmentForPage(int position) {
             PayRecordItemFragment textFragment = new PayRecordItemFragment();
             Bundle bundle = new Bundle();
-            bundle.putInt("orderState",position);
+            bundle.putInt("orderState", position);
             textFragment.setArguments(bundle);
             return textFragment;
 

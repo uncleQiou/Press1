@@ -80,7 +80,7 @@ public class SampleBookListFragment extends BaseFragment {
 
     private void getSampleBookList(final boolean isRefresh) {
         showProgressDialog();
-        addSubscription(apiStores.SampleBookList(guid,page), new ApiCallback<HttpResponse<ArrayList<GiveBookListBean>>>() {
+        addSubscription(apiStores.SampleBookList(guid, page), new ApiCallback<HttpResponse<ArrayList<GiveBookListBean>>>() {
             @Override
             public void onSuccess(HttpResponse<ArrayList<GiveBookListBean>> model) {
                 if (model.isStatus()) {
@@ -161,12 +161,12 @@ public class SampleBookListFragment extends BaseFragment {
             public void setData(GiveBookListBean data) {
                 super.setData(data);
                 tv_date.setText(TimeUtils.getTime(data.getTime_limit()));
-                tv_book_price.setText("￥"+data.getPrice());
+                tv_book_price.setText("￥" + data.getPrice());
                 tv_book_name.setText(data.getTitle());
                 //  状态  data.getTime_limit() 判断
-                if (System.currentTimeMillis() > data.getTime_limit()){
+                if (System.currentTimeMillis() > data.getTime_limit()) {
                     tv_book_state.setText(R.string.expired);
-                }else {
+                } else {
                     tv_book_state.setText(R.string.in_deadline);
                 }
 

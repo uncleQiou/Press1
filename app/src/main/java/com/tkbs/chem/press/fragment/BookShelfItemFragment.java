@@ -175,7 +175,6 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
             }
         });
         String values = getArguments().getString("111");
-//        recycler_bookshelf.getNoMoreView().setText(values);
         recycler_bookshelf.getNoMoreView().setText(R.string.no_more_data);
         timeOrder = Config.SORT_UP;
         changeTextColor();

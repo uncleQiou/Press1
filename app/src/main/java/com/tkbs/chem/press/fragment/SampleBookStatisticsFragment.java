@@ -448,6 +448,7 @@ public class SampleBookStatisticsFragment extends BaseFragment implements View.O
         barChart.setHighlightPerDragEnabled(false);
         barChart.notifyDataSetChanged();
     }
+
     public void showTeaBarChart(BarChart barChart, List<StatisticsCoordinateDataBean> dateValueList, String name, int color) {
         ArrayList<BarEntry> entries = new ArrayList<>();
         for (int i = 0; i < dateValueList.size(); i++) {

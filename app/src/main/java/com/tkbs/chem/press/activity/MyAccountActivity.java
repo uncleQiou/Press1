@@ -92,8 +92,8 @@ public class MyAccountActivity extends BaseActivity implements View.OnClickListe
                 break;
             case R.id.tv_recharge:
                 int user_type = preference.getInt(Config.MEMBER_TYPE, 3);
-                if (user_type == 5){
-                    startActivityForResult(new Intent(MyAccountActivity.this, LoginActivity.class),Config.ACCOUNT_SWITCHING);
+                if (user_type == 5) {
+                    startActivityForResult(new Intent(MyAccountActivity.this, LoginActivity.class), Config.ACCOUNT_SWITCHING);
                 } else {
                     startActivity(new Intent(MyAccountActivity.this, RechargeActivity.class));
                     finish();

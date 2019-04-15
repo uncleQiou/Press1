@@ -145,9 +145,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 case 1:
                     String uId = (String) msg.obj;
                     Logger.e("UID:" + uId);
-                    if (bingType.equals("qq")){
+                    if (bingType.equals("qq")) {
                         loginWeQQ(uId);
-                    }else {
+                    } else {
                         loginWeChat(uId);
                     }
                     break;
@@ -754,6 +754,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             }
         });
     }
+
     /**
      * QQ三方登陆
      */

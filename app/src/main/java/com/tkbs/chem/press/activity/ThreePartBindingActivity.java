@@ -80,7 +80,7 @@ public class ThreePartBindingActivity extends BaseActivity implements View.OnCli
         switch (view.getId()) {
             case R.id.back:
                 bindingWeb.loadUrl("javascript:disSmsInterval()");
-               finish();
+                finish();
                 break;
             default:
                 break;
@@ -178,6 +178,7 @@ public class ThreePartBindingActivity extends BaseActivity implements View.OnCli
         }
         super.onDestroy();
     }
+
     @Override
     public void openFileChooserCallBack(ValueCallback<Uri> uploadMsg, String acceptType) {
 
@@ -198,6 +199,7 @@ public class ThreePartBindingActivity extends BaseActivity implements View.OnCli
             }
         }
     }
+
     private String result;
 
     private class RegisterInterface {

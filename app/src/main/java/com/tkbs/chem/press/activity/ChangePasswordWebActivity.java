@@ -166,6 +166,7 @@ public class ChangePasswordWebActivity extends BaseActivity implements View.OnCl
         }
         super.onDestroy();
     }
+
     private class ChangePasswordInterface {
 
         ChangePasswordInterface() {

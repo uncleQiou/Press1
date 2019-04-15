@@ -93,7 +93,7 @@ public class MineTeacherFragment extends BaseFragment implements View.OnClickLis
         int user_type = preference.getInt(Config.MEMBER_TYPE, 3);
         if (user_type == 5) {
             tv_go_login.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             tv_go_login.setVisibility(View.GONE);
         }
     }

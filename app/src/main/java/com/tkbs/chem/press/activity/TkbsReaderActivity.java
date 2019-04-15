@@ -227,6 +227,7 @@ public class TkbsReaderActivity extends BaseActivity implements View.OnClickList
         // 记录当前滑动的值
         seekIndex = progress;
     }
+
     /**
      * 开始拖动
      */
@@ -234,6 +235,7 @@ public class TkbsReaderActivity extends BaseActivity implements View.OnClickList
     public void onStartTrackingTouch(SeekBar seekBar) {
         seekIndex = seekBar.getProgress();
     }
+
     /**
      * 停止拖动
      */
@@ -424,7 +426,7 @@ public class TkbsReaderActivity extends BaseActivity implements View.OnClickList
                 showProgressDialog();
                 err_url = url;
                 imgRefresh.setVisibility(View.GONE);
-                handler.sendEmptyMessageDelayed(1000,60000);
+                handler.sendEmptyMessageDelayed(1000, 60000);
             }
 
             @Override

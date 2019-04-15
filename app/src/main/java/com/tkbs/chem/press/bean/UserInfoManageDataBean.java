@@ -29,7 +29,6 @@ public class UserInfoManageDataBean {
     //课程
 
 
-
     public String getRealName() {
         return realName;
     }

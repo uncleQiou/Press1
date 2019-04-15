@@ -8,7 +8,7 @@ import java.util.List;
 public class BookCityDataBean {
 
     private BookCityResCatagory resCatagory;
-//    private BookCityResDocument resDocuments;
+    //    private BookCityResDocument resDocuments;
     private List<BookCityResultDataList> resultDataList;
 
     public BookCityResCatagory getResCatagory() {

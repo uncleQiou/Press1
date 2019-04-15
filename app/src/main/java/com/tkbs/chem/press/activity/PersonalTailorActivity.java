@@ -166,8 +166,9 @@ public class PersonalTailorActivity extends BaseActivity implements View.OnClick
 
             return user;
         }
+
         @JavascriptInterface
-        public void settingDone(){
+        public void settingDone() {
             // 个人定制设置完成 跳转到书城
             EventBus.getDefault().post(new MessageEvent("Refresh"));
             setResult(RESULT_OK);

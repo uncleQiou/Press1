@@ -390,45 +390,47 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
     /**
      * 修改排序字体颜色
      */
-    private void changeTextColor(int flg){
+    private void changeTextColor(int flg) {
 
-        if (flg == 0){
+        if (flg == 0) {
             // 时间排序
             imgSortTime.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down : R.mipmap.bookshelf_icon_up);
-            setTextColor(tvSortTime,1);
-            setTextColor(tvSortHot,0);
-            setTextColor(tvSortBookName,0);
-            setTextColor(tvSortState,0);
-        }else if (flg == 1){
+            setTextColor(tvSortTime, 1);
+            setTextColor(tvSortHot, 0);
+            setTextColor(tvSortBookName, 0);
+            setTextColor(tvSortState, 0);
+        } else if (flg == 1) {
             // 姓名排序
             imgSortTime.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down_black : R.mipmap.bookshelf_icon_up_black);
-            setTextColor(tvSortTime,0);
-            setTextColor(tvSortHot,1);
-            setTextColor(tvSortBookName,0);
-            setTextColor(tvSortState,0);
-        }else if (flg == 2){
+            setTextColor(tvSortTime, 0);
+            setTextColor(tvSortHot, 1);
+            setTextColor(tvSortBookName, 0);
+            setTextColor(tvSortState, 0);
+        } else if (flg == 2) {
 
-            setTextColor(tvSortTime,0);
-            setTextColor(tvSortHot,0);
-            setTextColor(tvSortBookName,1);
-            setTextColor(tvSortState,0);
-        }else if (flg == 3){
+            setTextColor(tvSortTime, 0);
+            setTextColor(tvSortHot, 0);
+            setTextColor(tvSortBookName, 1);
+            setTextColor(tvSortState, 0);
+        } else if (flg == 3) {
             imgSortTime.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down_black : R.mipmap.bookshelf_icon_up_black);
-            setTextColor(tvSortTime,0);
-            setTextColor(tvSortHot,0);
-            setTextColor(tvSortBookName,0);
-            setTextColor(tvSortState,1);
+            setTextColor(tvSortTime, 0);
+            setTextColor(tvSortHot, 0);
+            setTextColor(tvSortBookName, 0);
+            setTextColor(tvSortState, 1);
         }
 
     }
-    private void setTextColor(TextView textView,int flg){
-        if (flg == 0){
-            textView.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.text_main_6));
-        }else {
-            textView.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.apply_violet));
+
+    private void setTextColor(TextView textView, int flg) {
+        if (flg == 0) {
+            textView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.text_main_6));
+        } else {
+            textView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.apply_violet));
         }
 
     }
+
     /**
      * 一键审核
      */

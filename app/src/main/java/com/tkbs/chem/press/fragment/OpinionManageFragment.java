@@ -277,10 +277,10 @@ public class OpinionManageFragment extends BaseFragment implements View.OnClickL
             @Override
             public void setData(final OpinionManageBean data) {
                 super.setData(data);
-                tv_opinion_content.setText("    "+data.getContent());
+                tv_opinion_content.setText("    " + data.getContent());
                 tv_opinion_who.setText(data.getCreateUser());
                 tv_opinion_title.setText(data.getCreateDate());
-                tv_reply.setText("回复" );
+                tv_reply.setText("回复");
                 tv_reply.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -292,7 +292,7 @@ public class OpinionManageFragment extends BaseFragment implements View.OnClickL
                         ed_reply.setFocusableInTouchMode(true);
                         ed_reply.requestFocus();
                         InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.showSoftInput(ed_reply,0);
+                        imm.showSoftInput(ed_reply, 0);
                     }
                 });
 

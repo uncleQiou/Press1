@@ -73,7 +73,7 @@ public class SBookAllStatisticsDataBena {
     }
 
 
-    public class ProgressBarData{
+    public class ProgressBarData {
 
         /**
          * total : 321

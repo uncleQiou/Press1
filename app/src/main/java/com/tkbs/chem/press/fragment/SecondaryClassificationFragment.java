@@ -80,8 +80,6 @@ public class SecondaryClassificationFragment extends BaseFragment {
                 getClassifyData(true);
             }
         });
-//        String values = getArguments().getString("111");
-//        recycler.getNoMoreView().setText(values);
         recycler.getNoMoreView().setText("没有更多数据了");
     }
 

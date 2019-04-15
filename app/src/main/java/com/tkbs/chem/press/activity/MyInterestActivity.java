@@ -46,6 +46,7 @@ public class MyInterestActivity extends BaseActivity implements View.OnClickList
     WebView interesrWeb;
     private String baseUrl = Config.API_SERVER + "hello/interest.html";
     private String strInterest;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -184,8 +185,9 @@ public class MyInterestActivity extends BaseActivity implements View.OnClickList
             strInterest = result;
             finish();
         }
+
         @JavascriptInterface
-        public String getMyInterest(){
+        public String getMyInterest() {
             return strInterest;
         }
 

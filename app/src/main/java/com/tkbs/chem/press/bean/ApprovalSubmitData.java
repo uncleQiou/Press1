@@ -11,9 +11,9 @@ public class ApprovalSubmitData {
     private String content;
     private String guid;
     // 几个月
-    private int  limitTime;
+    private int limitTime;
     // 0 通过
-    private int isPass ;
+    private int isPass;
 
     public int getIsPass() {
         return isPass;

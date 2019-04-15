@@ -44,7 +44,7 @@ public class ChartDemoActivity extends BaseActivity {
     LineChart lineChart;
     @BindView(R.id.barChart)
     BarChart barChart;
-    private  List<BarChartBean.StFinDateBean.VtDateValueBean> dateValueList;
+    private List<BarChartBean.StFinDateBean.VtDateValueBean> dateValueList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,8 +132,8 @@ public class ChartDemoActivity extends BaseActivity {
 
         rightAxis.setEnabled(false);
         //保证Y轴从0开始，不然会上移一点
-         leftAxis.setAxisMinimum(0f);
-         rightAxis.setAxisMinimum(0f);
+        leftAxis.setAxisMinimum(0f);
+        rightAxis.setAxisMinimum(0f);
 
         /***折线图例 标签 设置***/
         legend = barChart.getLegend();

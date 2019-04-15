@@ -198,7 +198,7 @@ public class PayRecordItemFragment extends BaseFragment implements View.OnClickL
         addSubscription(apiStores.deleteOrder(guid), new ApiCallback<HttpResponse<Object>>() {
             @Override
             public void onSuccess(HttpResponse<Object> model) {
-                if (model.isStatus()){
+                if (model.isStatus()) {
                     toastShow(R.string.delete_order);
                     recycler_pay_record.post(new Runnable() {
                         @Override
@@ -208,7 +208,7 @@ public class PayRecordItemFragment extends BaseFragment implements View.OnClickL
                             getData(true);
                         }
                     });
-                }else {
+                } else {
                     toastShow(model.getErrorDescription());
                 }
 
@@ -282,37 +282,39 @@ public class PayRecordItemFragment extends BaseFragment implements View.OnClickL
     /**
      * 修改排序字体颜色
      */
-    private void changeTextColor(int flg){
+    private void changeTextColor(int flg) {
 
-        if (flg == 0){
+        if (flg == 0) {
             // 时间排序
             img_sort_time.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down : R.mipmap.bookshelf_icon_up);
-            setTextColor(tv_sort_time,1);
-            setTextColor(tv_sort_book_name,0);
-            setTextColor(tv_sort_hot,0);
-        }else if (flg == 1){
+            setTextColor(tv_sort_time, 1);
+            setTextColor(tv_sort_book_name, 0);
+            setTextColor(tv_sort_hot, 0);
+        } else if (flg == 1) {
             // 姓名排序
-            setTextColor(tv_sort_time,0);
-            setTextColor(tv_sort_book_name,1);
-            setTextColor(tv_sort_hot,0);
+            setTextColor(tv_sort_time, 0);
+            setTextColor(tv_sort_book_name, 1);
+            setTextColor(tv_sort_hot, 0);
             img_sort_time.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down_black : R.mipmap.bookshelf_icon_up_black);
-        }else if (flg == 2){
+        } else if (flg == 2) {
 
-            setTextColor(tv_sort_time,0);
-            setTextColor(tv_sort_book_name,0);
-            setTextColor(tv_sort_hot,1);
+            setTextColor(tv_sort_time, 0);
+            setTextColor(tv_sort_book_name, 0);
+            setTextColor(tv_sort_hot, 1);
             img_sort_time.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down_black : R.mipmap.bookshelf_icon_up_black);
         }
 
     }
-    private void setTextColor(TextView textView,int flg){
-        if (flg == 0){
-            textView.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.text_main_6));
-        }else {
-            textView.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.apply_violet));
+
+    private void setTextColor(TextView textView, int flg) {
+        if (flg == 0) {
+            textView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.text_main_6));
+        } else {
+            textView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.apply_violet));
         }
 
     }
+
     /**
      * 按时间排序 升序
      */
@@ -456,12 +458,12 @@ public class PayRecordItemFragment extends BaseFragment implements View.OnClickL
                     tv_go_pay.setVisibility(View.VISIBLE);
                     tv_delete_order.setVisibility(View.VISIBLE);
                 }
-                tv_book_value.setText("消费金额:"+data.getPay_price() + "CIP币");
-                tv_order_date.setText("购买时间:"+TimeUtils.getTime(data.getCreate_date()));
+                tv_book_value.setText("消费金额:" + data.getPay_price() + "CIP币");
+                tv_order_date.setText("购买时间:" + TimeUtils.getTime(data.getCreate_date()));
                 tv_delete_order.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if (data.getPay_state() == 10 || data.getPay_state() == 30){
+                        if (data.getPay_state() == 10 || data.getPay_state() == 30) {
                             deleteOrder(data.getOrderGuid());
                         }
                     }
@@ -530,6 +532,7 @@ public class PayRecordItemFragment extends BaseFragment implements View.OnClickL
     };
 
     private String payGuid;
+
     /**
      * 获取充值配置
      */

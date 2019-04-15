@@ -65,7 +65,7 @@ public class TeacherInforFragment extends BaseFragment {
 
         @Override
         public void afterTextChanged(Editable editable) {
-            if (isSoftShowing(getActivity())){
+            if (isSoftShowing(getActivity())) {
                 if (delayRun != null) {
                     //每次editText有变化的时候，则移除上次发出的延迟线程
                     handler.removeCallbacks(delayRun);
@@ -132,7 +132,7 @@ public class TeacherInforFragment extends BaseFragment {
         });
     }
 
-    private void setTeaInfo(){
+    private void setTeaInfo() {
         showProgressDialog();
         UpdateTeacherInfoBean updateTeacherInfoBean = new UpdateTeacherInfoBean();
         updateTeacherInfoBean.setGuid(guid);
@@ -169,6 +169,7 @@ public class TeacherInforFragment extends BaseFragment {
             }
         });
     }
+
     private void getUserInfo(String guid) {
         showProgressDialog();
         addSubscription(apiStores.UserDetail(guid), new ApiCallback<HttpResponse<UserInfoManageDataBean>>() {
@@ -208,6 +209,7 @@ public class TeacherInforFragment extends BaseFragment {
 
     /**
      * 判断软键盘是否显示方法
+     *
      * @param activity
      * @return
      */
@@ -221,11 +223,12 @@ public class TeacherInforFragment extends BaseFragment {
         activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(rect);
         //考虑到虚拟导航栏的情况（虚拟导航栏情况下：screenHeight = rect.bottom + 虚拟导航栏高度）
         //选取screenHeight*2/3进行判断
-        return screenHeight*2/3 > rect.bottom+getSoftButtonsBarHeight(activity);
+        return screenHeight * 2 / 3 > rect.bottom + getSoftButtonsBarHeight(activity);
     }
 
     /**
      * 底部虚拟按键栏的高度
+     *
      * @return
      */
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)

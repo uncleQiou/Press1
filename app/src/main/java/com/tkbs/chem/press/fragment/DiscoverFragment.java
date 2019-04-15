@@ -162,9 +162,10 @@ public class DiscoverFragment extends BaseFragment {
 
     /**
      * 阅读消息
+     *
      * @param guidMsg
      */
-    private void readMessage(String guidMsg){
+    private void readMessage(String guidMsg) {
         showProgressDialog();
         addSubscription(apiStores.readMessage(guidMsg), new ApiCallback<HttpResponse<Object>>() {
             @Override
@@ -246,11 +247,11 @@ public class DiscoverFragment extends BaseFragment {
                 super.setData(data);
                 tv_message_date.setText(TimeUtils.getTime(data.getCreateDate()));
                 tv_message_content.setText(data.getContent());
-                img_unread.setVisibility(data.getState() == 1?View.VISIBLE:View.GONE);
-                if (data.getMessageType() == 1 || data.getMessageType() == 9 ){
+                img_unread.setVisibility(data.getState() == 1 ? View.VISIBLE : View.GONE);
+                if (data.getMessageType() == 1 || data.getMessageType() == 9) {
                     img_unread.setVisibility(View.GONE);
                     ll_click_check.setVisibility(View.GONE);
-                }else {
+                } else {
                     ll_click_check.setVisibility(View.VISIBLE);
                 }
 //                if (data.getState() == 1){
@@ -296,19 +297,19 @@ public class DiscoverFragment extends BaseFragment {
                     Intent intent = new Intent(getActivity(), BookDetailActivity.class);
                     intent.putExtra("guid", data.getRelationGuid());
                     context.startActivity(intent);
-                }else if (messageType == 8){
+                } else if (messageType == 8) {
                     // 跳转图书详情
                     Intent intent = new Intent(getActivity(), BookDetailActivity.class);
                     intent.putExtra("guid", data.getRelationGuid());
                     context.startActivity(intent);
-                } else if (messageType == 1){
+                } else if (messageType == 1) {
 
-                } else if(messageType == 6){
+                } else if (messageType == 6) {
                     //6用户管理-用户详情页
 
                     getUserData(data.getRelationGuid(), messageType);
 
-                }else if(messageType == 7){
+                } else if (messageType == 7) {
                     //7样书管理-当前用户的审批页
                     getUserData(data.getRelationGuid(), messageType);
                 }

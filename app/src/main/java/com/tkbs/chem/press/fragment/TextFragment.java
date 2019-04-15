@@ -13,6 +13,7 @@ import com.tkbs.chem.press.util.UiUtils;
  */
 public class TextFragment extends BaseFragment {
     private TextView tv_view;
+
     @Override
     protected void onCreateViewLazy(Bundle savedInstanceState) {
         super.onCreateViewLazy(savedInstanceState);

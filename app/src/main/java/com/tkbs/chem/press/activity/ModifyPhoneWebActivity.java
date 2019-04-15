@@ -42,6 +42,7 @@ public class ModifyPhoneWebActivity extends BaseActivity implements View.OnClick
     @BindView(R.id.web_view)
     WebView webView;
     private String baseUrl = Config.API_SERVER + "hello/change_phone.html";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +62,7 @@ public class ModifyPhoneWebActivity extends BaseActivity implements View.OnClick
     protected void initTitle() {
         title.setText(R.string.modify_phone_title);
     }
+
     @OnClick({R.id.back})
     @Override
     public void onClick(View view) {
@@ -73,6 +75,7 @@ public class ModifyPhoneWebActivity extends BaseActivity implements View.OnClick
                 break;
         }
     }
+
     private void initWeb() {
         WebSettings setting = webView.getSettings();
         //允许加载javascript
@@ -135,6 +138,7 @@ public class ModifyPhoneWebActivity extends BaseActivity implements View.OnClick
 
         webView.loadUrl(baseUrl);
     }
+
     @Override
     public void openFileChooserCallBack(ValueCallback<Uri> uploadMsg, String acceptType) {
 
@@ -207,6 +211,7 @@ public class ModifyPhoneWebActivity extends BaseActivity implements View.OnClick
 
 
     }
+
     /**
      * 检查用户是否是黑名单用户
      */

@@ -47,7 +47,7 @@ public class SecondaryClassificationActivity extends BaseActivity implements Vie
     private String guid = "";
     private String titleStr = "";
     private ArrayList<BookCityResCatagory> indicatorData;
-    private  int currentItemIndex;
+    private int currentItemIndex;
 
 
     @Override
@@ -67,7 +67,7 @@ public class SecondaryClassificationActivity extends BaseActivity implements Vie
         // 获取indicator数据
         guid = getIntent().getStringExtra("guid");
         titleStr = getIntent().getStringExtra("title");
-        currentItemIndex = getIntent().getIntExtra("index",0);
+        currentItemIndex = getIntent().getIntExtra("index", 0);
         getIndicatorData();
         viewIndicator.setScrollBar(new ColorBar(getApplicationContext(), getResources().getColor(R.color.hg_app_main_color), 2));
         viewIndicator.setOnTransitionListener(
@@ -85,7 +85,7 @@ public class SecondaryClassificationActivity extends BaseActivity implements Vie
                 if (model.isStatus()) {
                     indicatorData = model.getData();
                     indicatorViewPager.setAdapter(new MyAdapter(getSupportFragmentManager()));
-                    indicatorViewPager.setCurrentItem(currentItemIndex,true);
+                    indicatorViewPager.setCurrentItem(currentItemIndex, true);
 
                 } else {
                     toastShow(model.getErrorDescription());

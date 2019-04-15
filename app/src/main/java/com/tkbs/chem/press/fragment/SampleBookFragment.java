@@ -152,8 +152,9 @@ public class SampleBookFragment extends BaseFragment implements View.OnClickList
     }
 
     private String searchKey = "";
+
     private void getSampleBookList(final boolean isRefresh) {
-        addSubscription(apiStores.SampleBookManageList(page, timeOrder, titleOrder,searchKey), new ApiCallback<HttpResponse<ArrayList<SampleBookManageDataBean>>>() {
+        addSubscription(apiStores.SampleBookManageList(page, timeOrder, titleOrder, searchKey), new ApiCallback<HttpResponse<ArrayList<SampleBookManageDataBean>>>() {
             @Override
             public void onSuccess(HttpResponse<ArrayList<SampleBookManageDataBean>> model) {
                 if (model.isStatus()) {
@@ -186,7 +187,7 @@ public class SampleBookFragment extends BaseFragment implements View.OnClickList
 
             @Override
             public void onFinish() {
-                if (searchKey.length()>0){
+                if (searchKey.length() > 0) {
                     searchKey = "";
                 }
             }
@@ -249,7 +250,7 @@ public class SampleBookFragment extends BaseFragment implements View.OnClickList
                 ed_reply.setFocusableInTouchMode(true);
                 ed_reply.requestFocus();
                 InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.showSoftInput(ed_reply,0);
+                imm.showSoftInput(ed_reply, 0);
                 break;
             case R.id.ed_search:
                 ll_reply_layot.setVisibility(View.VISIBLE);
@@ -258,7 +259,7 @@ public class SampleBookFragment extends BaseFragment implements View.OnClickList
                 ed_reply.setFocusableInTouchMode(true);
                 ed_reply.requestFocus();
                 InputMethodManager imm1 = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm1.showSoftInput(ed_reply,0);
+                imm1.showSoftInput(ed_reply, 0);
                 break;
             case R.id.ll_search:
                 getActivity().startActivity(new Intent(getActivity(), SearchActivity.class));
@@ -353,21 +354,22 @@ public class SampleBookFragment extends BaseFragment implements View.OnClickList
     /**
      * 修改排序字体颜色
      */
-    private void changeTextColor(){
+    private void changeTextColor() {
 
-        if (titleOrder == Config.SORT_NOONE){
+        if (titleOrder == Config.SORT_NOONE) {
             // 时间排序
             img_sort_time.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down : R.mipmap.bookshelf_icon_up);
-            tv_sort_time.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.apply_violet));
-            tv_sort_book_name.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.text_main_6));
-        }else {
+            tv_sort_time.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.apply_violet));
+            tv_sort_book_name.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.text_main_6));
+        } else {
             // 姓名排序
             img_sort_time.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down_black : R.mipmap.bookshelf_icon_up_black);
-            tv_sort_time.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.text_main_6));
-            tv_sort_book_name.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.apply_violet));
+            tv_sort_time.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.text_main_6));
+            tv_sort_book_name.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.apply_violet));
         }
 
     }
+
     /**
      * 按状态进行排序
      */
