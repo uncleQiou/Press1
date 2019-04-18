@@ -1085,7 +1085,6 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
                     } else {
                         dismissProgressDialog();
                         downLoadBook(model.getData(), bookId);
-//                        toastShow(model.getData());
                     }
 
                 } else {
@@ -1120,6 +1119,9 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
             // 已经下载 直接阅读
             toastShow("已经下载 直接阅读");
             return;
+        }else {
+            // 添加下载记录
+            addDownLoadNote(bookId);
         }
         Call<ResponseBody> call = apiStores.downloadFileWithUrl(filePathStr);
         showProgressDialog("下载中...");
@@ -1165,6 +1167,32 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
         });
 
 
+    }
+
+    /**
+     * 添加下载记录
+     */
+    private void addDownLoadNote(String bookId) {
+        //showProgressDialog();
+        addSubscription(apiStores.DownLoadNote(bookId), new ApiCallback<HttpResponse<Object>>() {
+            @Override
+            public void onSuccess(HttpResponse<Object> model) {
+                if (model.isStatus()) {
+                } else {
+                    toastShow(model.getErrorDescription());
+                }
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                toastShow(msg);
+            }
+
+            @Override
+            public void onFinish() {
+                dismissProgressDialog();
+            }
+        });
     }
 
     /**

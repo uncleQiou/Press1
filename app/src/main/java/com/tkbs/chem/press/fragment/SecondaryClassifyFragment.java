@@ -424,6 +424,9 @@ public class SecondaryClassifyFragment extends BaseFragment implements View.OnCl
             @Override
             public void onItemViewClick(ThreeClassifyDataBena data) {
                 super.onItemViewClick(data);
+                Intent intent = new Intent(context, BookDetailActivity.class);
+                intent.putExtra("guid", data.getGuid());
+                context.startActivity(intent);
 
             }
         }

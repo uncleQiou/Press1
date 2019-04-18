@@ -497,7 +497,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         // 提醒信息的背景颜色，自己设置
         badge1.setBackgroundResource(R.mipmap.red_point);
         //设置背景图片
-        badge1.setTextSize(12);
+        badge1.setTextSize(10);
         // 文本大小
         badge1.setBadgeMargin(40, 15);
         // 水平和竖直方向的间距

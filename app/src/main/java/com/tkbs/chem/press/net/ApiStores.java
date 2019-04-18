@@ -683,6 +683,11 @@ public interface ApiStores {
     @POST("share/info/{guid}")
     Observable<HttpResponse<ShareDataBean>> ObtainShareData (@Path("guid") String  guid);
     /**
+     * 添加下载记录
+     */
+    @POST("read/downloadResource/{documentGuid} ")
+    Observable<HttpResponse<Object>> DownLoadNote (@Path("documentGuid") String  guid);
+    /**
      * 删除订单
      */
     @POST("order/deleteOrder/{guid}")

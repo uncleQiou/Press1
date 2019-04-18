@@ -305,7 +305,7 @@ public class NewsActivity extends BaseActivity implements View.OnClickListener {
                     img_unread.setVisibility(View.GONE);
                 }
                 if (data.getMessageType() == 1 || data.getMessageType() == 9) {
-                    img_unread.setVisibility(View.GONE);
+//                    img_unread.setVisibility(View.GONE);
                     ll_details.setVisibility(View.GONE);
                 } else {
 //                    img_unread.setVisibility(View.VISIBLE);

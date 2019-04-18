@@ -158,7 +158,7 @@ public class BadgeView extends AppCompatTextView {
 
         } else {
 
-            // TODO verify that parent is indeed a ViewGroup
+            //  verify that parent is indeed a ViewGroup
             ViewGroup group = (ViewGroup) parent;
             int index = group.indexOfChild(target);
 

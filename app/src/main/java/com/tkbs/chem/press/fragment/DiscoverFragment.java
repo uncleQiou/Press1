@@ -249,7 +249,7 @@ public class DiscoverFragment extends BaseFragment {
                 tv_message_content.setText(data.getContent());
                 img_unread.setVisibility(data.getState() == 1 ? View.VISIBLE : View.GONE);
                 if (data.getMessageType() == 1 || data.getMessageType() == 9) {
-                    img_unread.setVisibility(View.GONE);
+//                    img_unread.setVisibility(View.GONE);
                     ll_click_check.setVisibility(View.GONE);
                 } else {
                     ll_click_check.setVisibility(View.VISIBLE);
