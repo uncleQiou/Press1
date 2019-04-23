@@ -29,6 +29,7 @@ import com.tkbs.chem.press.bean.ThreeClassifyDataBena;
 import com.tkbs.chem.press.net.ApiCallback;
 import com.tkbs.chem.press.util.Config;
 import com.tkbs.chem.press.util.SPManagement;
+import com.tkbs.chem.press.util.TimeUtils;
 
 import java.text.Collator;
 import java.text.RuleBasedCollator;
@@ -595,7 +596,7 @@ public class SearchResultActivity extends BaseActivity implements View.OnClickLi
                 tv_book_name.setText(data.getTitle());
                 tv_book_price.setText("￥" + data.getPrice());
                 tv_book_author.setText(data.getAuthor());
-                tv_book_endtime.setText(String.format(getResources().getString(R.string.book_publish_time), data.getPublishTime()));
+                tv_book_endtime.setText(String.format(getResources().getString(R.string.book_publish_time), TimeUtils.getTime(data.getPublishTime())));
                 Glide.with(SearchResultActivity.this).load(data.getCover())
                         .apply(BaseApplication.options)
                         .into(bookshelf_cover);

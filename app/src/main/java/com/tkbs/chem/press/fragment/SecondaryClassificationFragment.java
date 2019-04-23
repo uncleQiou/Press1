@@ -39,6 +39,7 @@ public class SecondaryClassificationFragment extends BaseFragment {
     private Handler mHandler;
     private MyAdapter myAdapter;
     private String guid;
+    private int interestType;
 
     @Override
     protected View getPreviewLayout(LayoutInflater inflater, ViewGroup container) {
@@ -51,6 +52,7 @@ public class SecondaryClassificationFragment extends BaseFragment {
 
         setContentView(R.layout.fragment_secondary_classification);
         guid = getArguments().getString("Type");
+        interestType = getArguments().getInt("INTERESTTYPE");
         mHandler = new Handler();
         myAdapter = new MyAdapter(getActivity());
         recycler = (RefreshRecyclerView) findViewById(R.id.recycler);
@@ -85,39 +87,76 @@ public class SecondaryClassificationFragment extends BaseFragment {
 
     private void getClassifyData(final boolean isRefresh) {
 //        showProgressDialog();
-        addSubscription(apiStores.SecondClassifyData(guid, page), new ApiCallback<HttpResponse<ArrayList<SecondClassifyDataBean>>>() {
-            @Override
-            public void onSuccess(HttpResponse<ArrayList<SecondClassifyDataBean>> model) {
-                if (model.isStatus()) {
-                    if (isRefresh) {
-                        page = 1;
-                        myAdapter.clear();
-                        myAdapter.addAll(model.getData());
-                        recycler.dismissSwipeRefresh();
-                        recycler.getRecyclerView().scrollToPosition(0);
+        if (interestType == 1) {
+            addSubscription(apiStores.SecondClassifyInterestData(guid, page), new ApiCallback<HttpResponse<ArrayList<SecondClassifyDataBean>>>() {
+                @Override
+                public void onSuccess(HttpResponse<ArrayList<SecondClassifyDataBean>> model) {
+                    if (model.isStatus()) {
+                        if (isRefresh) {
+                            page = 1;
+                            myAdapter.clear();
+                            myAdapter.addAll(model.getData());
+                            recycler.dismissSwipeRefresh();
+                            recycler.getRecyclerView().scrollToPosition(0);
+                        } else {
+                            myAdapter.addAll(model.getData());
+                        }
+                        if (model.getData().size() < 10) {
+                            recycler.showNoMore();
+                        }
                     } else {
-                        myAdapter.addAll(model.getData());
+                        recycler.dismissSwipeRefresh();
+                        toastShow(model.getErrorDescription());
                     }
-                    if (model.getData().size() < 10) {
-                        recycler.showNoMore();
-                    }
-                } else {
-                    recycler.dismissSwipeRefresh();
-                    toastShow(model.getErrorDescription());
+
                 }
 
-            }
+                @Override
+                public void onFailure(String msg) {
+                    toastShow(msg);
+                }
 
-            @Override
-            public void onFailure(String msg) {
-                toastShow(msg);
-            }
+                @Override
+                public void onFinish() {
+                    dismissProgressDialog();
+                }
+            });
+        } else {
+            addSubscription(apiStores.SecondClassifyData(guid, page), new ApiCallback<HttpResponse<ArrayList<SecondClassifyDataBean>>>() {
+                @Override
+                public void onSuccess(HttpResponse<ArrayList<SecondClassifyDataBean>> model) {
+                    if (model.isStatus()) {
+                        if (isRefresh) {
+                            page = 1;
+                            myAdapter.clear();
+                            myAdapter.addAll(model.getData());
+                            recycler.dismissSwipeRefresh();
+                            recycler.getRecyclerView().scrollToPosition(0);
+                        } else {
+                            myAdapter.addAll(model.getData());
+                        }
+                        if (model.getData().size() < 10) {
+                            recycler.showNoMore();
+                        }
+                    } else {
+                        recycler.dismissSwipeRefresh();
+                        toastShow(model.getErrorDescription());
+                    }
 
-            @Override
-            public void onFinish() {
-                dismissProgressDialog();
-            }
-        });
+                }
+
+                @Override
+                public void onFailure(String msg) {
+                    toastShow(msg);
+                }
+
+                @Override
+                public void onFinish() {
+                    dismissProgressDialog();
+                }
+            });
+        }
+
 
     }
 

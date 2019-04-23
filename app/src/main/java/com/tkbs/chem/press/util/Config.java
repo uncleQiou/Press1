@@ -12,11 +12,11 @@ public class Config {
     /**
      * 105
      */
-//    public static String API_SERVER = "http://192.168.1.105:8281/app/";
+    public static String API_SERVER = "http://192.168.1.105:8281/app/";
     /**
      *si tao
      */
-    public static String API_SERVER = "http://192.168.1.106:8281/app/";
+//    public static String API_SERVER = "http://192.168.1.106:8281/app/";
 
 
     /**
@@ -79,7 +79,7 @@ public class Config {
      */
     public static final String CIP_FILE_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "CIP" + File.separator;
 
-    //// KEY为自定义秘钥
+    // KEY为自定义秘钥
     public static final String SMS_CUSTOM_KEY = "smsCustomKey";
 
     // 试读页数
@@ -88,6 +88,8 @@ public class Config {
     // 资源加密密钥
     public static String SUBJECT_ENCRYPT_KEY = "1234567890";
     public static String FILE_KEY = "12345678";
+    // 定制 guid
+    public static String CUSTOM_GUID = "09E61F4071964458B963BB9764FD5835";
 
     /**
      * 正序

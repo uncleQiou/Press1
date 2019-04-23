@@ -27,6 +27,7 @@ public class SampleBookItemDataBean {
      */
 
     private String shortdocno;
+    private String longdocno;
     private String author;
     private String publish_time;
     private double price;
@@ -40,6 +41,14 @@ public class SampleBookItemDataBean {
     private boolean isChecked;
     private String pagenum;
     private String time_limit;
+
+    public String getLongdocno() {
+        return longdocno;
+    }
+
+    public void setLongdocno(String longdocno) {
+        this.longdocno = longdocno;
+    }
 
     public String getPagenum() {
         return pagenum;

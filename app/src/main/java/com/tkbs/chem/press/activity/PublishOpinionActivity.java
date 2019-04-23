@@ -60,7 +60,6 @@ public class PublishOpinionActivity extends BaseActivity implements View.OnClick
                 finish();
                 break;
             case R.id.tv_submit:
-                toastShow(edOpinion.getText().toString().trim());
                 String content = edOpinion.getText().toString().trim();
                 if (content.length() > 0) {
                     addCommentOpinion(content);

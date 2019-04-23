@@ -182,6 +182,7 @@
     <string name="copyright_str">Copyright©2018 \n化学工业出版社,All Rights Reserved.</string>
     <string name="have_download">已下载</string>
     <string name="bookshelf_page">页数：%1$S 页</string>
+    <string name="bookshelf_isbn">ISBN：%1$S </string>
     <string name="bookshelf_limit">截止时间：%1$S</string>
     <string name="save_modify">设置成功</string>
     <string name="binding_phone">绑定手机号</string>

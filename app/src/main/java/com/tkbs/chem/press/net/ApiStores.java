@@ -709,6 +709,24 @@ public interface ApiStores {
     @POST("mmMember/updateMemberBySaleMan")
     Observable<HttpResponse<Object>> setTesInfo (@Body RequestBody body);
 
+    /**
+     * 书城二级页面Indicator数据
+     *
+     * @return
+     */
+    @POST("resDocument/customizationInterestTwo/{guid}")
+    Observable<HttpResponse<ArrayList<BookCityResCatagory>>> SecdClasIndicatorInterest(@Path("guid") String guid);
+
+    /**
+     * 书城兴趣二级页面
+     *
+     * @param
+     * @return
+     */
+    @POST("resDocument/customizationInterest/{guid}/{pageNum}/10")
+    Observable<HttpResponse<ArrayList<SecondClassifyDataBean>>> SecondClassifyInterestData(@Path("guid") String guid, @Path("pageNum") int pageNum);
+
+
     /*************************************************************************************************************/
 
 }

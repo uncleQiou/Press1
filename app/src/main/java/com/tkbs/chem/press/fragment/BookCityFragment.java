@@ -38,6 +38,7 @@ import com.tkbs.chem.press.bean.BookCityDataBean;
 import com.tkbs.chem.press.bean.BookCityResultDataList;
 import com.tkbs.chem.press.bean.HttpResponse;
 import com.tkbs.chem.press.net.ApiCallback;
+import com.tkbs.chem.press.util.Config;
 import com.tkbs.chem.press.util.FullyGridLayoutManager;
 import com.tkbs.chem.press.util.MessageEvent;
 import com.tkbs.chem.press.util.UiUtils;
@@ -398,46 +399,33 @@ public class BookCityFragment extends BaseFragment implements View.OnClickListen
             //  设置三级分类  indicators
             BookCityIndicatorAdapter bookCityIndicatorAdapter = new BookCityIndicatorAdapter();
             List<BookCityResultDataList> resultDataLists = data.getResultDataList();
-//            List<String> list = new ArrayList<>();
-//            for (int i = 0; i < resultDataLists.size(); i++) {
-//                list.add(resultDataLists.get(i).getResCatagory().getTitle());
-//            }
             bookCityIndicatorAdapter.SetData(resultDataLists);
             IndicatorViewPager indicatorViewPager = new IndicatorViewPager(fragment_bookcity_indicator, fragment_bookcity_viewPager);
             indicatorViewPager.setAdapter(bookCityIndicatorAdapter);
             ll_book_city_more.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    int subexistsOne = data.getResCatagory().getSubexists();
-                    //  分类是否含有子节点 有：二级页面 无：三级页面
-                    if (subexistsOne == 1) {
-//                        Intent intent = new Intent(getActivity(), SecondaryClassificationActivity.class);
-//                        intent.putExtra("guid", data.getResCatagory().getGuid());
-//                        intent.putExtra("title", data.getResCatagory().getTitle());
-//                        intent.putExtra("index",fragment_bookcity_indicator.getCurrentItem());
-//                        getActivity().startActivity(intent);
-                        // TODO  二级分类点击进入不同页面
-                        int subexists = data.getResultDataList().get(fragment_bookcity_indicator.getCurrentItem()).getResCatagory().getSubexists();
-                        if (subexists == 1) {
-                            Intent intent = new Intent(getActivity(), SecondaryClassificationActivity.class);
-                            intent.putExtra("guid", data.getResCatagory().getGuid());
-                            intent.putExtra("title", data.getResCatagory().getTitle());
-                            intent.putExtra("index", fragment_bookcity_indicator.getCurrentItem());
-                            getActivity().startActivity(intent);
+                    //   二级分类点击进入不同页面
+                    int subexists = data.getResultDataList().get(fragment_bookcity_indicator.getCurrentItem()).getResCatagory().getSubexists();
+                    if (subexists == 1) {
+                        String guid = data.getResCatagory().getGuid();
+                        Intent intent = new Intent(getActivity(), SecondaryClassificationActivity.class);
+                        intent.putExtra("guid", guid);
+                        intent.putExtra("title", data.getResCatagory().getTitle());
+                        intent.putExtra("index", fragment_bookcity_indicator.getCurrentItem());
+                        if (guid.equals(Config.CUSTOM_GUID)) {
+                            intent.putExtra("INTERESTTYPE", 1);
                         } else {
-                            Intent intent1 = new Intent(getActivity(), SecondaryClassifyActivity.class);
-                            intent1.putExtra("guid", data.getResCatagory().getGuid());
-                            intent1.putExtra("title", data.getResCatagory().getTitle());
-                            intent1.putExtra("index", fragment_bookcity_indicator.getCurrentItem());
-                            getActivity().startActivity(intent1);
+                            intent.putExtra("INTERESTTYPE", 0);
                         }
+                        getActivity().startActivity(intent);
                     } else {
-                        Intent intent1 = new Intent(getActivity(), ThreeClassificActivity.class);
+                        Intent intent1 = new Intent(getActivity(), SecondaryClassifyActivity.class);
                         intent1.putExtra("guid", data.getResCatagory().getGuid());
                         intent1.putExtra("title", data.getResCatagory().getTitle());
+                        intent1.putExtra("index", fragment_bookcity_indicator.getCurrentItem());
                         getActivity().startActivity(intent1);
                     }
-
                 }
             });
 

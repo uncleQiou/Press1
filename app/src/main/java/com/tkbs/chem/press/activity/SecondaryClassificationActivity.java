@@ -48,6 +48,7 @@ public class SecondaryClassificationActivity extends BaseActivity implements Vie
     private String titleStr = "";
     private ArrayList<BookCityResCatagory> indicatorData;
     private int currentItemIndex;
+    private int interestType;
 
 
     @Override
@@ -68,7 +69,12 @@ public class SecondaryClassificationActivity extends BaseActivity implements Vie
         guid = getIntent().getStringExtra("guid");
         titleStr = getIntent().getStringExtra("title");
         currentItemIndex = getIntent().getIntExtra("index", 0);
-        getIndicatorData();
+        interestType = getIntent().getIntExtra("INTERESTTYPE", 0);
+        if (interestType == 1) {
+            getInsterIndicatorData();
+        } else {
+            getIndicatorData();
+        }
         viewIndicator.setScrollBar(new ColorBar(getApplicationContext(), getResources().getColor(R.color.hg_app_main_color), 2));
         viewIndicator.setOnTransitionListener(
                 new OnTransitionTextListener().setColor(selectColor, unSelectColor));
@@ -80,6 +86,34 @@ public class SecondaryClassificationActivity extends BaseActivity implements Vie
     private void getIndicatorData() {
         showProgressDialog();
         addSubscription(apiStores.SecondClassificIndicator(guid), new ApiCallback<HttpResponse<ArrayList<BookCityResCatagory>>>() {
+            @Override
+            public void onSuccess(HttpResponse<ArrayList<BookCityResCatagory>> model) {
+                if (model.isStatus()) {
+                    indicatorData = model.getData();
+                    indicatorViewPager.setAdapter(new MyAdapter(getSupportFragmentManager()));
+                    indicatorViewPager.setCurrentItem(currentItemIndex, true);
+
+                } else {
+                    toastShow(model.getErrorDescription());
+                }
+
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                toastShow(msg);
+            }
+
+            @Override
+            public void onFinish() {
+                dismissProgressDialog();
+            }
+        });
+    }
+
+    private void getInsterIndicatorData() {
+        showProgressDialog();
+        addSubscription(apiStores.SecdClasIndicatorInterest(guid), new ApiCallback<HttpResponse<ArrayList<BookCityResCatagory>>>() {
             @Override
             public void onSuccess(HttpResponse<ArrayList<BookCityResCatagory>> model) {
                 if (model.isStatus()) {
@@ -174,7 +208,7 @@ public class SecondaryClassificationActivity extends BaseActivity implements Vie
         public Fragment getFragmentForPage(int position) {
             SecondaryClassificationFragment secondaryClassificationFragment = new SecondaryClassificationFragment();
             Bundle bundle = new Bundle();
-            bundle.putString("111", "这是第==" + position);
+            bundle.putInt("INTERESTTYPE", interestType);
             bundle.putString("Type", indicatorData.get(position).getGuid());
             secondaryClassificationFragment.setArguments(bundle);
             return secondaryClassificationFragment;
