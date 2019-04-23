@@ -75,7 +75,9 @@
     <string name="send">发送</string>
     <string name="publish_opinion">发表意见</string>
     <string name="submit_opinion">意见提交</string>
+    <string name="submit_letter">发送私信</string>
     <string name="publish_opinion_title">您有什么问题或者建议想对我们说？</string>
+    <string name="publish_private_letter">请输入您要发送的私信</string>
     <string name="publish_opinion_hint">您的宝贵意见，就是我们进步的源泉</string>
     <string name="one_key_approve">一键审批</string>
     <string name="message_manage">消息管理</string>
@@ -89,6 +91,7 @@
     <string name="sample_book">样书：</string>
     <string name="give_book">赠书：</string>
     <string name="give_book1">赠书</string>
+    <string name="private_letter">私信</string>
     <string name="blacklist">加入黑名单</string>
     <string name="remove_blacklist">移出黑名单</string>
     <string name="approval">审批</string>
@@ -198,4 +201,6 @@
     <string name="check_change">(点击切换学校)</string>
     <string name="book_publish_time">出版时间：%1$S</string>
     <string name="no_edit_data">暂无可管理数据</string>
+    <string name="oppinion_from">来自 %1$s </string>
+    <string name="oppinion_to">发送给 %1$s </string>
 </resources>

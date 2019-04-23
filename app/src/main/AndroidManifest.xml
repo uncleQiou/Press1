@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.tkbs.chem.press">
 
-    <!--如果是安卓8.0，应用编译配置的targetSdkVersion>=26，请务必添加以下权限 -->
+    <!-- 如果是安卓8.0，应用编译配置的targetSdkVersion>=26，请务必添加以下权限 -->
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -146,6 +146,7 @@
         <activity android:name=".activity.SecondaryClassifyActivity" />
         <!-- banner图 跳转 -->
         <activity android:name=".activity.BannerWebActivity" />
+        <activity android:name=".activity.PublishPrivateLetterActivity"></activity>
     </application>
 
 </manifest>

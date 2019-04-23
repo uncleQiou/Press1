@@ -24,6 +24,7 @@ import com.tkbs.chem.press.bean.OrderInfoBean;
 import com.tkbs.chem.press.bean.SampleBookDetailDataBean;
 import com.tkbs.chem.press.bean.SampleBookItemDataBean;
 import com.tkbs.chem.press.net.ApiCallback;
+import com.tkbs.chem.press.util.MessageEvent;
 import com.tkbs.chem.press.util.UiUtils;
 
 import java.util.ArrayList;
@@ -34,6 +35,9 @@ import cn.lemon.view.RefreshRecyclerView;
 import cn.lemon.view.adapter.Action;
 import cn.lemon.view.adapter.BaseViewHolder;
 import cn.lemon.view.adapter.RecyclerAdapter;
+import de.greenrobot.event.EventBus;
+import de.greenrobot.event.Subscribe;
+import de.greenrobot.event.ThreadMode;
 
 /**
  * Created by Administrator on 2018/10/17.
@@ -62,6 +66,7 @@ public class OpinionManageFragment extends BaseFragment implements View.OnClickL
     protected void onCreateViewLazy(Bundle savedInstanceState) {
         super.onCreateViewLazy(savedInstanceState);
         setContentView(R.layout.fragment_opinion_manage);
+        EventBus.getDefault().register(this);
         mHandler = new Handler();
         myAdapter = new OpinionManageAdapter(getActivity());
         recycler = (RefreshRecyclerView) findViewById(R.id.recycler);
@@ -201,7 +206,7 @@ public class OpinionManageFragment extends BaseFragment implements View.OnClickL
     private void addCommentOpinion(String content) {
         showProgressDialog();
 
-        addSubscription(apiStores.addOpinion(parentId, content), new ApiCallback<HttpResponse<OrderInfoBean>>() {
+        addSubscription(apiStores.replyOpinion(parentId, content), new ApiCallback<HttpResponse<OrderInfoBean>>() {
             @Override
             public void onSuccess(HttpResponse<OrderInfoBean> model) {
                 if (model.isStatus()) {
@@ -232,6 +237,18 @@ public class OpinionManageFragment extends BaseFragment implements View.OnClickL
 
             }
         });
+    }
+    @Subscribe(threadMode = ThreadMode.MainThread)
+    public void RefreshUi(MessageEvent messageEvent) {
+        if ("RefreshOpinion".endsWith(messageEvent.getMessage())) {
+            recycler.post(new Runnable() {
+                @Override
+                public void run() {
+                    recycler.showSwipeRefresh();
+                    getSOpinionManagesData(true);
+                }
+            });
+        }
     }
 
     class OpinionManageAdapter extends RecyclerAdapter<OpinionManageBean> {
@@ -277,8 +294,21 @@ public class OpinionManageFragment extends BaseFragment implements View.OnClickL
             @Override
             public void setData(final OpinionManageBean data) {
                 super.setData(data);
+                //public static final int  OPINION_TYPE_TEACHER = 1; // 教师创建
+                //public static final int  OPINION_TYPE_SALE = 2; // 业务员创建
+
+                String titleName = "";
+                if (data.getType() == 1){
+                    // 来自
+                    titleName = String.format(context.getResources().getString(R.string.oppinion_from),
+                            data.getCreateUser());
+                }else {
+                    // 发送给
+                    titleName = String.format(context.getResources().getString(R.string.oppinion_to),
+                            data.getCreateUser());
+                }
                 tv_opinion_content.setText("    " + data.getContent());
-                tv_opinion_who.setText(data.getCreateUser());
+                tv_opinion_who.setText(titleName);
                 tv_opinion_title.setText(data.getCreateDate());
                 tv_reply.setText("回复");
                 tv_reply.setOnClickListener(new View.OnClickListener() {

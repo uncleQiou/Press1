@@ -64,6 +64,7 @@ public interface ApiStores {
      */
     @POST("login/toLogin")
     Observable<HttpResponse<UserBean>> PressLogin(@Body RequestBody body);
+
     /**
      * 手机验证码登陆
      *
@@ -82,6 +83,7 @@ public interface ApiStores {
      */
     @POST("login/toLoginByWechat")
     Observable<HttpResponse<UserBean>> loginByWechat(@Query("wxUserId") String wxUserId);
+
     /**
      * 三方登陆
      * QQ
@@ -101,8 +103,10 @@ public interface ApiStores {
      */
     @POST("mmMember/queryMemberInfo/{memberGuid}")
     Observable<HttpResponse<UserBean>> thrLoginUserInfo(@Path("memberGuid") String memberGuid);
+
     /**
      * 更新用戶信息
+     *
      * @return
      */
     @POST("mmMember/queryMemberInfo")
@@ -675,39 +679,44 @@ public interface ApiStores {
      * 获取手机验证码
      */
     @POST("login/loginToSendSms")
-    Observable<HttpResponse<PhoneCodeBean>> obtainPhoneCode (@Query("phone") String  phone,
-                                                             @Query("equipment") String  equipment);
+    Observable<HttpResponse<PhoneCodeBean>> obtainPhoneCode(@Query("phone") String phone,
+                                                            @Query("equipment") String equipment);
+
     /**
      * 获取分享內容
      */
     @POST("share/info/{guid}")
-    Observable<HttpResponse<ShareDataBean>> ObtainShareData (@Path("guid") String  guid);
+    Observable<HttpResponse<ShareDataBean>> ObtainShareData(@Path("guid") String guid);
+
     /**
      * 添加下载记录
      */
     @POST("read/downloadResource/{documentGuid} ")
-    Observable<HttpResponse<Object>> DownLoadNote (@Path("documentGuid") String  guid);
+    Observable<HttpResponse<Object>> DownLoadNote(@Path("documentGuid") String guid);
+
     /**
      * 删除订单
      */
     @POST("order/deleteOrder/{guid}")
-    Observable<HttpResponse<Object>> deleteOrder (@Path("guid") String  guid);
+    Observable<HttpResponse<Object>> deleteOrder(@Path("guid") String guid);
 
     /**
      * 业务员、教师查询未读消息的个数
      */
     @POST("message/unreadCount")
-    Observable<HttpResponse<Integer>> checkUnReadCount ();
+    Observable<HttpResponse<Integer>> checkUnReadCount();
+
     /**
      * 业务员、教师阅读消息
      */
     @POST("message/readed/{guid}")
-    Observable<HttpResponse<Object>> readMessage (@Path("guid") String  guid);
+    Observable<HttpResponse<Object>> readMessage(@Path("guid") String guid);
+
     /**
      * 业务员设置教师学校和院系信息
      */
     @POST("mmMember/updateMemberBySaleMan")
-    Observable<HttpResponse<Object>> setTesInfo (@Body RequestBody body);
+    Observable<HttpResponse<Object>> setTesInfo(@Body RequestBody body);
 
     /**
      * 书城二级页面Indicator数据
@@ -726,6 +735,28 @@ public interface ApiStores {
     @POST("resDocument/customizationInterest/{guid}/{pageNum}/10")
     Observable<HttpResponse<ArrayList<SecondClassifyDataBean>>> SecondClassifyInterestData(@Path("guid") String guid, @Path("pageNum") int pageNum);
 
+
+    /**
+     * 教师发表意见
+     */
+    @POST("opinion/addOpinionByTeacher")
+    Observable<HttpResponse<Object>> addOpinionByTeacher(@Query("content") String content);
+
+    /**
+     * 业务员发表意见
+     */
+    @POST("opinion/addOpinionBySale")
+    Observable<HttpResponse<Object>> addOpinionBySale(@Query("userGuid") String userGuid, @Query("content") String content);
+
+
+    /**
+     * 回复意见
+     *
+     * @param parentId
+     * @return
+     */
+    @POST("opinion/replyOpinion")
+    Observable<HttpResponse<Object>> replyOpinion(@Query("parentId") int parentId, @Query("content") String content);
 
     /*************************************************************************************************************/
 

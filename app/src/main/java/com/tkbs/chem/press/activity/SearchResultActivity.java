@@ -127,7 +127,12 @@ public class SearchResultActivity extends BaseActivity implements View.OnClickLi
         spUtilInstance = SPManagement.getSPUtilInstance(Config.SAVEDTAB);
         classfyguid = getIntent().getStringArrayListExtra("Classfy");
         searchKeyStr = getIntent().getStringExtra("SearchKey");
+        // 搜索结果去掉默认排序
         timeOrder = Config.SORT_NOONE;
+        titleOrder = Config.SORT_NOONE;
+        degreeOrder = Config.SORT_NOONE;
+        imgSortTime.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down_black : R.mipmap.bookshelf_icon_up_black);
+        changeTextColor();
         mAdapter = new SerachResultAdapter(this);
         recycler.setSwipeRefreshColors(0xFF437845, 0xFFE44F98, 0xFF2FAC21);
         recycler.setLayoutManager(new GridLayoutManager(this, 1));
@@ -162,9 +167,6 @@ public class SearchResultActivity extends BaseActivity implements View.OnClickLi
             }
         });
         recycler.getNoMoreView().setText(R.string.no_more_data);
-        timeOrder = Config.SORT_UP;
-        imgSortTime.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down : R.mipmap.bookshelf_icon_up);
-        changeTextColor();
     }
 
     @Override

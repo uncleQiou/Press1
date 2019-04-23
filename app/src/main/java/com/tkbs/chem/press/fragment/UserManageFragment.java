@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.activity.GiveBookManagementActivity;
+import com.tkbs.chem.press.activity.PublishPrivateLetterActivity;
 import com.tkbs.chem.press.activity.SearchActivity;
 import com.tkbs.chem.press.activity.UserManageActivity;
 import com.tkbs.chem.press.base.BaseFragment;
@@ -179,10 +180,13 @@ public class UserManageFragment extends BaseFragment implements View.OnClickList
                         recycler.dismissSwipeRefresh();
                         recycler.getRecyclerView().scrollToPosition(0);
                     } else {
-                        userList.addAll(model.getData().getList());
-                        myAdapter.addAll(model.getData().getList());
+                        if (null != model.getData().getList()) {
+                            userList.addAll(model.getData().getList());
+                            myAdapter.addAll(model.getData().getList());
+                        }
+
                     }
-                    if (model.getData().getList().size() < 10) {
+                    if (null == model.getData().getList() || model.getData().getList().size() < 10) {
                         recycler.showNoMore();
                     }
                 } else {
@@ -411,6 +415,7 @@ public class UserManageFragment extends BaseFragment implements View.OnClickList
             private TextView tv_givebook_num;
             private TextView tv_give_book;
             private TextView tv_black_list;
+            private TextView tv_private_letter;
 
             public UserManageHolder(ViewGroup parent) {
                 super(parent, R.layout.item_user_manage);
@@ -425,6 +430,7 @@ public class UserManageFragment extends BaseFragment implements View.OnClickList
                 tv_samplebook_num = findViewById(R.id.tv_samplebook_num);
                 tv_givebook_num = findViewById(R.id.tv_givebook_num);
                 tv_give_book = findViewById(R.id.tv_give_book);
+                tv_private_letter = findViewById(R.id.tv_private_letter);
                 tv_black_list = findViewById(R.id.tv_black_list);
             }
 
@@ -467,6 +473,14 @@ public class UserManageFragment extends BaseFragment implements View.OnClickList
                         int state = 0 == data.getState() ? 1 : 0;
                         showNormalDialog(data.getUserGuid(), state);
 
+                    }
+                });
+                tv_private_letter.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(getActivity(), PublishPrivateLetterActivity.class);
+                        intent.putExtra("guid", data.getUserGuid());
+                        getActivity().startActivity(intent);
                     }
                 });
 

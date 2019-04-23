@@ -242,7 +242,7 @@ public class MyOpinionActivity extends BaseActivity implements View.OnClickListe
     private void addCommentOpinion(String content) {
         showProgressDialog();
 
-        addSubscription(apiStores.addOpinion(parentId, content), new ApiCallback<HttpResponse<OrderInfoBean>>() {
+        addSubscription(apiStores.replyOpinion(parentId, content), new ApiCallback<HttpResponse<OrderInfoBean>>() {
             @Override
             public void onSuccess(HttpResponse<OrderInfoBean> model) {
                 if (model.isStatus()) {

@@ -2,7 +2,6 @@ package com.tkbs.chem.press.activity;
 
 import android.os.Bundle;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -18,7 +17,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import de.greenrobot.event.EventBus;
 
-public class PublishOpinionActivity extends BaseActivity implements View.OnClickListener {
+public class PublishPrivateLetterActivity extends BaseActivity implements View.OnClickListener{
 
     @BindView(R.id.back)
     ImageView back;
@@ -26,30 +25,33 @@ public class PublishOpinionActivity extends BaseActivity implements View.OnClick
     TextView title;
     @BindView(R.id.tv_right)
     TextView tvRight;
-    @BindView(R.id.ed_opinion)
-    EditText edOpinion;
+    @BindView(R.id.img_share)
+    ImageView imgShare;
+    @BindView(R.id.ed_letter)
+    EditText edLetter;
     @BindView(R.id.tv_submit)
     TextView tvSubmit;
+
+    private String guid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
     }
 
     @Override
     protected int getLayoutId() {
-        return R.layout.activity_publish_opinion;
+        return R.layout.activity_publish_private_letter;
     }
 
     @Override
     protected void initdata() {
-
+        guid = getIntent().getStringExtra("guid");
     }
 
     @Override
     protected void initTitle() {
-        title.setText(R.string.publish_opinion);
+        title.setText(R.string.private_letter);
     }
 
     @OnClick({R.id.back, R.id.tv_submit})
@@ -60,7 +62,7 @@ public class PublishOpinionActivity extends BaseActivity implements View.OnClick
                 finish();
                 break;
             case R.id.tv_submit:
-                String content = edOpinion.getText().toString().trim();
+                String content = edLetter.getText().toString().trim();
                 if (content.length() > 0) {
                     addCommentOpinion(content);
                 } else {
@@ -71,14 +73,13 @@ public class PublishOpinionActivity extends BaseActivity implements View.OnClick
                 break;
         }
     }
-
     /***
      * 添加回复意见
      */
     private void addCommentOpinion(String content) {
         showProgressDialog();
 
-        addSubscription(apiStores.addOpinionByTeacher(content), new ApiCallback<HttpResponse<OrderInfoBean>>() {
+        addSubscription(apiStores.addOpinionBySale(guid, content), new ApiCallback<HttpResponse<OrderInfoBean>>() {
             @Override
             public void onSuccess(HttpResponse<OrderInfoBean> model) {
                 if (model.isStatus()) {
