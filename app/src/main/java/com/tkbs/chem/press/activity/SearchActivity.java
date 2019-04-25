@@ -89,6 +89,8 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
      */
     TextView tvClassfyTitel;
 
+    private String classfyStrFromResult;
+
 
     private SharedPreferences searchHistorySp;
     private Map<String, ?> map;
@@ -187,6 +189,10 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         } else {
             llClassfy.setVisibility(View.GONE);
         }
+        classfyStrFromResult = getIntent().getStringExtra("classyStr");
+        if (null != classfyStrFromResult && classfyGuid.size() == 0){
+            initClassfyFromResult(classfyStrFromResult);
+        }
         // 搜索历史
         initSearchHistory();
     }
@@ -210,9 +216,27 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         // 分類下直接搜索
         Intent intent = new Intent(SearchActivity.this, SearchResultActivity.class);
         intent.putStringArrayListExtra("Classfy", classfyGuid);
+        intent.putExtra("ClassfyStr", classfyStr);
         intent.putExtra("SearchKey", edSearch.getText().toString().trim());
         startActivity(intent);
         finish();
+    }
+    /**
+     * 设置搜索分类
+     */
+    private void initClassfyFromResult(String classfyStr) {
+        Gson gson = new Gson();
+        List<ClassifyBean> jsonListObject = gson.fromJson(classfyStr, new TypeToken<List<ClassifyBean>>() {
+        }.getType());
+        String searchClassify = "";
+        //把JSON格式的字符串转为List  
+        for (ClassifyBean classify : jsonListObject) {
+            searchClassify = searchClassify + classify.getCatagoryName() + "、";
+            Logger.e("把JSON格式的字符串转为List///  " + searchClassify);
+            classfyGuid.add(classify.getCatagoryGuid());
+        }
+        tvClassfy.setText(searchClassify);
+        llClassfy.setVisibility(View.GONE);
     }
 
     /**
@@ -286,12 +310,16 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             case R.id.tv_do_search:
                 Intent intent = new Intent(SearchActivity.this, SearchResultActivity.class);
                 intent.putStringArrayListExtra("Classfy", classfyGuid);
+                intent.putExtra("ClassfyStr", classfyStrFromResult);
                 intent.putExtra("SearchKey", edSearch.getText().toString().trim());
                 startActivity(intent);
                 finish();
                 break;
             case R.id.img_search_classific:
-                startActivityForResult(new Intent(SearchActivity.this, SearchClassifyActivity.class), 0);
+                Intent intentClassify = new Intent(SearchActivity.this, SearchClassifyActivity.class);
+                intentClassify.putExtra("classyStr",classfyStrFromResult);
+                startActivityForResult(intentClassify, 0);
+//                startActivityForResult(new Intent(SearchActivity.this, SearchClassifyActivity.class), 0);
                 break;
             default:
                 break;
@@ -350,6 +378,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
 //                Toast.makeText(SearchActivity.this, localLabs.get(position), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(SearchActivity.this, SearchResultActivity.class);
                 intent.putStringArrayListExtra("Classfy", classfyGuid);
+                intent.putExtra("ClassfyStr", classfyStrFromResult);
                 intent.putExtra("SearchKey", localLabs.get(position));
                 startActivity(intent);
                 finish();
@@ -439,6 +468,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                 super.onItemViewClick(data);
                 Intent intent = new Intent(SearchActivity.this, SearchResultActivity.class);
                 intent.putStringArrayListExtra("Classfy", classfyGuid);
+                intent.putExtra("ClassfyStr", classfyStrFromResult);
                 intent.putExtra("SearchKey", data.getKeyword());
                 startActivity(intent);
                 finish();

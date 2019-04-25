@@ -57,7 +57,8 @@
             android:name=".activity.SearchActivity"
             android:windowSoftInputMode="stateHidden|stateUnchanged" />
         <!-- 搜索结果 -->
-        <activity android:name=".activity.SearchResultActivity" />
+        <activity android:name=".activity.SearchResultActivity"
+            android:launchMode="singleTask"/>
         <!-- 书城二级分类页面 -->
         <activity android:name=".activity.SecondaryClassificationActivity" />
         <!-- 书城三级分类页面 -->
@@ -146,7 +147,8 @@
         <activity android:name=".activity.SecondaryClassifyActivity" />
         <!-- banner图 跳转 -->
         <activity android:name=".activity.BannerWebActivity" />
-        <activity android:name=".activity.PublishPrivateLetterActivity"></activity>
+        <!--私信 业务员发送消息给所属教师-->
+        <activity android:name=".activity.PublishPrivateLetterActivity" />
     </application>
 
 </manifest>

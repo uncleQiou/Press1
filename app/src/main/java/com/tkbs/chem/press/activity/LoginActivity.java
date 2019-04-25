@@ -346,7 +346,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     if (1 == loginState) {
                         login();
                     } else {
-                        loginByPhone();
+                        if (checkPhoneNumber()) {
+                            loginByPhone();
+                        } else {
+                            toastShow(R.string.input_login_msg);
+                        }
+
                     }
                 } else {
                     toastShow(R.string.input_login_msg);

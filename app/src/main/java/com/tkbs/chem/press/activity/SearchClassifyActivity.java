@@ -35,6 +35,8 @@ public class SearchClassifyActivity extends BaseActivity implements View.OnClick
     WebView classifyWeb;
     private String baseUrl = Config.API_SERVER + "hello/classify.html";
 
+    private String classfy;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +49,7 @@ public class SearchClassifyActivity extends BaseActivity implements View.OnClick
 
     @Override
     protected void initdata() {
+        classfy = getIntent().getStringExtra("classyStr");
         initWeb();
 
     }
@@ -172,7 +175,13 @@ public class SearchClassifyActivity extends BaseActivity implements View.OnClick
             SearchClassifyActivity.this.setResult(RESULT_OK, intent);
             finish();
         }
-
+        /***
+         * 添加回显
+         */
+        @JavascriptInterface
+        public String getMyClassfy() {
+            return classfy;
+        }
 
     }
 }

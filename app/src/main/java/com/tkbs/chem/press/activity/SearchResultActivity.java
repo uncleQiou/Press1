@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.orhanobut.logger.Logger;
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.adapter.BookCityItemAdapter;
@@ -112,6 +113,10 @@ public class SearchResultActivity extends BaseActivity implements View.OnClickLi
 
     private boolean noMoreData;
 
+    private String clssfyStr;
+
+    private boolean isFuYong = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -123,10 +128,29 @@ public class SearchResultActivity extends BaseActivity implements View.OnClickLi
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        if (isFuYong){
+            getNewData();
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+
+    }
+
+    @Override
     protected void initdata() {
         spUtilInstance = SPManagement.getSPUtilInstance(Config.SAVEDTAB);
         classfyguid = getIntent().getStringArrayListExtra("Classfy");
+        clssfyStr = getIntent().getStringExtra("ClassfyStr");
         searchKeyStr = getIntent().getStringExtra("SearchKey");
+        if (null != clssfyStr && classfyguid.size() == 0) {
+            initClassfyFromResult(clssfyStr);
+        }
         // 搜索结果去掉默认排序
         timeOrder = Config.SORT_NOONE;
         titleOrder = Config.SORT_NOONE;
@@ -169,11 +193,55 @@ public class SearchResultActivity extends BaseActivity implements View.OnClickLi
         recycler.getNoMoreView().setText(R.string.no_more_data);
     }
 
+    private void  getNewData(){
+        isFuYong = false;
+        classfyguid = getIntent().getStringArrayListExtra("Classfy");
+        clssfyStr = getIntent().getStringExtra("ClassfyStr");
+        searchKeyStr = getIntent().getStringExtra("SearchKey");
+        classfyList = new ArrayList<>();
+        if (null != classfyguid && classfyguid.size() > 0) {
+            for (String guid : classfyguid) {
+                classfyList.add(guid);
+            }
+        }
+        if (null != clssfyStr && classfyguid.size() == 0) {
+            initClassfyFromResult(clssfyStr);
+        }
+        recycler.post(new Runnable() {
+            @Override
+            public void run() {
+                recycler.showSwipeRefresh();
+                getSearchedData(true);
+            }
+        });
+    }
+
     @Override
     protected void initTitle() {
 
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        isFuYong = true;
+    }
+
+    /**
+     * 设置搜索分类
+     */
+    private void initClassfyFromResult(String classfyStr) {
+        Gson gson = new Gson();
+        List<ClassifyBean> jsonListObject = gson.fromJson(classfyStr, new TypeToken<List<ClassifyBean>>() {
+        }.getType());
+        String searchClassify = "";
+        //把JSON格式的字符串转为List  
+        for (ClassifyBean classify : jsonListObject) {
+            searchClassify = searchClassify + classify.getCatagoryName() + "、";
+            Logger.e("把JSON格式的字符串转为List///  " + searchClassify);
+            classfyguid.add(classify.getCatagoryGuid());
+        }
+    }
 
     /**
      * 获得搜索数据
@@ -241,11 +309,15 @@ public class SearchResultActivity extends BaseActivity implements View.OnClickLi
                 finish();
                 break;
             case R.id.img_classification:
-                startActivityForResult(new Intent(SearchResultActivity.this, SearchClassifyActivity.class), 0);
+                Intent intentClassify = new Intent(SearchResultActivity.this, SearchClassifyActivity.class);
+                intentClassify.putExtra("classyStr", clssfyStr);
+                startActivityForResult(intentClassify, 0);
                 break;
             case R.id.img_serache:
-                startActivity(new Intent(SearchResultActivity.this, SearchActivity.class));
-                finish();
+                Intent intentSearch = new Intent(SearchResultActivity.this, SearchActivity.class);
+                intentSearch.putExtra("classyStr", clssfyStr);
+                startActivity(intentSearch);
+//                finish();
                 break;
             case R.id.img_sort_edit:
                 if (1 == disType) {
