@@ -291,7 +291,9 @@ public class SearchResultActivity extends BaseActivity implements View.OnClickLi
 
             @Override
             public void onFinish() {
-                recycler.dismissSwipeRefresh();
+                if (null != recycler){
+                    recycler.dismissSwipeRefresh();
+                }
                 dismissProgressDialog();
 
             }

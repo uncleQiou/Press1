@@ -213,7 +213,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         }
         tvClassfy.setText(searchClassify);
         llClassfy.setVisibility(View.GONE);
-        // 分類下直接搜索
+        // 下直接搜索
         Intent intent = new Intent(SearchActivity.this, SearchResultActivity.class);
         intent.putStringArrayListExtra("Classfy", classfyGuid);
         intent.putExtra("ClassfyStr", classfyStr);
@@ -279,7 +279,10 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
 
             @Override
             public void onFinish() {
-                recyclerviewSearchHot.dismissSwipeRefresh();
+                if (null!= recyclerviewSearchHot){
+                    recyclerviewSearchHot.dismissSwipeRefresh();
+                }
+
                 dismissProgressDialog();
 
             }

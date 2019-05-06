@@ -43,6 +43,7 @@
                 android:layout_marginLeft="@dimen/margin_8dp"
                 android:background="@null"
                 android:hint="@string/text_search_hint"
+                android:textColorHint="@color/text_main_6"
                 android:textColor="@color/text_main_6"
                 android:textSize="@dimen/text_14sp" />
 

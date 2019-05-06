@@ -992,14 +992,17 @@ public class BookShelfItemFragment extends BaseFragment implements View.OnClickL
                     }
 
                 }
-                if(user_type == 2){
-                    tv_book_page.setText(String.format(context.getResources().
-                            getString(R.string.bookshelf_isbn), data.getLongdocno()));
-                }else {
-                    tv_book_page.setText(String.format(context.getResources().
-                            getString(R.string.bookshelf_page), data.getPagenum()));
-                }
+                // 2019年5月5日 书架所以栏页数 都改为ISBN号 和李老师确认过
+//                if(user_type == 2){
+//                    tv_book_page.setText(String.format(context.getResources().
+//                            getString(R.string.bookshelf_isbn), data.getLongdocno()));
+//                }else {
+//                    tv_book_page.setText(String.format(context.getResources().
+//                            getString(R.string.bookshelf_page), data.getPagenum()));
+//                }
 
+                tv_book_page.setText(String.format(context.getResources().
+                        getString(R.string.bookshelf_isbn), data.getLongdocno()));
                 tv_book_endtime.setVisibility(type == 3 ? View.GONE : View.VISIBLE);
                 tv_book_endtime.setText(String.format(context.getResources().
                         getString(R.string.bookshelf_limit), data.getTime_limit()));

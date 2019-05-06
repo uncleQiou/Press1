@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.ValueCallback;
 import android.webkit.WebSettings;
@@ -143,16 +144,21 @@ public class TeaPersonalCenterActivity extends BaseActivity implements View.OnCl
 
         @JavascriptInterface
         public void ShowProgressbar(final int progress) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (progress >= 50) {
-                        dismissProgressDialog();
-                    } else {
-                        showProgressDialog();
+            try {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (progress >= 50) {
+                            dismissProgressDialog();
+                        } else {
+                            showProgressDialog();
+                        }
                     }
-                }
-            });
+                });
+            }catch (WindowManager.BadTokenException e){
+                e.printStackTrace();
+            }
+
         }
 
         @JavascriptInterface

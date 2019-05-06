@@ -130,6 +130,8 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
                 // 通知html5页面进行刷新 购买完成 reflushData
                 if (model.isStatus()) {
                     bookDetailWeb.loadUrl("javascript:reflushData()");
+                    // 2019年5月5日 添加 购买成功提示
+                    toastShow(R.string.buy_success);
                 } else {
                     toastShow(model.getErrorDescription());
                 }
@@ -395,9 +397,9 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
                 if (Wechat.NAME.equals(platform.getName()) ||
                         WechatMoments.NAME.equals(platform.getName())) {
                     paramsToShare.setShareType(Platform.SHARE_WEBPAGE);
-                    paramsToShare.setUrl(shareData.getUrl());
                     paramsToShare.setText(shareData.getIntroduction());
-                    paramsToShare.setImageUrl(shareData.getCover());
+                    paramsToShare.setUrl(shareData.getUrl());
+                    paramsToShare.setImageUrl(shareData.getUrl());
                     paramsToShare.setImagePath(shareData.getCover());
                     paramsToShare.setTitle(shareData.getTitle());
                 }

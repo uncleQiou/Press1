@@ -581,7 +581,7 @@ public class SampleBookStatisticsFragment extends BaseFragment implements View.O
 //        //禁止拖拽
 //        barChart.setDragEnabled(true);
 //        //X轴或Y轴禁止缩放
-//        barChart.setScaleXEnabled(false);
+        barChart.setScaleXEnabled(false);
         barChart.setScaleYEnabled(false);
 //        barChart.setScaleEnabled(false);
 //        //禁止所有事件

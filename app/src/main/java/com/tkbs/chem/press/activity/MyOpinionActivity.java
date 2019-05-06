@@ -160,7 +160,9 @@ public class MyOpinionActivity extends BaseActivity implements View.OnClickListe
 
             @Override
             public void onFinish() {
-                recycler.dismissSwipeRefresh();
+                if (null != recycler){
+                    recycler.dismissSwipeRefresh();
+                }
                 dismissProgressDialog();
 
             }

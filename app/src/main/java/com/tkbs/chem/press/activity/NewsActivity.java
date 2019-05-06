@@ -122,7 +122,9 @@ public class NewsActivity extends BaseActivity implements View.OnClickListener {
 
             @Override
             public void onFinish() {
-                recycler.dismissSwipeRefresh();
+                if (null != recycler) {
+                    recycler.dismissSwipeRefresh();
+                }
                 dismissProgressDialog();
 
             }
@@ -195,7 +197,9 @@ public class NewsActivity extends BaseActivity implements View.OnClickListener {
 
             @Override
             public void onFinish() {
-                recycler.dismissSwipeRefresh();
+                if (null != recycler) {
+                    recycler.dismissSwipeRefresh();
+                }
                 dismissProgressDialog();
 
             }

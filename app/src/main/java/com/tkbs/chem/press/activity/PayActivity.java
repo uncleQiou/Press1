@@ -201,7 +201,7 @@ public class PayActivity extends BaseActivity implements View.OnClickListener, C
      * 微信支付
      */
     private void payReadyWX() {
-        // TODO 微信接口无法访问
+        //  微信接口无法访问
         showProgressDialog();
         addSubscription(apiStores.payReadyWeChat(0), new ApiCallback<HttpResponse<RechargeResult.WeChat>>() {
             @Override

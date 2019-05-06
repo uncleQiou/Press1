@@ -169,7 +169,9 @@ public class RechargeRecordActivity extends BaseActivity implements View.OnClick
 
             @Override
             public void onFinish() {
-                recycler.dismissSwipeRefresh();
+                if (null != recycler){
+                    recycler.dismissSwipeRefresh();
+                }
                 dismissProgressDialog();
 
             }

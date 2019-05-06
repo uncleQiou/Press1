@@ -198,9 +198,10 @@
     <string name="cancle_btn">取消</string>
     <string name="please_setting">请设置教师信息</string>
     <string name="bookshelf_del_title">是否删除选中项，删除后无法找回，请慎重选择!</string>
-    <string name="check_change">(点击切换学校)</string>
+    <string name="check_change"> ＞ </string>
     <string name="book_publish_time">出版时间：%1$S</string>
     <string name="no_edit_data">暂无可管理数据</string>
     <string name="oppinion_from">来自 %1$s </string>
     <string name="oppinion_to">发送给 %1$s </string>
+    <string name="buy_success">购买成功</string>
 </resources>

@@ -119,7 +119,9 @@ public class MyApplyActivity extends BaseActivity implements View.OnClickListene
 
             @Override
             public void onFinish() {
-                recycler.dismissSwipeRefresh();
+                if (null != recycler){
+                    recycler.dismissSwipeRefresh();
+                }
                 dismissProgressDialog();
 
             }
