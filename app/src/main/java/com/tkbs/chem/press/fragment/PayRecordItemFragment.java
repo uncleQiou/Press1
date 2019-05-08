@@ -78,6 +78,19 @@ public class PayRecordItemFragment extends BaseFragment implements View.OnClickL
 
     private int orderState;
 
+    /**
+     * 时间排序
+     */
+    private int timeOrder;
+    /**
+     * 书名排序
+     */
+    private int titleOrder;
+    /**
+     * 热度排序
+     */
+    private int degreeOrder;
+
     @Override
     protected View getPreviewLayout(LayoutInflater inflater, ViewGroup container) {
         return inflater.inflate(R.layout.layout_preview, container, false);
@@ -136,7 +149,7 @@ public class PayRecordItemFragment extends BaseFragment implements View.OnClickL
 
     private void getData(final boolean isRefresh) {
         showProgressDialog();
-        addSubscription(apiStores.getConsumptionRecords(page, orderState), new ApiCallback<HttpResponse<ArrayList<ConsumptionRecordsDataBean>>>() {
+        addSubscription(apiStores.getConsumptionRecords(page, orderState, timeOrder, titleOrder, degreeOrder), new ApiCallback<HttpResponse<ArrayList<ConsumptionRecordsDataBean>>>() {
             @Override
             public void onSuccess(HttpResponse<ArrayList<ConsumptionRecordsDataBean>> model) {
                 if (model.isStatus()) {
@@ -169,7 +182,9 @@ public class PayRecordItemFragment extends BaseFragment implements View.OnClickL
 
             @Override
             public void onFinish() {
-                recycler_pay_record.dismissSwipeRefresh();
+                if (null != recycler_pay_record){
+                    recycler_pay_record.dismissSwipeRefresh();
+                }
                 dismissProgressDialog();
 
             }
@@ -234,44 +249,59 @@ public class PayRecordItemFragment extends BaseFragment implements View.OnClickL
                 if (null == dataList) {
                     return;
                 }
-                recycler_pay_record.showSwipeRefresh();
-
                 if (isAscendingOrder) {
                     isAscendingOrder = false;
-                    sortByDateUp();
+                    timeOrder = Config.SORT_DOWN;
+                    titleOrder = Config.SORT_NOONE;
+                    degreeOrder = Config.SORT_NOONE;
                 } else {
                     isAscendingOrder = true;
-                    sortByDateDown();
+                    timeOrder = Config.SORT_UP;
+                    titleOrder = Config.SORT_NOONE;
+                    degreeOrder = Config.SORT_NOONE;
                 }
-                payRecordAdapter.clear();
-                payRecordAdapter.addAll(dataList);
-                recycler_pay_record.dismissSwipeRefresh();
-                recycler_pay_record.getRecyclerView().scrollToPosition(0);
+                recycler_pay_record.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        page = 1;
+                        recycler_pay_record.showSwipeRefresh();
+                        getData(true);
+                    }
+                });
                 changeTextColor(0);
                 break;
             case R.id.ll_sort_book_name:
                 if (null == dataList) {
                     return;
                 }
-                img_sort_time.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down_black : R.mipmap.bookshelf_icon_up_black);
-                recycler_pay_record.showSwipeRefresh();
-                sortByBookName();
-                payRecordAdapter.clear();
-                payRecordAdapter.addAll(dataList);
-                recycler_pay_record.dismissSwipeRefresh();
-                recycler_pay_record.getRecyclerView().scrollToPosition(0);
+                timeOrder = Config.SORT_NOONE;
+                titleOrder = Config.SORT_UP;
+                degreeOrder = Config.SORT_NOONE;
+                recycler_pay_record.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        page = 1;
+                        recycler_pay_record.showSwipeRefresh();
+                        getData(true);
+                    }
+                });
                 changeTextColor(1);
                 break;
             case R.id.ll_sort_hot:
                 if (null == dataList) {
                     return;
                 }
-                recycler_pay_record.showSwipeRefresh();
-                sortBydEgreeDown();
-                payRecordAdapter.clear();
-                payRecordAdapter.addAll(dataList);
-                recycler_pay_record.dismissSwipeRefresh();
-                recycler_pay_record.getRecyclerView().scrollToPosition(0);
+                timeOrder = Config.SORT_NOONE;
+                titleOrder = Config.SORT_NOONE;
+                degreeOrder = Config.SORT_UP;
+                recycler_pay_record.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        page = 1;
+                        recycler_pay_record.showSwipeRefresh();
+                        getData(true);
+                    }
+                });
                 changeTextColor(2);
                 break;
             default:

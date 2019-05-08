@@ -578,7 +578,10 @@ public interface ApiStores {
      */
     @POST("order/{pageNum}/10")
     Observable<HttpResponse<ArrayList<ConsumptionRecordsDataBean>>> getConsumptionRecords(@Path("pageNum") int page,
-                                                                                          @Query("state") int state);
+                                                                                          @Query("state") int state,
+                                                                                          @Query("timeOrder") int timeOrder,
+                                                                                          @Query("titleOrder") int titleOrder,
+                                                                                          @Query("degreeOrder") int degreeOrder);
 
 
     /**

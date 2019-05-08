@@ -191,19 +191,6 @@ public class DiscoverFragment extends BaseFragment {
         });
     }
 
-    private DiscoverItemData[] getTestData() {
-        return new DiscoverItemData[]{
-                new DiscoverItemData("忍受不了打击和挫折，陈守不住忽视和平淡"),
-                new DiscoverItemData("因为喜欢才牵挂，因为牵挂而忧伤，用心去感受对方的牵挂。牵挂是一份烂漫，一份深沉，一份纯美，一份质朴。"),
-                new DiscoverItemData("  苦口的是良药，逆耳必是忠言。改过必生智慧。护短心内非贤"),
-                new DiscoverItemData("  一百天，看似很长，切实很短。一天提高一小点，一百天就能够先进一大点。在这一百天里，我们要尽自己最大的努力往学习。相信自己，所有皆有可能!"),
-                new DiscoverItemData("  在人生的道路上，要懂得善待自己，只有这样我们才能获得精神的解脱，从容地走自己选择的路，做自己喜欢做的事"),
-                new DiscoverItemData("  只要不把自己束缚在心灵的牢笼里，谁也束缚不了你去展翅高飞"),
-                new DiscoverItemData(" 少壮须努力，用功要趁早。十年磨一剑，备战为高考。天道自古酬勤，付出才有回报。压力释放心情好，考前放松最重要。预祝高考顺利，金榜题名!"),
-
-        };
-    }
-
     class DiscoverAdapter extends RecyclerAdapter<MessageBean> {
         private Context context;
         /**

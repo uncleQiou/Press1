@@ -10,6 +10,8 @@ import com.mob.MobSDK;
 import com.mob.pushsdk.MobPush;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
+import com.tencent.bugly.Bugly;
+import com.tencent.bugly.beta.Beta;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.util.SPManagement;
@@ -51,7 +53,9 @@ public class BaseApplication extends Application {
         SPManagement.init(this);
 
         // 腾讯 bugly
-        CrashReport.initCrashReport(getApplicationContext(), "05144663eb", false);
+//        CrashReport.initCrashReport(getApplicationContext(), "05144663eb", false);
+        Bugly.init(getApplicationContext(), "05144663eb", false);
+        Beta.checkUpgrade(false,false);
 
     }
 

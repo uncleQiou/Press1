@@ -204,4 +204,5 @@
     <string name="oppinion_from">来自 %1$s </string>
     <string name="oppinion_to">发送给 %1$s </string>
     <string name="buy_success">购买成功</string>
+    <string name="cip_hot_phone">010-19980232</string>
 </resources>

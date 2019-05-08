@@ -476,6 +476,7 @@ public class SearchResultActivity extends BaseActivity implements View.OnClickLi
                     Logger.e(result);
                     Intent intent = new Intent(SearchResultActivity.this, SearchActivity.class);
                     intent.putExtra("Classy", result);
+                    intent.putExtra("SearchKey", searchKeyStr);
                     startActivity(intent);
                     finish();
                     break;

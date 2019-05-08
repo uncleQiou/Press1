@@ -1,6 +1,7 @@
 package com.tkbs.chem.press.activity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -68,7 +69,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         tvPhoneNumber.setText(phone);
         String version = "当前版本：V" + UiUtils.getVersionCode(this);
         tvVersion.setText(version);
-        tvContact.setText("010-19980232");
+        tvContact.setText(R.string.cip_hot_phone);
         user_type = preference.getInt(Config.MEMBER_TYPE, 3);
 //        if (2 == user_type) {
 //            // 2019年3月8日  业务员允许修改手机号
@@ -94,10 +95,11 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 startActivity(new Intent(SettingActivity.this, ModifyPhoneWebActivity.class));
                 break;
             case R.id.ll_version:
-                toastShow(R.string.version_update);
+//                toastShow(R.string.version_update);
                 break;
             case R.id.ll_contact:
-                toastShow(R.string.contact_us);
+//                toastShow(R.string.contact_us);
+                callPhone(tvContact.getText().toString());
                 break;
             case R.id.tv_exit:
 //                toastShow(R.string.exit_logon);
@@ -109,6 +111,17 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             default:
                 break;
         }
+    }
+    /**
+     * 拨打电话（跳转到拨号界面，用户手动点击拨打）
+     *
+     * @param phoneNum 电话号码
+     */
+    public void callPhone(String phoneNum) {
+        Intent intent = new Intent(Intent.ACTION_DIAL);
+        Uri data = Uri.parse("tel:" + phoneNum);
+        intent.setData(data);
+        startActivity(intent);
     }
 
     @Override

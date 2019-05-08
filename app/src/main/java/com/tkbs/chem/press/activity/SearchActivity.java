@@ -217,7 +217,8 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         Intent intent = new Intent(SearchActivity.this, SearchResultActivity.class);
         intent.putStringArrayListExtra("Classfy", classfyGuid);
         intent.putExtra("ClassfyStr", classfyStr);
-        intent.putExtra("SearchKey", edSearch.getText().toString().trim());
+        String searchKey = getIntent().getStringExtra("SearchKey");
+        intent.putExtra("SearchKey", searchKey);
         startActivity(intent);
         finish();
     }
