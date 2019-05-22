@@ -40,7 +40,7 @@
                 android:id="@+id/tv_my_token"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="300点"
+                android:text="0点"
                 android:textColor="@color/bg_main_white"
                 android:textSize="@dimen/text_18sp" />
 

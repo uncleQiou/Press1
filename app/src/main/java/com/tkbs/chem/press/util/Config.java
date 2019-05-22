@@ -12,11 +12,15 @@ public class Config {
     /**
      * 105
      */
-    public static String API_SERVER = "http://192.168.1.105:8281/app/";
+//    public static String API_SERVER = "http://192.168.1.105:8281/app/";
     /**
      *si tao
      */
-//    public static String API_SERVER = "http://192.168.1.106:8281/app/";
+    public static String API_SERVER = "http://192.168.1.106:8281/app/";
+    /**
+     * 外网
+     */
+//    public static String API_SERVER = "http://121.46.4.25:8081/app/";
 
 
     /**

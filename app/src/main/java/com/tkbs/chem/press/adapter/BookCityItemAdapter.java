@@ -65,7 +65,6 @@ public class BookCityItemAdapter extends RecyclerView.Adapter<BookCityItemAdapte
         if (len > 9) {
             return 9;
         } else {
-
             return list.size();
         }
     }

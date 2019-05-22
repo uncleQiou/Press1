@@ -51,11 +51,11 @@ public class TeacherInforFragment extends BaseFragment {
     private String guid;
     private boolean isBtnModify = false;
     private Handler handler = new Handler();
+    private String beforeText = "";
 
     private TextWatcher myTextWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
         }
 
         @Override
@@ -65,7 +65,8 @@ public class TeacherInforFragment extends BaseFragment {
 
         @Override
         public void afterTextChanged(Editable editable) {
-            if (isSoftShowing(getActivity())) {
+            if (!editable.toString().equals(beforeText)) {
+//            if (isSoftShowing(getActivity())) {
                 if (delayRun != null) {
                     //每次editText有变化的时候，则移除上次发出的延迟线程
                     handler.removeCallbacks(delayRun);
@@ -73,7 +74,7 @@ public class TeacherInforFragment extends BaseFragment {
                 //延迟800ms，如果不再输入字符，则执行该线程的run方法
                 handler.postDelayed(delayRun, 800);
             }
-
+//            changeButtonState();
         }
     };
 
@@ -114,8 +115,26 @@ public class TeacherInforFragment extends BaseFragment {
         tv_save_modify = (TextView) findViewById(R.id.tv_save_modify);
         tvTeachingCourse = (TextView) findViewById(R.id.tv_teaching_course);
         getUserInfo(guid);
-        tvSchool.addTextChangedListener(myTextWatcher);
-        tvFaculty.addTextChangedListener(myTextWatcher);
+        tvSchool.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                beforeText = tvSchool.getText().toString().trim();
+                tvSchool.addTextChangedListener(myTextWatcher);
+                if (b){
+                    isBtnModify = false;
+                }
+            }
+        });
+        tvFaculty.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                beforeText = tvSchool.getText().toString().trim();
+                tvFaculty.addTextChangedListener(myTextWatcher);
+                if (b){
+                    isBtnModify = false;
+                }
+            }
+        });
 
     }
 
@@ -151,6 +170,16 @@ public class TeacherInforFragment extends BaseFragment {
                     tv_save_modify.setBackground(getResources().getDrawable(R.drawable.rounded_rectangle_gray));
                     tv_save_modify.setTextColor(getResources().getColor(R.color.text_main_9));
                     tv_save_modify.setOnClickListener(null);
+                    if (delayRun != null) {
+                        //每次editText有变化的时候，则移除上次发出的延迟线程
+                        handler.removeCallbacks(delayRun);
+                    }
+//                    tvSchool.addTextChangedListener(null);
+                    tvSchool.removeTextChangedListener(myTextWatcher);
+                    tvFaculty.removeTextChangedListener(myTextWatcher);
+//                    tvFaculty.addTextChangedListener(null);
+                    tvSchool.clearFocus();
+                    tvFaculty.clearFocus();
                 } else {
                     toastShow(model.getErrorDescription());
                 }

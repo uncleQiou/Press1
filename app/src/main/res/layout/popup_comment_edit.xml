@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/margin_10dp"
+    android:background="@drawable/miaobian_normal">
+
+    <EditText
+        android:id="@+id/popup_live_comment_edit"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_toLeftOf="@+id/popup_live_comment_send"
+        android:gravity="center_vertical"
+        android:hint="@string/please_input"
+        android:imeOptions="actionNone"
+        android:maxLength="30"
+        android:paddingLeft="@dimen/margin_5dp"
+        android:paddingRight="@dimen/margin_5dp"
+        android:singleLine="true"
+        android:background="@drawable/conner_gray"
+        android:textColor="@color/text_main_3"
+        android:textColorHint="@color/text_main_6"
+        android:textSize="15dp" />
+
+    <TextView
+        android:id="@+id/popup_live_comment_send"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:gravity="center_vertical"
+        android:layout_margin="@dimen/margin_5dp"
+        android:paddingBottom="@dimen/margin_8dp"
+        android:paddingLeft="@dimen/margin_15dp"
+        android:paddingRight="@dimen/margin_15dp"
+        android:paddingTop="@dimen/margin_8dp"
+        android:text="@string/send"
+        android:background="@drawable/miaobian_blue"
+        android:textColor="@color/hg_app_main_color"
+        android:textSize="@dimen/text_15sp" />
+
+
+
+</RelativeLayout>

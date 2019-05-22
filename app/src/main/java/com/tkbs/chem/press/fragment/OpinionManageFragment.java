@@ -25,6 +25,7 @@ import com.tkbs.chem.press.bean.SampleBookDetailDataBean;
 import com.tkbs.chem.press.bean.SampleBookItemDataBean;
 import com.tkbs.chem.press.net.ApiCallback;
 import com.tkbs.chem.press.util.MessageEvent;
+import com.tkbs.chem.press.util.PopUtils;
 import com.tkbs.chem.press.util.UiUtils;
 
 import java.util.ArrayList;
@@ -238,6 +239,7 @@ public class OpinionManageFragment extends BaseFragment implements View.OnClickL
             }
         });
     }
+
     @Subscribe(threadMode = ThreadMode.MainThread)
     public void RefreshUi(MessageEvent messageEvent) {
         if ("RefreshOpinion".endsWith(messageEvent.getMessage())) {
@@ -298,11 +300,11 @@ public class OpinionManageFragment extends BaseFragment implements View.OnClickL
                 //public static final int  OPINION_TYPE_SALE = 2; // 业务员创建
 
                 String titleName = "";
-                if (data.getType() == 1){
+                if (data.getType() == 1) {
                     // 来自
                     titleName = String.format(context.getResources().getString(R.string.oppinion_from),
                             data.getCreateUser());
-                }else {
+                } else {
                     // 发送给
                     titleName = String.format(context.getResources().getString(R.string.oppinion_to),
                             data.getCreateUser());
@@ -314,15 +316,28 @@ public class OpinionManageFragment extends BaseFragment implements View.OnClickL
                 tv_reply.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        ll_reply_layot.setVisibility(View.VISIBLE);
+//                        ll_reply_layot.setVisibility(View.VISIBLE);
                         parentId = data.getOpinionId();
-                        ed_reply.setHint("回复");
-                        // 显示键盘
-                        ed_reply.setFocusable(true);
-                        ed_reply.setFocusableInTouchMode(true);
-                        ed_reply.requestFocus();
-                        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.showSoftInput(ed_reply, 0);
+//                        ed_reply.setHint("回复");
+//                        // 显示键盘
+//                        ed_reply.setFocusable(true);
+//                        ed_reply.setFocusableInTouchMode(true);
+//                        ed_reply.requestFocus();
+//                        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+//                        imm.showSoftInput(ed_reply, 0);
+                        PopUtils.showCommentEdit(getActivity(), view, R.string.send, new PopUtils.liveCommentResult() {
+                            @Override
+                            public void onResult(boolean confirmed, String comment) {
+                                if (confirmed) {
+//                                    tv_reply.setText(comment);
+                                    if (comment.length() > 0) {
+                                        addCommentOpinion(comment);
+                                    } else {
+                                        toastShow(R.string.please_input_content);
+                                    }
+                                }
+                            }
+                        });
                     }
                 });
 

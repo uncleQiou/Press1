@@ -105,4 +105,9 @@
         <item name="android:minHeight">10dp</item>
         <item name="android:thumb">@drawable/red_point_seekbar</item>
     </style>
+    <!--自定义输入框-->
+    <style name="popWindow_animation_in2out">
+        <item name="android:windowEnterAnimation">@anim/popupwindow_in</item>
+        <item name="android:windowExitAnimation">@anim/popupwindow_out</item>
+    </style>
 </resources>

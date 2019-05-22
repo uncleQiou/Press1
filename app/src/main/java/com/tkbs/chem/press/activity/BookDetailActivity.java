@@ -76,8 +76,6 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
     @Override
     protected void initdata() {
         guid = getIntent().getStringExtra("guid");
-//        guid = "34DBCCE472A14205A2431AF22538644D";
-        Logger.e("bookGuid == " + guid);
         EventBus.getDefault().register(this);
         imgShare.setVisibility(View.VISIBLE);
         imgShare.setOnClickListener(this);
@@ -514,10 +512,6 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
             finish();
         }
 
-//        @JavascriptInterface
-//        public void downLoadRes(String path) {
-//            downLoadBook(path);
-//        }
 
         @JavascriptInterface
         public void isReadAll(boolean flg) {

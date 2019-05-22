@@ -242,7 +242,11 @@ public class TkbsReaderActivity extends BaseActivity implements View.OnClickList
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
         //  通知h5页面进行刷新 需要html5 提供一个js方法 用来通知滑动的页数
-        tkbsReadWeb.loadUrl("javascript:getCataLog(" + seekBar.getProgress() + ")");
+        int index = seekBar.getProgress();
+        if (index <= 0){
+            index = 1;
+        }
+        tkbsReadWeb.loadUrl("javascript:getCataLog(" + index + ")");
     }
 
     /**

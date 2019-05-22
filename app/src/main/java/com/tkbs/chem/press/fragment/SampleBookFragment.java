@@ -25,6 +25,7 @@ import com.tkbs.chem.press.bean.SampleBookManageDataBean;
 import com.tkbs.chem.press.bean.ThreeClassifyDataBena;
 import com.tkbs.chem.press.net.ApiCallback;
 import com.tkbs.chem.press.util.Config;
+import com.tkbs.chem.press.util.PopUtils;
 import com.tkbs.chem.press.util.UiUtils;
 
 import java.text.Collator;
@@ -127,6 +128,7 @@ public class SampleBookFragment extends BaseFragment implements View.OnClickList
             @Override
             public void onAction() {
                 page = 1;
+                ed_search.setText("");
                 getSampleBookList(true);
             }
         });
@@ -244,22 +246,39 @@ public class SampleBookFragment extends BaseFragment implements View.OnClickList
                 }
                 break;
             case R.id.ll_search_title:
-                ll_reply_layot.setVisibility(View.VISIBLE);
-                // 显示键盘
-                ed_reply.setFocusable(true);
-                ed_reply.setFocusableInTouchMode(true);
-                ed_reply.requestFocus();
-                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.showSoftInput(ed_reply, 0);
+//                ll_reply_layot.setVisibility(View.VISIBLE);
+//                // 显示键盘
+//                ed_reply.setFocusable(true);
+//                ed_reply.setFocusableInTouchMode(true);
+//                ed_reply.requestFocus();
+//                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+//                imm.showSoftInput(ed_reply, 0);
+                PopUtils.showCommentEdit(getActivity(), view, R.string.sure_btn, new PopUtils.liveCommentResult() {
+                    @Override
+                    public void onResult(boolean confirmed, String comment) {
+                        if (confirmed) {
+                            ed_search.setText(comment);
+                        }
+                    }
+                });
                 break;
             case R.id.ed_search:
-                ll_reply_layot.setVisibility(View.VISIBLE);
-                // 显示键盘
-                ed_reply.setFocusable(true);
-                ed_reply.setFocusableInTouchMode(true);
-                ed_reply.requestFocus();
-                InputMethodManager imm1 = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm1.showSoftInput(ed_reply, 0);
+//                ll_reply_layot.setVisibility(View.VISIBLE);
+//                // 显示键盘
+//                ed_reply.setFocusable(true);
+//                ed_reply.setFocusableInTouchMode(true);
+//                ed_reply.requestFocus();
+//                InputMethodManager imm1 = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+//                imm1.showSoftInput(ed_reply, 0);
+                ed_search.setText("");
+                PopUtils.showCommentEdit(getActivity(), view, R.string.sure_btn, new PopUtils.liveCommentResult() {
+                    @Override
+                    public void onResult(boolean confirmed, String comment) {
+                        if (confirmed) {
+                            ed_search.setText(comment);
+                        }
+                    }
+                });
                 break;
             case R.id.ll_search:
                 getActivity().startActivity(new Intent(getActivity(), SearchActivity.class));

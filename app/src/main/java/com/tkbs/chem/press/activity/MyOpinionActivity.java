@@ -25,6 +25,7 @@ import com.tkbs.chem.press.bean.OrderInfoBean;
 import com.tkbs.chem.press.net.ApiCallback;
 import com.tkbs.chem.press.util.Config;
 import com.tkbs.chem.press.util.MessageEvent;
+import com.tkbs.chem.press.util.PopUtils;
 import com.tkbs.chem.press.util.UiUtils;
 
 import java.util.ArrayList;
@@ -160,7 +161,7 @@ public class MyOpinionActivity extends BaseActivity implements View.OnClickListe
 
             @Override
             public void onFinish() {
-                if (null != recycler){
+                if (null != recycler) {
                     recycler.dismissSwipeRefresh();
                 }
                 dismissProgressDialog();
@@ -326,15 +327,28 @@ public class MyOpinionActivity extends BaseActivity implements View.OnClickListe
                 tv_reply.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        llReplyLayot.setVisibility(View.VISIBLE);
+//                        llReplyLayot.setVisibility(View.VISIBLE);
                         parentId = data.getOpinionId();
-                        edReply.setHint("回复");
-                        // 显示键盘
-                        edReply.setFocusable(true);
-                        edReply.setFocusableInTouchMode(true);
-                        edReply.requestFocus();
-                        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.showSoftInput(edReply, 0);
+//                        edReply.setHint("回复");
+//                        // 显示键盘
+//                        edReply.setFocusable(true);
+//                        edReply.setFocusableInTouchMode(true);
+//                        edReply.requestFocus();
+//                        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+//                        imm.showSoftInput(edReply, 0);
+                        PopUtils.showCommentEdit(MyOpinionActivity.this, view, R.string.send, new PopUtils.liveCommentResult() {
+                            @Override
+                            public void onResult(boolean confirmed, String comment) {
+                                if (confirmed) {
+//                                    tv_reply.setText(comment);
+                                    if (comment.length() > 0) {
+                                        addCommentOpinion(comment);
+                                    } else {
+                                        toastShow(R.string.please_input_content);
+                                    }
+                                }
+                            }
+                        });
                     }
                 });
 
