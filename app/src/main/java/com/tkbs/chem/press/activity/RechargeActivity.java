@@ -138,6 +138,7 @@ public class RechargeActivity extends BaseActivity implements View.OnClickListen
         });
         // 设置温馨提示内容 tv_kindly_reminder
         tvKindlyReminder.setText(topicTips.replace("。", "。\n"));
+        recharge_num = Integer.valueOf(configList.get(0).getPayPrice());
     }
 
     /**

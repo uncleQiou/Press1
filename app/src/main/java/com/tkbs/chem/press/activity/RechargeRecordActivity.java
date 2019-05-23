@@ -140,7 +140,7 @@ public class RechargeRecordActivity extends BaseActivity implements View.OnClick
                     }
                     noData = false;
                     tvDisMonth.setText(strDisMonth);
-                    String total = getResources().getString(R.string.recharge_total, model.getData().getTotalPrice());
+                    String total = getResources().getString(R.string.recharge_total, String.valueOf(model.getData().getTotalPrice()));
                     tvPay.setText(total);
                     if (isRefresh) {
                         page = 1;

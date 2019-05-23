@@ -381,7 +381,8 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
         // text是分享文本，所有平台都需要这个字段
         oks.setText(shareData.getIntroduction());
         // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
-        oks.setImagePath(shareData.getCover());
+//        oks.setImagePath(shareData.getCover());
+        oks.setImageUrl(shareData.getCover());
         //确保SDcard下面存在此张图片
         // url在微信、微博，Facebook等平台中使用
         oks.setUrl(shareData.getUrl());
@@ -397,8 +398,9 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
                     paramsToShare.setShareType(Platform.SHARE_WEBPAGE);
                     paramsToShare.setText(shareData.getIntroduction());
                     paramsToShare.setUrl(shareData.getUrl());
-                    paramsToShare.setImageUrl(shareData.getUrl());
-                    paramsToShare.setImagePath(shareData.getCover());
+                    paramsToShare.setImageUrl(shareData.getCover());
+                    Logger.e("分享："+shareData.getCover());
+//                    paramsToShare.setImagePath(shareData.getCover());
                     paramsToShare.setTitle(shareData.getTitle());
                 }
                 if (SinaWeibo.NAME.equals(platform.getName())) {

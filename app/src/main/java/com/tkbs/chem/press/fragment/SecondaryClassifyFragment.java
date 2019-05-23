@@ -415,7 +415,11 @@ public class SecondaryClassifyFragment extends BaseFragment implements View.OnCl
                 tv_book_name.setText(data.getTitle());
                 tv_book_price.setText("￥" + data.getPrice());
                 tv_book_author.setText(data.getAuthor());
-                tv_book_endtime.setText(String.format(getResources().getString(R.string.book_publish_time), TimeUtils.getTime(data.getPublishTime())));
+                if (data.getPublishTime() == 0){
+                    tv_book_endtime.setText(String.format(getResources().getString(R.string.book_publish_time), " "));
+                }else {
+                    tv_book_endtime.setText(String.format(getResources().getString(R.string.book_publish_time), TimeUtils.getTime(data.getPublishTime())));
+                }
                 Glide.with(getActivity()).load(data.getCover())
                         .apply(BaseApplication.options)
                         .into(bookshelf_cover);

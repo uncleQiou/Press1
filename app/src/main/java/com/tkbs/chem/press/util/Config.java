@@ -16,11 +16,11 @@ public class Config {
     /**
      *si tao
      */
-    public static String API_SERVER = "http://192.168.1.106:8281/app/";
+//    public static String API_SERVER = "http://192.168.1.106:8281/app/";
     /**
      * 外网
      */
-//    public static String API_SERVER = "http://121.46.4.25:8081/app/";
+    public static String API_SERVER = "http://121.46.4.25:8081/app/";
 
 
     /**
@@ -28,7 +28,7 @@ public class Config {
      */
     public static final String USERNAME = "username";
     public static final String USERKRY = "userKey";
-    public static final String WX_APP_ID = "wx444955314a8cc03d";
+    public static final String WX_APP_ID = "wx65125889a1045772";
     /**
      * 查看word缓存路径
      */

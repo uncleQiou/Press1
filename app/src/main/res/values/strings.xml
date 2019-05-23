@@ -181,7 +181,7 @@
     <string name="token_balance_noenough">余额不足</string>
     <string name="price_rmb">售价:%1$s 元</string>
     <string name="recharge_token">充值面值：%1$d CIP币</string>
-    <string name="recharge_total">总计：￥%1$d 元</string>
+    <string name="recharge_total">总计：￥%1$S 元</string>
     <string name="copyright_str">Copyright©2018 \n化学工业出版社,All Rights Reserved.</string>
     <string name="have_download">已下载</string>
     <string name="bookshelf_page">页数：%1$S 页</string>
