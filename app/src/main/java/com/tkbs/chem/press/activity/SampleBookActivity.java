@@ -28,6 +28,7 @@ import com.tkbs.chem.press.bean.SampleBookDetailDataBean;
 import com.tkbs.chem.press.bean.SampleBookItemDataBean;
 import com.tkbs.chem.press.net.ApiCallback;
 import com.tkbs.chem.press.util.Config;
+import com.tkbs.chem.press.util.MessageEvent;
 import com.tkbs.chem.press.util.TimeUtils;
 import com.tkbs.chem.press.view.DialogApprovalBook;
 
@@ -47,6 +48,7 @@ import cn.lemon.view.RefreshRecyclerView;
 import cn.lemon.view.adapter.Action;
 import cn.lemon.view.adapter.BaseViewHolder;
 import cn.lemon.view.adapter.RecyclerAdapter;
+import de.greenrobot.event.EventBus;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 
@@ -267,6 +269,8 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
                         public void run() {
                             recycler.showSwipeRefresh();
                             getSampleDetail(true);
+                            // 添加通知 刷新 样书列表页面
+                            EventBus.getDefault().post(new MessageEvent("SampleBookApproval"));
                         }
                     });
 
@@ -453,6 +457,8 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
                         public void run() {
                             recycler.showSwipeRefresh();
                             getSampleDetail(true);
+                            // 添加通知 刷新 样书列表页面
+                            EventBus.getDefault().post(new MessageEvent("SampleBookApproval"));
                         }
                     });
                 } else {

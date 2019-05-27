@@ -44,7 +44,7 @@ public class TeacherInforFragment extends BaseFragment {
     private TextView tvLocation;
     private EditText tvSchool;
     private EditText tvFaculty;
-    private EditText tvTeacherJob;
+    private TextView tvTeacherJob;
     private TextView tvOfficePhone;
     private TextView tvTeachingCourse;
     private TextView tv_save_modify;
@@ -110,7 +110,7 @@ public class TeacherInforFragment extends BaseFragment {
         tvLocation = (TextView) findViewById(R.id.tv_location);
         tvSchool = (EditText) findViewById(R.id.tv_school);
         tvFaculty = (EditText) findViewById(R.id.tv_faculty);
-        tvTeacherJob = (EditText) findViewById(R.id.tv_teacher_job);
+        tvTeacherJob = (TextView) findViewById(R.id.tv_teacher_job);
         tvOfficePhone = (TextView) findViewById(R.id.tv_office_phone);
         tv_save_modify = (TextView) findViewById(R.id.tv_save_modify);
         tvTeachingCourse = (TextView) findViewById(R.id.tv_teaching_course);

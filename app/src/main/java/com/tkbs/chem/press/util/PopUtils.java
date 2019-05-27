@@ -35,9 +35,9 @@ public class PopUtils {
 
     public static void showCommentEdit(final Activity context, View view,int btnName, final liveCommentResult commentResult) {
         liveCommentResult = commentResult;
-        if (commentView == null) {
-            commentView = context.getLayoutInflater().inflate(R.layout.popup_comment_edit, null);
-        }
+            if (commentView == null) {
+                commentView = context.getLayoutInflater().inflate(R.layout.popup_comment_edit, null);
+            }
         if (commentPopup == null) {
             // 创建一个PopuWidow对象
             commentPopup = new PopupWindow(commentView, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);

@@ -190,7 +190,7 @@
                 android:textColor="@color/text_main_6"
                 android:textSize="@dimen/text_14sp" />
 
-            <EditText
+            <TextView
                 android:id="@+id/tv_teacher_job"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

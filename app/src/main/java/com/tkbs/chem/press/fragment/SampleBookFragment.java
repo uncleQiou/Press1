@@ -25,6 +25,7 @@ import com.tkbs.chem.press.bean.SampleBookManageDataBean;
 import com.tkbs.chem.press.bean.ThreeClassifyDataBena;
 import com.tkbs.chem.press.net.ApiCallback;
 import com.tkbs.chem.press.util.Config;
+import com.tkbs.chem.press.util.MessageEvent;
 import com.tkbs.chem.press.util.PopUtils;
 import com.tkbs.chem.press.util.UiUtils;
 
@@ -41,6 +42,9 @@ import cn.lemon.view.RefreshRecyclerView;
 import cn.lemon.view.adapter.Action;
 import cn.lemon.view.adapter.BaseViewHolder;
 import cn.lemon.view.adapter.RecyclerAdapter;
+import de.greenrobot.event.EventBus;
+import de.greenrobot.event.Subscribe;
+import de.greenrobot.event.ThreadMode;
 
 /**
  * Created by Administrator on 2018/10/16.
@@ -151,8 +155,22 @@ public class SampleBookFragment extends BaseFragment implements View.OnClickList
         });
         recycler.getNoMoreView().setText("没有更多数据了");
         changeTextColor();
+        EventBus.getDefault().register(this);
     }
 
+    @Subscribe(threadMode = ThreadMode.MainThread)
+    public void RefreshUi(MessageEvent messageEvent) {
+        if ("SampleBookApproval".endsWith(messageEvent.getMessage())) {
+            recycler.post(new Runnable() {
+                @Override
+                public void run() {
+                    page = 1;
+                    recycler.showSwipeRefresh();
+                    getSampleBookList(true);
+                }
+            });
+        }
+    }
     private String searchKey = "";
 
     private void getSampleBookList(final boolean isRefresh) {

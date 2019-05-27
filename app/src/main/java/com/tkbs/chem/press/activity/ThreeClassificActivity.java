@@ -81,7 +81,7 @@ public class ThreeClassificActivity extends BaseActivity implements View.OnClick
     private String titleStr;
     private int disType = 1;
     // 升序
-    private boolean isAscendingOrder = true;
+    private boolean isAscendingOrder = false;
     private ArrayList<ThreeClassifyDataBena> bookDatas;
     /**
      * 时间排序
@@ -144,7 +144,7 @@ public class ThreeClassificActivity extends BaseActivity implements View.OnClick
             }
         });
         recycler.getNoMoreView().setText("没有更多数据了");
-        timeOrder = Config.SORT_UP;
+//        timeOrder = Config.SORT_UP;
         imgSortTime.setImageResource(isAscendingOrder ? R.mipmap.bookshelf_icon_down : R.mipmap.bookshelf_icon_up);
         changeTextColor();
     }

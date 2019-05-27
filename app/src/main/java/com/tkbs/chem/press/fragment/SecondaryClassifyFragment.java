@@ -89,6 +89,7 @@ public class SecondaryClassifyFragment extends BaseFragment implements View.OnCl
         img_sort_time = (ImageView) findViewById(R.id.img_sort_time);
         ll_sort_time = (LinearLayout) findViewById(R.id.ll_sort_time);
         ll_sort_time.setOnClickListener(this);
+        timeOrder = Config.SORT_UP;
         tv_sort_hot = (TextView) findViewById(R.id.tv_sort_hot);
         tv_sort_hot.setOnClickListener(this);
         ll_sort_hot = (LinearLayout) findViewById(R.id.ll_sort_hot);
