@@ -171,6 +171,7 @@ public class SampleBookFragment extends BaseFragment implements View.OnClickList
             });
         }
     }
+
     private String searchKey = "";
 
     private void getSampleBookList(final boolean isRefresh) {
