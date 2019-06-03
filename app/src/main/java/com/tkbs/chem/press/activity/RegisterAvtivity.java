@@ -250,6 +250,11 @@ public class RegisterAvtivity extends BaseActivity implements View.OnClickListen
         }
 
         @JavascriptInterface
+        public void goToS() {
+            Intent intent = new Intent(RegisterAvtivity.this, ServiceWebActivityA.class);
+            startActivity(intent);
+        }
+        @JavascriptInterface
         public void login(String loginName, String password) {
 
             //{"loginName":"xx000001","password":"1"}

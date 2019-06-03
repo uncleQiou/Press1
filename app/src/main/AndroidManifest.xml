@@ -5,8 +5,8 @@
     <!-- 如果是安卓8.0，应用编译配置的targetSdkVersion>=26，请务必添加以下权限 -->
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
-    <!--<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
-    <!--<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />-->
+    <!-- <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> -->
+    <!-- <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
@@ -28,7 +28,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.FLASHLIGHT" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
-    <!--<uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />-->
+    <!-- <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" /> -->
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
@@ -57,8 +57,9 @@
             android:name=".activity.SearchActivity"
             android:windowSoftInputMode="stateHidden|stateUnchanged" />
         <!-- 搜索结果 -->
-        <activity android:name=".activity.SearchResultActivity"
-            android:launchMode="singleTask"/>
+        <activity
+            android:name=".activity.SearchResultActivity"
+            android:launchMode="singleTask" />
         <!-- 书城二级分类页面 -->
         <activity android:name=".activity.SecondaryClassificationActivity" />
         <!-- 书城三级分类页面 -->
@@ -147,13 +148,14 @@
         <activity android:name=".activity.SecondaryClassifyActivity" />
         <!-- banner图 跳转 -->
         <activity android:name=".activity.BannerWebActivity" />
-        <!--私信 业务员发送消息给所属教师-->
+        <!-- 私信 业务员发送消息给所属教师 -->
         <activity android:name=".activity.PublishPrivateLetterActivity" />
-        <!--更新-->
+        <!-- 更新 -->
         <activity
             android:name="com.tencent.bugly.beta.ui.BetaActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|locale"
             android:theme="@android:style/Theme.Translucent" />
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.fileProvider"
@@ -161,20 +163,22 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths"/>
+                android:resource="@xml/provider_paths" />
         </provider>
-        <!--微信支付-->
+        <!-- 微信支付 -->
         <activity
             android:name=".wxapi.WXPayEntryActivity"
             android:exported="true"
             android:launchMode="singleTop">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <data android:scheme="wx65125889a1045772"/>
-            </intent-filter>
+                <action android:name="android.intent.action.VIEW" />
 
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:scheme="wx65125889a1045772" />
+            </intent-filter>
         </activity>
+        <activity android:name=".activity.ServiceWebActivityA"></activity>
     </application>
 
 </manifest>

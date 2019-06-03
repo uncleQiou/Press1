@@ -206,4 +206,5 @@
     <string name="buy_success">购买成功</string>
     <string name="cip_hot_phone">010-19980232</string>
     <string name="save_change">保存</string>
+    <string name="str_tos">服务条款</string>
 </resources>
