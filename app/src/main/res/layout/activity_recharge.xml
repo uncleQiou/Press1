@@ -95,9 +95,11 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/margin_1dp"
+                android:visibility="gone"
                 android:background="@color/app_bag" />
 
             <LinearLayout
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/margin_60dp"
                 android:background="@color/white"

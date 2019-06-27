@@ -435,13 +435,17 @@ public class RechargeActivity extends BaseActivity implements View.OnClickListen
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         switch (buttonView.getId()) {
             case R.id.cb_recharge_wx:
-                if (isChecked) {
-                    cbRechargeZfb.setChecked(false);
-                    paytype = "1";
-                } else {
-                    cbRechargeZfb.setChecked(true);
-                    paytype = "2";
-                }
+                // 2019年6月3日 隐藏支付宝支付方式
+                cbRechargeWx.setChecked(true);
+                cbRechargeZfb.setChecked(false);
+                paytype = "1";
+//                if (isChecked) {
+//                    cbRechargeZfb.setChecked(false);
+//                    paytype = "1";
+//                } else {
+//                    cbRechargeZfb.setChecked(true);
+//                    paytype = "2";
+//                }
                 break;
             case R.id.cb_recharge_zfb:
                 if (isChecked) {

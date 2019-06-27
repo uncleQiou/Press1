@@ -219,9 +219,9 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
                         bookList.addAll(model.getData());
                         myAdapter.addAll(model.getData());
                     }
-                    if (model.getData().size() < 10) {
-                        recycler.showNoMore();
-                    }
+//                    if (model.getData().size() < 10) {
+                    recycler.showNoMore();
+//                    }
                     isOneKeyApproval = false;
                     llBottomEdit.setVisibility(isOneKeyApproval ? View.VISIBLE : View.GONE);
                     cbSelect.setChecked(false);
