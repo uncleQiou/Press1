@@ -57,6 +57,7 @@
     <dimen name="margin_135dp">135dp</dimen>
     <dimen name="margin_160dp">160dp</dimen>
     <dimen name="margin_150dp">150dp</dimen>
+    <dimen name="margin_180dp">180dp</dimen>
     <dimen name="margin_190dp">190dp</dimen>
     <dimen name="margin_225dp">225dp</dimen>
     <dimen name="margin_200dp">200dp</dimen>
