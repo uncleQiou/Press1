@@ -122,7 +122,10 @@ public class SampleBookActivity extends BaseActivity implements View.OnClickList
             "对于不屈不挠的人来说，没有失败这回事", "我想正是伸手摘星的精神，让我们很多人长时间地工作奋战。不论到哪，让作品充分表现这个精神，并且驱使我们放弃佳作，只求杰作",
             "爱情埋在心灵深处，并不是住在双唇之间");
     final String[] items = new String[]{"1个月", "2个月", "3个月", "4个月",
-            "5个月", "6个月", "7个月", "8个月", "9个月", "10个月", "11个月", "12个月"};
+            "5个月", "6个月"};
+    // 2019年7月12日 修改
+//    final String[] items = new String[]{"1个月", "2个月", "3个月", "4个月",
+//            "5个月", "6个月", "7个月", "8个月", "9个月", "10个月", "11个月", "12个月"};
     private int timeLimit;
     // 升序
     private boolean isAscendingOrder = true;

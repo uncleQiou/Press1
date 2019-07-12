@@ -101,7 +101,7 @@ public class DialogApprovalBook extends Dialog implements AdapterView.OnItemClic
         setContentView(view);
         mDatas = new ArrayList<String>();
 
-        for (int i = 0; i < 12; i++) {
+        for (int i = 0; i < 6; i++) {
             mDatas.add(i + 1 + "个月");
         }
         edOpinion = (EditText) view.findViewById(R.id.ed_opinion);
