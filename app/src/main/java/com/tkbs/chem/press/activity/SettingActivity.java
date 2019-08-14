@@ -8,23 +8,18 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.orhanobut.logger.Logger;
 import com.tkbs.chem.press.R;
 import com.tkbs.chem.press.base.BaseActivity;
+import com.tkbs.chem.press.base.BaseApplication;
+import com.tkbs.chem.press.bean.HttpResponse;
+import com.tkbs.chem.press.net.ApiCallback;
+import com.tkbs.chem.press.util.CipDownLoadPopWindow;
 import com.tkbs.chem.press.util.Config;
 import com.tkbs.chem.press.util.UiUtils;
 
-import java.util.HashMap;
-
 import butterknife.BindView;
 import butterknife.OnClick;
-import cn.sharesdk.framework.Platform;
-import cn.sharesdk.framework.PlatformActionListener;
-import cn.sharesdk.onekeyshare.OnekeyShare;
-import cn.sharesdk.onekeyshare.ShareContentCustomizeCallback;
-import cn.sharesdk.sina.weibo.SinaWeibo;
-import cn.sharesdk.tencent.qq.QQ;
-import cn.sharesdk.wechat.friends.Wechat;
-import cn.sharesdk.wechat.moments.WechatMoments;
 
 public class SettingActivity extends BaseActivity implements View.OnClickListener {
 
@@ -50,6 +45,10 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     TextView tvExit;
     @BindView(R.id.ll_change_password)
     LinearLayout llChangePassword;
+    @BindView(R.id.img_share)
+    ImageView imgShare;
+    @BindView(R.id.ll_share_app)
+    LinearLayout llShareApp;
     // 用户身份
     private int user_type = 4;
 
@@ -82,7 +81,8 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         title.setText(R.string.setting);
     }
 
-    @OnClick({R.id.back, R.id.ll_phone, R.id.ll_version, R.id.ll_contact, R.id.tv_exit, R.id.ll_change_password})
+    @OnClick({R.id.back, R.id.ll_phone, R.id.ll_version, R.id.ll_contact,
+            R.id.tv_exit, R.id.ll_change_password, R.id.ll_share_app})
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -108,10 +108,44 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             case R.id.ll_change_password:
                 startActivity(new Intent(SettingActivity.this, ChangePasswordWebActivity.class));
                 break;
+            case R.id.ll_share_app:
+//                getDownLoadPath();
+                CipDownLoadPopWindow.getInstance().showPopWindow(SettingActivity.this, llShareApp, "");
+                break;
             default:
+
                 break;
         }
     }
+
+    /**
+     * 获取app下载路径二维码图片路径
+     */
+    private void getDownLoadPath() {
+        showProgressDialog();
+        addSubscription(apiStores.getLoadUrl(), new ApiCallback<HttpResponse<String>>() {
+            @Override
+            public void onSuccess(HttpResponse<String> model) {
+                if (model.isStatus()) {
+                    CipDownLoadPopWindow.getInstance().showPopWindow(SettingActivity.this, llShareApp, model.getData());
+                } else {
+                    toastShow(model.getErrorDescription());
+                }
+
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                toastShow(msg);
+            }
+
+            @Override
+            public void onFinish() {
+                dismissProgressDialog();
+            }
+        });
+    }
+
     /**
      * 拨打电话（跳转到拨号界面，用户手动点击拨打）
      *

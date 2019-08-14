@@ -118,7 +118,30 @@
             android:textSize="@dimen/text_15sp" />
 
     </LinearLayout>
+    <LinearLayout
+        android:id="@+id/ll_share_app"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_1dp"
+        android:background="@color/white"
+        android:gravity="center_vertical"
+        android:padding="@dimen/margin_15dp">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/share_app"
+            android:textColor="@color/text_main_3"
+            android:textSize="@dimen/text_15sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/hg_app_main_color"
+            android:textSize="@dimen/text_15sp" />
+
+    </LinearLayout>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

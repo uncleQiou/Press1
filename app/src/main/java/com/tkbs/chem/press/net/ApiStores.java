@@ -762,5 +762,11 @@ public interface ApiStores {
     Observable<HttpResponse<Object>> replyOpinion(@Query("parentId") int parentId, @Query("content") String content);
 
     /*************************************************************************************************************/
-
+    /**
+     * 获取下载链接
+     *
+     * @return
+     */
+    @POST("download/qrimage")
+    Observable<HttpResponse<String>> getLoadUrl();
 }
