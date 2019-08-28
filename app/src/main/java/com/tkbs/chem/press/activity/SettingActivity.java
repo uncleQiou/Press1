@@ -109,7 +109,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 startActivity(new Intent(SettingActivity.this, ChangePasswordWebActivity.class));
                 break;
             case R.id.ll_share_app:
-                getDownLoadPath();
+//                getDownLoadPath();
                 CipDownLoadPopWindow.getInstance().showPopWindow(SettingActivity.this, llShareApp, "");
                 break;
             default:

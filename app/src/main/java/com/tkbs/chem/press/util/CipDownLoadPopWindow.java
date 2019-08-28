@@ -3,6 +3,8 @@ package com.tkbs.chem.press.util;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
@@ -67,6 +69,7 @@ public class CipDownLoadPopWindow {
         if (img.length() > 0) {
             imgUrl = img;
         }
+        imgUrl = Config.API_SERVER + "download/qrimage";
         mPopView = context.getLayoutInflater().inflate(R.layout.cip_load_pop_window, null);
         // 创建一个PopuWidow对象
         mPopwindow = new PopupWindow(mPopView, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
