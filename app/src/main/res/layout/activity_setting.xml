@@ -125,7 +125,7 @@
         android:layout_marginTop="@dimen/margin_1dp"
         android:background="@color/white"
         android:gravity="center_vertical"
-        android:visibility="gone"
+        android:visibility="visible"
         android:padding="@dimen/margin_15dp">
 
         <TextView
